@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Capacity Connect - Template Suite & Interactive Showcase</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <!-- Material Symbols Icons -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              DEFAULT: '#00236f',
+              dark: '#001952',
+              light: '#1e3a8a',
+              subtle: '#eff4ff',
+            }
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="min-h-screen bg-slate-100 flex flex-col justify-between font-sans relative overflow-x-hidden">
+  <!-- Subtle Office / Workspace Blurred Backdrop -->
+  <div class="fixed inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-100 via-slate-100 to-slate-200 -z-10"></div>
+  <div class="fixed inset-0 backdrop-blur-3xl -z-10"></div>
+
+  <!-- Top Navigation Header -->
+  <header class="w-full py-4 px-6 sm:px-12 flex items-center justify-between border-b border-slate-200/70 bg-white/60 backdrop-blur-md sticky top-0 z-20">
+    <div class="flex items-center gap-3">
+      <div class="w-10 h-10 rounded-xl bg-brand flex items-center justify-center text-white shadow-md shadow-brand/20">
+        <span class="material-symbols-outlined text-2xl">account_tree</span>
+      </div>
+      <div>
+        <h1 class="text-xl font-bold text-brand tracking-tight">Capacity Connect</h1>
+        <p class="text-[11px] text-slate-500 font-medium">Enterprise Learning & Capacity Design System</p>
+      </div>
+    </div>
+
+    <div class="flex items-center gap-3 text-xs">
+      <a
+        href="login.html"
+        class="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-brand hover:bg-brand-dark text-white font-semibold shadow-sm transition"
+      >
+        <span>Test Auth Flow</span>
+        <span class="material-symbols-outlined text-sm">arrow_forward</span>
+      </a>
+    </div>
+  </header>
+
+  <!-- Showcase Content -->
+  <main class="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-10 space-y-10">
+    
+    <!-- Hero Banner -->
+    <div class="text-center max-w-3xl mx-auto space-y-3">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 text-brand text-xs font-semibold border border-brand/10">
+        <span class="w-2 h-2 rounded-full bg-brand"></span>
+        <span>HTML5 • Tailwind CSS • Inter • Material Symbols</span>
+      </div>
+      <h2 class="text-3xl sm:text-4xl font-extrabold text-brand tracking-tight">
+        Complete Frontend Template Suite
+      </h2>
+      <p class="text-sm sm:text-base text-slate-600 leading-relaxed">
+        Featuring glassmorphic desktop styling, centered blur backdrops, and brand navy accents (<code class="text-brand font-mono font-semibold bg-white/80 px-1.5 py-0.5 rounded border border-slate-200">#00236f</code> / <code class="text-brand-light font-mono font-semibold bg-white/80 px-1.5 py-0.5 rounded border border-slate-200">#1e3a8a</code>).
+      </p>
+    </div>
+
+    <!-- Quick Role Launcher Pills -->
+    <div class="max-w-2xl mx-auto bg-white/80 backdrop-blur-md rounded-2xl p-3 border border-white/60 shadow-md flex flex-col sm:flex-row items-center gap-3">
+      <a
+        href="employee-dashboard.html"
+        class="flex-1 w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-brand hover:bg-brand-dark text-white text-xs font-bold shadow-md shadow-brand/20 transition"
+      >
+        <span class="material-symbols-outlined text-base">school</span>
+        <span>Launch as Learner (Employee Portal)</span>
+      </a>
+      <a
+        href="admin-dashboard.html"
+        class="flex-1 w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-purple-900 hover:bg-purple-950 text-white text-xs font-bold shadow-md shadow-purple-900/20 transition"
+      >
+        <span class="material-symbols-outlined text-base">admin_panel_settings</span>
+        <span>Launch as Admin (Capacity Analytics)</span>
+      </a>
+      <a
+        href="course-player.html"
+        class="flex-1 w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-slate-800 hover:bg-slate-900 text-white text-xs font-bold shadow-sm transition"
+      >
+        <span class="material-symbols-outlined text-base">play_circle</span>
+        <span>Launch Course Player</span>
+      </a>
+    </div>
+
+    <!-- Group 1: Core Extended Dashboards & Players -->
+    <div class="space-y-4">
+      <div class="flex items-center gap-2">
+        <span class="material-symbols-outlined text-brand">dashboard</span>
+        <h3 class="text-lg font-bold text-brand tracking-tight">Core Application Dashboards & Learning Players</h3>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        
+        <!-- Card 1: Employee Dashboard -->
+        <div class="bg-white/90 backdrop-blur-md rounded-2xl border border-white/60 p-6 shadow-md hover:shadow-xl transition flex flex-col justify-between group">
+          <div class="space-y-3">
+            <div class="w-12 h-12 rounded-xl bg-brand text-white flex items-center justify-center shadow-md shadow-brand/20 group-hover:scale-105 transition">
+              <span class="material-symbols-outlined text-2xl">school</span>
+            </div>
+            <h4 class="text-base font-bold text-slate-900">Employee Learning Dashboard</h4>
+            <p class="text-xs text-slate-500 leading-relaxed">
+              Personalized learner hub with 4 active pathways, 78% quarterly completion status, upcoming ISO compliance deadlines, and skill growth tracking.
+            </p>
+            <div class="flex flex-wrap gap-1.5 pt-1">
+              <span class="text-[10px] bg-blue-50 text-brand px-2 py-0.5 rounded font-semibold">Course Grid</span>
+              <span class="text-[10px] bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded font-semibold">Skill Radar</span>
+              <span class="text-[10px] bg-slate-100 text-slate-600 px-2 py-0.5 rounded font-semibold">Deadlines</span>
+            </div>
+          </div>
+          <div class="pt-6 mt-4 border-t border-slate-100">
+            <a
+              href="employee-dashboard.html"
+              class="w-full flex items-center justify-center gap-2 py-2.5 rounded-lg bg-brand hover:bg-brand-dark text-white text-xs font-semibold shadow-sm transition"
+            >
+              <span>Open Dashboard</span>
+              <span class="material-symbols-outlined text-sm">arrow_forward</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Card 2: Admin Dashboard -->
+        <div class="bg-white/90 backdrop-blur-md rounded-2xl border border-white/60 p-6 shadow-md hover:shadow-xl transition flex flex-col justify-between group">
+          <div class="space-y-3">
+            <div class="w-12 h-12 rounded-xl bg-purple-900 text-white flex items-center justify-center shadow-md shadow-purple-900/20 group-hover:scale-105 transition">
+              <span class="material-symbols-outlined text-2xl">admin_panel_settings</span>
+            </div>
+            <h4 class="text-base font-bold text-slate-900">Admin Capacity Suite</h4>
+            <p class="text-xs text-slate-500 leading-relaxed">
+              Workforce capacity telemetry across 1,480 employees, department completion progress bars, compliance audit tables, and instant batch reminders.
+            </p>
+            <div class="flex flex-wrap gap-1.5 pt-1">
+              <span class="text-[10px] bg-purple-50 text-purple-800 px-2 py-0.5 rounded font-semibold">Telemetry KPIs</span>
+              <span class="text-[10px] bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded font-semibold">Department Bars</span>
+              <span class="text-[10px] bg-amber-50 text-amber-700 px-2 py-0.5 rounded font-semibold">Audit Table</span>
+            </div>
+          </div>
+          <div class="pt-6 mt-4 border-t border-slate-100">
+            <a
+              href="admin-dashboard.html"
+              class="w-full flex items-center justify-center gap-2 py-2.5 rounded-lg bg-purple-900 hover:bg-purple-950 text-white text-xs font-semibold shadow-sm transition"
+            >
+              <span>Open Admin Suite</span>
+              <span class="material-symbols-outlined text-sm">arrow_forward</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Card 3: Course & Quiz Player -->
+        <div class="bg-white/90 backdrop-blur-md rounded-2xl border border-white/60 p-6 shadow-md hover:shadow-xl transition flex flex-col justify-between group">
+          <div class="space-y-3">
+            <div class="w-12 h-12 rounded-xl bg-slate-900 text-white flex items-center justify-center shadow-md shadow-slate-900/20 group-hover:scale-105 transition">
+              <span class="material-symbols-outlined text-2xl">play_circle</span>
+            </div>
+            <h4 class="text-base font-bold text-slate-900">Course & Quiz Player</h4>
+            <p class="text-xs text-slate-500 leading-relaxed">
+              Interactive learning studio with video stage, collapsible curriculum syllabus, and integrated 3-question knowledge check with instant validation.
+            </p>
+            <div class="flex flex-wrap gap-1.5 pt-1">
+              <span class="text-[10px] bg-slate-100 text-slate-800 px-2 py-0.5 rounded font-semibold">Interactive Video</span>
+              <span class="text-[10px] bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded font-semibold">Live Quiz</span>
+              <span class="text-[10px] bg-blue-50 text-brand px-2 py-0.5 rounded font-semibold">Syllabus Drawer</span>
+            </div>
+          </div>
+          <div class="pt-6 mt-4 border-t border-slate-100">
+            <a
+              href="course-player.html"
+              class="w-full flex items-center justify-center gap-2 py-2.5 rounded-lg bg-slate-900 hover:bg-black text-white text-xs font-semibold shadow-sm transition"
+            >
+              <span>Open Course Player</span>
+              <span class="material-symbols-outlined text-sm">arrow_forward</span>
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Group 2: Complete Authentication Flow -->
+    <div class="space-y-4">
+      <div class="flex items-center gap-2">
+        <span class="material-symbols-outlined text-brand">lock</span>
+        <h3 class="text-lg font-bold text-brand tracking-tight">Authentication Flow Pages</h3>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        
+        <!-- Login -->
+        <a href="login.html" class="bg-white/80 backdrop-blur-md rounded-2xl border border-white/60 p-5 shadow-sm hover:shadow-md transition block group">
+          <div class="flex items-center justify-between mb-2">
+            <div class="w-10 h-10 rounded-lg bg-brand-subtle text-brand flex items-center justify-center">
+              <span class="material-symbols-outlined text-xl">login</span>
+            </div>
+            <span class="material-symbols-outlined text-slate-400 group-hover:text-brand text-sm transition">arrow_forward</span>
+          </div>
+          <h5 class="text-sm font-bold text-slate-900">Sign In (login.html)</h5>
+          <p class="text-xs text-slate-500 mt-1">Credentials, password visibility toggle, SSO button, and "Remember device".</p>
+        </a>
+
+        <!-- Signup -->
+        <a href="signup.html" class="bg-white/80 backdrop-blur-md rounded-2xl border border-white/60 p-5 shadow-sm hover:shadow-md transition block group">
+          <div class="flex items-center justify-between mb-2">
+            <div class="w-10 h-10 rounded-lg bg-blue-50 text-brand flex items-center justify-center">
+              <span class="material-symbols-outlined text-xl">person_add</span>
+            </div>
+            <span class="material-symbols-outlined text-slate-400 group-hover:text-brand text-sm transition">arrow_forward</span>
+          </div>
+          <h5 class="text-sm font-bold text-slate-900">Create Account (signup.html)</h5>
+          <p class="text-xs text-slate-500 mt-1">Full name, email, password confirmation, and Terms of Service consent.</p>
+        </a>
+
+        <!-- Forgot Password -->
+        <a href="forgot-password.html" class="bg-white/80 backdrop-blur-md rounded-2xl border border-white/60 p-5 shadow-sm hover:shadow-md transition block group">
+          <div class="flex items-center justify-between mb-2">
+            <div class="w-10 h-10 rounded-lg bg-amber-50 text-amber-700 flex items-center justify-center">
+              <span class="material-symbols-outlined text-xl">mail_lock</span>
+            </div>
+            <span class="material-symbols-outlined text-slate-400 group-hover:text-brand text-sm transition">arrow_forward</span>
+          </div>
+          <h5 class="text-sm font-bold text-slate-900">Forgot Password (forgot-password.html)</h5>
+          <p class="text-xs text-slate-500 mt-1">Recovery link dispatch with school mark brand badge.</p>
+        </a>
+
+        <!-- Check Email -->
+        <a href="check-email.html" class="bg-white/80 backdrop-blur-md rounded-2xl border border-white/60 p-5 shadow-sm hover:shadow-md transition block group">
+          <div class="flex items-center justify-between mb-2">
+            <div class="w-10 h-10 rounded-lg bg-indigo-50 text-indigo-700 flex items-center justify-center">
+              <span class="material-symbols-outlined text-xl">mark_email_read</span>
+            </div>
+            <span class="material-symbols-outlined text-slate-400 group-hover:text-brand text-sm transition">arrow_forward</span>
+          </div>
+          <h5 class="text-sm font-bold text-slate-900">Check Email (check-email.html)</h5>
+          <p class="text-xs text-slate-500 mt-1">Notification confirmation with simulated resend toast and reset entry.</p>
+        </a>
+
+        <!-- Reset Password -->
+        <a href="reset-password.html" class="bg-white/80 backdrop-blur-md rounded-2xl border border-white/60 p-5 shadow-sm hover:shadow-md transition block group">
+          <div class="flex items-center justify-between mb-2">
+            <div class="w-10 h-10 rounded-lg bg-purple-50 text-purple-800 flex items-center justify-center">
+              <span class="material-symbols-outlined text-xl">lock_reset</span>
+            </div>
+            <span class="material-symbols-outlined text-slate-400 group-hover:text-brand text-sm transition">arrow_forward</span>
+          </div>
+          <h5 class="text-sm font-bold text-slate-900">Set New Password (reset-password.html)</h5>
+          <p class="text-xs text-slate-500 mt-1">Real-time password strength meter, rule checklist, and confirmation.</p>
+        </a>
+
+        <!-- Reset Success -->
+        <a href="reset-success.html" class="bg-white/80 backdrop-blur-md rounded-2xl border border-white/60 p-5 shadow-sm hover:shadow-md transition block group">
+          <div class="flex items-center justify-between mb-2">
+            <div class="w-10 h-10 rounded-lg bg-emerald-50 text-emerald-700 flex items-center justify-center">
+              <span class="material-symbols-outlined text-xl">check_circle</span>
+            </div>
+            <span class="material-symbols-outlined text-slate-400 group-hover:text-brand text-sm transition">arrow_forward</span>
+          </div>
+          <h5 class="text-sm font-bold text-slate-900">Reset Success (reset-success.html)</h5>
+          <p class="text-xs text-slate-500 mt-1">Completion state with verified checkmark and return-to-login CTA.</p>
+        </a>
+
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Shared Footer -->
+  <footer class="w-full py-4 px-6 text-center text-xs text-slate-500 border-t border-slate-200/50 bg-white/40 backdrop-blur-sm mt-12">
+    <div class="flex flex-wrap items-center justify-center gap-4">
+      <span>© 2025 Capacity Connect. All rights reserved.</span>
+      <span>•</span>
+      <a href="#" class="hover:text-brand hover:underline">Privacy Policy</a>
+      <span>•</span>
+      <a href="#" class="hover:text-brand hover:underline">Terms of Service</a>
+      <span>•</span>
+      <a href="#" class="hover:text-brand hover:underline">Help Center</a>
+    </div>
+  </footer>
+</body>
+</html>

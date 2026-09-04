@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Capacity Connect - Course & Quiz Player</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <!-- Material Symbols Icons -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              DEFAULT: '#00236f',
+              dark: '#001952',
+              light: '#1e3a8a',
+              subtle: '#eff4ff',
+            }
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="min-h-screen bg-slate-100 flex flex-col justify-between font-sans relative overflow-x-hidden">
+  <!-- Subtle Office / Workspace Blurred Backdrop -->
+  <div class="fixed inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-100 via-slate-100 to-slate-200 -z-10"></div>
+  <div class="fixed inset-0 backdrop-blur-3xl -z-10"></div>
+
+  <!-- Player Header -->
+  <header class="w-full sticky top-0 z-30 border-b border-slate-200/70 bg-white/90 backdrop-blur-md">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
+      <div class="flex items-center gap-4">
+        <a
+          href="employee-dashboard.html"
+          class="flex items-center gap-1 text-slate-600 hover:text-brand text-xs font-semibold px-2.5 py-1.5 rounded-lg hover:bg-slate-100 transition"
+        >
+          <span class="material-symbols-outlined text-base">arrow_back</span>
+          <span class="hidden sm:inline">Back to Dashboard</span>
+        </a>
+        <div class="h-5 w-px bg-slate-200 hidden sm:block"></div>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="text-[10px] font-bold uppercase tracking-wider bg-brand-subtle text-brand px-2 py-0.5 rounded">Architecture 301</span>
+            <span class="text-xs text-slate-400 hidden md:inline">Module 3: Scalability Patterns</span>
+          </div>
+          <h1 class="text-sm font-bold text-slate-900 truncate max-w-xs sm:max-w-md">
+            Cloud Infrastructure & High-Availability Scaling
+          </h1>
+        </div>
+      </div>
+
+      <!-- Right Header Actions -->
+      <div class="flex items-center gap-3">
+        <div class="hidden sm:flex items-center gap-2 text-xs">
+          <span class="text-slate-500">Progress:</span>
+          <span class="font-bold text-brand">68%</span>
+          <div class="w-20 h-2 bg-slate-100 rounded-full overflow-hidden">
+            <div class="h-full bg-brand rounded-full" style="width: 68%"></div>
+          </div>
+        </div>
+        <button
+          type="button"
+          onclick="toggleCompletion()"
+          id="btnComplete"
+          class="flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-brand hover:bg-brand-dark text-white text-xs font-semibold shadow-sm transition cursor-pointer"
+        >
+          <span class="material-symbols-outlined text-sm">check</span>
+          <span>Mark Lesson Complete</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Player Stage & Syllabus Split -->
+  <main class="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-6">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
+
+      <!-- Left Column: Video Player & Interactive Tabs (2 Columns) -->
+      <div class="lg:col-span-2 space-y-6">
+        
+        <!-- Video Screen Mockup -->
+        <div class="bg-slate-900 rounded-2xl shadow-xl overflow-hidden relative aspect-video flex flex-col justify-between border border-slate-800 group">
+          <!-- Ambient Player Background -->
+          <div class="absolute inset-0 bg-gradient-to-tr from-slate-950 via-slate-900 to-indigo-950 opacity-90"></div>
+          
+          <!-- Mock Diagram on Video screen -->
+          <div class="absolute inset-0 flex items-center justify-center p-8 pointer-events-none">
+            <div class="text-center space-y-3 opacity-90">
+              <div class="w-16 h-16 mx-auto rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center text-white shadow-2xl">
+                <span class="material-symbols-outlined text-4xl">cloud_sync</span>
+              </div>
+              <div class="text-white font-mono text-xs tracking-wider text-slate-300">Active-Active Multi-Region Mesh Replication</div>
+              <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand/40 border border-brand-light/30 text-white text-[11px]">
+                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                <span>Live Telemetry Demonstration</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Video Top Overlay -->
+          <div class="relative z-10 p-4 flex items-center justify-between text-white/90 text-xs bg-gradient-to-b from-black/60 to-transparent">
+            <div class="flex items-center gap-2">
+              <span class="px-2 py-0.5 rounded bg-white/20 font-mono text-[10px]">1080p HD</span>
+              <span class="font-medium">Lesson 3.2: Multi-Region Active-Active Replication</span>
+            </div>
+            <button class="p-1.5 rounded hover:bg-white/20 transition"><span class="material-symbols-outlined text-base">settings</span></button>
+          </div>
+
+          <!-- Large Play Button Trigger -->
+          <button
+            onclick="togglePlay()"
+            id="centerPlayBtn"
+            class="relative z-10 m-auto w-16 h-16 rounded-full bg-brand/90 hover:bg-brand text-white flex items-center justify-center shadow-2xl hover:scale-105 transition active:scale-95 cursor-pointer backdrop-blur-sm"
+          >
+            <span class="material-symbols-outlined text-3xl pl-1" id="playIcon">play_arrow</span>
+          </button>
+
+          <!-- Video Player Controls Bar -->
+          <div class="relative z-10 p-4 bg-gradient-to-t from-black/80 to-transparent space-y-2">
+            <!-- Scrubber Track -->
+            <div class="w-full h-1.5 bg-white/20 hover:h-2.5 rounded-full cursor-pointer transition-all relative overflow-hidden">
+              <div class="h-full bg-brand-light rounded-full" style="width: 52%"></div>
+            </div>
+            <div class="flex items-center justify-between text-white text-xs pt-1">
+              <div class="flex items-center gap-3">
+                <button onclick="togglePlay()" class="hover:text-brand-light transition cursor-pointer">
+                  <span class="material-symbols-outlined text-lg" id="controlPlay">play_arrow</span>
+                </button>
+                <button class="hover:text-brand-light transition cursor-pointer">
+                  <span class="material-symbols-outlined text-lg">volume_up</span>
+                </button>
+                <span class="font-mono text-[11px] text-slate-300">14:32 / 28:10</span>
+              </div>
+              <div class="flex items-center gap-3">
+                <span class="px-1.5 py-0.5 rounded bg-white/10 text-[10px] font-semibold cursor-pointer hover:bg-white/20">1.0x</span>
+                <button class="hover:text-brand-light transition cursor-pointer">
+                  <span class="material-symbols-outlined text-lg">closed_caption</span>
+                </button>
+                <button class="hover:text-brand-light transition cursor-pointer">
+                  <span class="material-symbols-outlined text-lg">fullscreen</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Interactive Tabs: Overview vs Quiz vs Resources -->
+        <div class="bg-white/90 backdrop-blur-md rounded-2xl p-6 sm:p-8 border border-white/60 shadow-md">
+          <div class="flex items-center gap-3 border-b border-slate-200 pb-3 mb-6">
+            <button
+              onclick="switchTab('notes')"
+              id="tabBtnNotes"
+              class="px-3.5 py-1.5 rounded-lg text-xs font-bold bg-brand text-white transition cursor-pointer"
+            >
+              Lesson Notes & Objectives
+            </button>
+            <button
+              onclick="switchTab('quiz')"
+              id="tabBtnQuiz"
+              class="px-3.5 py-1.5 rounded-lg text-xs font-semibold text-slate-600 hover:text-brand hover:bg-slate-100 transition cursor-pointer flex items-center gap-1.5"
+            >
+              <span class="material-symbols-outlined text-sm">quiz</span>
+              <span>Knowledge Check Quiz</span>
+              <span class="px-1.5 py-0.2 rounded-full bg-blue-100 text-brand text-[10px] font-bold">3 Questions</span>
+            </button>
+            <button
+              onclick="switchTab('resources')"
+              id="tabBtnResources"
+              class="px-3.5 py-1.5 rounded-lg text-xs font-semibold text-slate-600 hover:text-brand hover:bg-slate-100 transition cursor-pointer"
+            >
+              Architecture Blueprints
+            </button>
+          </div>
+
+          <!-- Tab Content 1: Lesson Notes -->
+          <div id="tabNotes" class="space-y-4 text-slate-700 text-sm leading-relaxed">
+            <div class="flex items-center gap-3 p-3 rounded-xl bg-slate-50 border border-slate-100">
+              <div class="w-10 h-10 rounded-full bg-brand text-white flex items-center justify-center font-bold text-xs shrink-0">
+                AT
+              </div>
+              <div>
+                <div class="text-xs font-bold text-slate-900">Dr. Aris Thorne • Principal Cloud Systems Architect</div>
+                <div class="text-[11px] text-slate-500">Curriculum Lead for Distributed Enterprise Capacity</div>
+              </div>
+            </div>
+
+            <h3 class="font-bold text-slate-900 text-base">Key Architecture Takeaways</h3>
+            <p>
+              In this module, we examine how cross-region active-active architectures distribute traffic load during peak demand periods, maintaining an SLA of 99.999% availability.
+            </p>
+            <ul class="list-disc pl-5 space-y-1.5 text-xs text-slate-600">
+              <li><strong>Anycast DNS Routing:</strong> Directs users to the geolocated edge PoP with the lowest latency ping.</li>
+              <li><strong>Conflict Resolution (CRDTs):</strong> How concurrent writes across primary regions reconcile without distributed locking bottlenecks.</li>
+              <li><strong>Circuit Breaker Cascades:</strong> Preventing brownouts by shedding non-essential load when CPU capacity utilization exceeds 85%.</li>
+            </ul>
+
+            <div class="p-4 rounded-xl bg-blue-50/60 border border-blue-100 flex items-start gap-3 text-xs text-slate-700 mt-4">
+              <span class="material-symbols-outlined text-brand text-lg">lightbulb</span>
+              <p>
+                <strong>Pro-Tip for Exam:</strong> Pay special attention to consensus algorithms (Raft vs Paxos) regarding quorum requirements during partition splits.
+              </p>
+            </div>
+          </div>
+
+          <!-- Tab Content 2: Interactive Quiz Component -->
+          <div id="tabQuiz" class="hidden space-y-6">
+            <div class="flex items-center justify-between p-4 rounded-xl bg-blue-50/70 border border-blue-200/60">
+              <div>
+                <h3 class="text-sm font-bold text-brand">Module 3 Knowledge Check</h3>
+                <p class="text-xs text-slate-600">Pass this 3-question quiz with 100% to unlock Module 4.</p>
+              </div>
+              <div id="quizBadge" class="text-xs font-bold px-2.5 py-1 rounded-full bg-white text-brand border border-brand/20">
+                Score: 0 / 3
+              </div>
+            </div>
+
+            <form id="quizForm" onsubmit="submitQuiz(event)" class="space-y-6 text-xs">
+              <!-- Question 1 -->
+              <div class="p-4 rounded-xl bg-slate-50 border border-slate-200/80 space-y-3" id="q1Box">
+                <p class="font-bold text-slate-900 text-sm">
+                  1. Which protocol guarantees consistency and partition tolerance during multi-region database failover?
+                </p>
+                <div class="space-y-2">
+                  <label class="flex items-center gap-2.5 p-2 rounded-lg hover:bg-white cursor-pointer border border-transparent hover:border-slate-200">
+                    <input type="radio" name="q1" value="A" class="text-brand focus:ring-brand" />
+                    <span>Single-node SQLite with local journaling</span>
+                  </label>
+                  <label class="flex items-center gap-2.5 p-2 rounded-lg hover:bg-white cursor-pointer border border-transparent hover:border-slate-200">
+                    <input type="radio" name="q1" value="B" class="text-brand focus:ring-brand" />
+                    <span>Distributed Consensus Quorum (e.g. Raft algorithm)</span>
+                  </label>
+                  <label class="flex items-center gap-2.5 p-2 rounded-lg hover:bg-white cursor-pointer border border-transparent hover:border-slate-200">
+                    <input type="radio" name="q1" value="C" class="text-brand focus:ring-brand" />
+                    <span>Simple Round-Robin DNS without health checking</span>
+                  </label>
+                </div>
+                <div class="hidden text-[11px] p-2 rounded feedback-msg"></div>
+              </div>
+
+              <!-- Question 2 -->
+              <div class="p-4 rounded-xl bg-slate-50 border border-slate-200/80 space-y-3" id="q2Box">
+                <p class="font-bold text-slate-900 text-sm">
+                  2. What is the primary purpose of a Circuit Breaker pattern in high-capacity microservices?
+                </p>
+                <div class="space-y-2">
+                  <label class="flex items-center gap-2.5 p-2 rounded-lg hover:bg-white cursor-pointer border border-transparent hover:border-slate-200">
+                    <input type="radio" name="q2" value="A" class="text-brand focus:ring-brand" />
+                    <span>Prevent cascading failures by failing fast when downstream services become unresponsive</span>
+                  </label>
+                  <label class="flex items-center gap-2.5 p-2 rounded-lg hover:bg-white cursor-pointer border border-transparent hover:border-slate-200">
+                    <input type="radio" name="q2" value="B" class="text-brand focus:ring-brand" />
+                    <span>Double the network throughput by disabling TLS encryption</span>
+                  </label>
+                  <label class="flex items-center gap-2.5 p-2 rounded-lg hover:bg-white cursor-pointer border border-transparent hover:border-slate-200">
+                    <input type="radio" name="q2" value="C" class="text-brand focus:ring-brand" />
+                    <span>Store user session passwords in plaintext caches</span>
+                  </label>
+                </div>
+                <div class="hidden text-[11px] p-2 rounded feedback-msg"></div>
+              </div>
+
+              <!-- Question 3 -->
+              <div class="p-4 rounded-xl bg-slate-50 border border-slate-200/80 space-y-3" id="q3Box">
+                <p class="font-bold text-slate-900 text-sm">
+                  3. In the Capacity Connect framework, what indicates optimal server cluster bandwidth utilization?
+                </p>
+                <div class="space-y-2">
+                  <label class="flex items-center gap-2.5 p-2 rounded-lg hover:bg-white cursor-pointer border border-transparent hover:border-slate-200">
+                    <input type="radio" name="q3" value="A" class="text-brand focus:ring-brand" />
+                    <span>Running at 100% CPU capacity with zero headroom</span>
+                  </label>
+                  <label class="flex items-center gap-2.5 p-2 rounded-lg hover:bg-white cursor-pointer border border-transparent hover:border-slate-200">
+                    <input type="radio" name="q3" value="B" class="text-brand focus:ring-brand" />
+                    <span>Targeting 65-75% nominal utilization with autoscaling headroom for unexpected traffic spikes</span>
+                  </label>
+                  <label class="flex items-center gap-2.5 p-2 rounded-lg hover:bg-white cursor-pointer border border-transparent hover:border-slate-200">
+                    <input type="radio" name="q3" value="C" class="text-brand focus:ring-brand" />
+                    <span>Turning off all health monitoring probes</span>
+                  </label>
+                </div>
+                <div class="hidden text-[11px] p-2 rounded feedback-msg"></div>
+              </div>
+
+              <div class="flex items-center justify-between pt-2">
+                <button
+                  type="submit"
+                  class="px-5 py-2.5 rounded-lg bg-brand hover:bg-brand-dark text-white font-bold text-xs shadow-md shadow-brand/20 transition cursor-pointer"
+                >
+                  Submit Answers & Validate
+                </button>
+                <button
+                  type="button"
+                  onclick="resetQuiz()"
+                  class="text-xs text-slate-500 hover:text-brand font-medium"
+                >
+                  Clear Selection
+                </button>
+              </div>
+            </form>
+          </div>
+
+          <!-- Tab Content 3: Resources -->
+          <div id="tabResources" class="hidden space-y-3 text-xs">
+            <h3 class="font-bold text-slate-900 text-sm mb-3">Downloadable Architectural Artifacts</h3>
+            
+            <div class="flex items-center justify-between p-3 rounded-xl bg-slate-50 border border-slate-100">
+              <div class="flex items-center gap-3">
+                <span class="material-symbols-outlined text-brand text-2xl">picture_as_pdf</span>
+                <div>
+                  <div class="font-bold text-slate-900">Multi-Region-Mesh-Architecture-V2.pdf</div>
+                  <div class="text-slate-400 text-[11px]">PDF Document • 4.8 MB</div>
+                </div>
+              </div>
+              <button onclick="alert('Downloading blueprint...')" class="text-brand font-bold hover:underline">Download</button>
+            </div>
+
+            <div class="flex items-center justify-between p-3 rounded-xl bg-slate-50 border border-slate-100">
+              <div class="flex items-center gap-3">
+                <span class="material-symbols-outlined text-indigo-700 text-2xl">code</span>
+                <div>
+                  <div class="font-bold text-slate-900">terraform-mesh-autoscaling-template.zip</div>
+                  <div class="text-slate-400 text-[11px]">Terraform HCL Scripts • 1.2 MB</div>
+                </div>
+              </div>
+              <button onclick="alert('Downloading code template...')" class="text-brand font-bold hover:underline">Download</button>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- Right Column: Course Curriculum Syllabus Sidebar -->
+      <div class="space-y-6">
+        
+        <!-- Syllabus Card -->
+        <div class="bg-white/90 backdrop-blur-md rounded-2xl p-5 sm:p-6 border border-white/60 shadow-md">
+          <div class="flex items-center justify-between mb-4">
+            <div>
+              <h2 class="text-sm font-bold text-brand uppercase tracking-wider">Course Syllabus</h2>
+              <p class="text-[11px] text-slate-500">5 Modules • 18 Total Lessons</p>
+            </div>
+            <span class="text-xs font-bold text-slate-700">12/18 Done</span>
+          </div>
+
+          <div class="space-y-3 text-xs">
+            
+            <!-- Module 1 (Completed) -->
+            <div class="rounded-xl border border-slate-200/80 overflow-hidden bg-slate-50/50">
+              <div class="p-3 font-semibold text-slate-800 flex items-center justify-between bg-slate-100/60">
+                <div class="flex items-center gap-2">
+                  <span class="material-symbols-outlined text-emerald-600 text-base">check_circle</span>
+                  <span>1. Foundational Elasticity</span>
+                </div>
+                <span class="text-[10px] text-slate-400">3/3 Done</span>
+              </div>
+            </div>
+
+            <!-- Module 2 (Completed) -->
+            <div class="rounded-xl border border-slate-200/80 overflow-hidden bg-slate-50/50">
+              <div class="p-3 font-semibold text-slate-800 flex items-center justify-between bg-slate-100/60">
+                <div class="flex items-center gap-2">
+                  <span class="material-symbols-outlined text-emerald-600 text-base">check_circle</span>
+                  <span>2. Edge Caching & CDNs</span>
+                </div>
+                <span class="text-[10px] text-slate-400">4/4 Done</span>
+              </div>
+            </div>
+
+            <!-- Module 3 (Active / Current) -->
+            <div class="rounded-xl border-2 border-brand/30 overflow-hidden bg-white shadow-sm">
+              <div class="p-3 font-bold text-brand flex items-center justify-between bg-brand-subtle">
+                <div class="flex items-center gap-2">
+                  <span class="material-symbols-outlined text-brand text-base">radio_button_checked</span>
+                  <span>3. Multi-Region Scaling</span>
+                </div>
+                <span class="text-[10px] font-bold bg-brand text-white px-2 py-0.5 rounded">In Progress</span>
+              </div>
+              <div class="p-2 space-y-1 divide-y divide-slate-50">
+                <div class="p-2 flex items-center justify-between text-slate-600">
+                  <span class="flex items-center gap-2">
+                    <span class="material-symbols-outlined text-emerald-600 text-sm">check</span>
+                    <span>3.1 Anycast Traffic Steering</span>
+                  </span>
+                  <span class="text-[10px] text-slate-400">18 min</span>
+                </div>
+
+                <div class="p-2 flex items-center justify-between font-bold text-brand bg-brand-subtle/40 rounded-lg">
+                  <span class="flex items-center gap-2">
+                    <span class="material-symbols-outlined text-brand text-sm">play_arrow</span>
+                    <span>3.2 Active-Active Replication</span>
+                  </span>
+                  <span class="text-[10px] text-brand">28 min</span>
+                </div>
+
+                <div class="p-2 flex items-center justify-between text-slate-600">
+                  <span class="flex items-center gap-2">
+                    <span class="material-symbols-outlined text-slate-400 text-sm">quiz</span>
+                    <button onclick="switchTab('quiz')" class="hover:underline text-left">3.3 Knowledge Check Assessment</button>
+                  </span>
+                  <span class="text-[10px] text-slate-400">Quiz</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Module 4 (Upcoming) -->
+            <div class="rounded-xl border border-slate-200/80 overflow-hidden bg-slate-50/50 opacity-75">
+              <div class="p-3 font-semibold text-slate-600 flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                  <span class="material-symbols-outlined text-slate-400 text-base">lock</span>
+                  <span>4. Disaster Recovery & Failover</span>
+                </div>
+                <span class="text-[10px] text-slate-400">4 Lessons</span>
+              </div>
+            </div>
+
+            <!-- Module 5 (Exam) -->
+            <div class="rounded-xl border border-slate-200/80 overflow-hidden bg-slate-50/50 opacity-75">
+              <div class="p-3 font-semibold text-slate-600 flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                  <span class="material-symbols-outlined text-slate-400 text-base">lock</span>
+                  <span>5. Final Architect Exam</span>
+                </div>
+                <span class="text-[10px] text-slate-400">Certification</span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Instructor Support Widget -->
+        <div class="bg-white/90 backdrop-blur-md rounded-2xl p-5 border border-white/60 shadow-sm text-xs space-y-3">
+          <div class="font-bold text-brand flex items-center gap-1.5">
+            <span class="material-symbols-outlined text-base">contact_support</span>
+            <span>Need Help with this Module?</span>
+          </div>
+          <p class="text-slate-500 text-[11px]">
+            Have a question on CRDT algorithms or quorum setups? Post in the engineering cohort forum.
+          </p>
+          <button
+            type="button"
+            onclick="alert('Cohort discussion board opened!')"
+            class="w-full py-2 rounded-lg border border-slate-200 hover:bg-slate-50 text-slate-700 font-semibold transition"
+          >
+            Ask Cohort Mentors
+          </button>
+        </div>
+
+      </div>
+
+    </div>
+  </main>
+
+  <script>
+    let isPlaying = false;
+    function togglePlay() {
+      isPlaying = !isPlaying;
+      const playIcon = document.getElementById('playIcon');
+      const controlPlay = document.getElementById('controlPlay');
+      const centerBtn = document.getElementById('centerPlayBtn');
+      if (isPlaying) {
+        playIcon.textContent = 'pause';
+        controlPlay.textContent = 'pause';
+        centerBtn.classList.add('opacity-30');
+      } else {
+        playIcon.textContent = 'play_arrow';
+        controlPlay.textContent = 'play_arrow';
+        centerBtn.classList.remove('opacity-30');
+      }
+    }
+
+    function toggleCompletion() {
+      const btn = document.getElementById('btnComplete');
+      btn.innerHTML = '<span class="material-symbols-outlined text-sm">done_all</span><span>Completed!</span>';
+      btn.className = 'flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-emerald-600 text-white text-xs font-semibold shadow-sm transition';
+      alert('Lesson 3.2 marked complete! Progress updated to 74%.');
+    }
+
+    function switchTab(tab) {
+      const tNotes = document.getElementById('tabNotes');
+      const tQuiz = document.getElementById('tabQuiz');
+      const tResources = document.getElementById('tabResources');
+
+      const btnNotes = document.getElementById('tabBtnNotes');
+      const btnQuiz = document.getElementById('tabBtnQuiz');
+      const btnResources = document.getElementById('tabBtnResources');
+
+      // Hide all
+      tNotes.classList.add('hidden');
+      tQuiz.classList.add('hidden');
+      tResources.classList.add('hidden');
+
+      // Reset classes
+      [btnNotes, btnQuiz, btnResources].forEach(b => {
+        b.className = 'px-3.5 py-1.5 rounded-lg text-xs font-semibold text-slate-600 hover:text-brand hover:bg-slate-100 transition cursor-pointer';
+      });
+
+      if (tab === 'notes') {
+        tNotes.classList.remove('hidden');
+        btnNotes.className = 'px-3.5 py-1.5 rounded-lg text-xs font-bold bg-brand text-white transition cursor-pointer';
+      } else if (tab === 'quiz') {
+        tQuiz.classList.remove('hidden');
+        btnQuiz.className = 'px-3.5 py-1.5 rounded-lg text-xs font-bold bg-brand text-white transition cursor-pointer flex items-center gap-1.5';
+      } else if (tab === 'resources') {
+        tResources.classList.remove('hidden');
+        btnResources.className = 'px-3.5 py-1.5 rounded-lg text-xs font-bold bg-brand text-white transition cursor-pointer';
+      }
+    }
+
+    function submitQuiz(e) {
+      e.preventDefault();
+      const form = e.target;
+      const q1 = form.elements['q1'] ? form.elements['q1'].value : null;
+      const q2 = form.elements['q2'] ? form.elements['q2'].value : null;
+      const q3 = form.elements['q3'] ? form.elements['q3'].value : null;
+
+      let score = 0;
+
+      // Q1 check (Correct: B)
+      const q1Box = document.getElementById('q1Box');
+      const q1Msg = q1Box.querySelector('.feedback-msg');
+      q1Msg.classList.remove('hidden');
+      if (q1 === 'B') {
+        score++;
+        q1Msg.className = 'text-[11px] p-2 rounded bg-emerald-50 text-emerald-800 border border-emerald-200';
+        q1Msg.textContent = '✓ Correct! Distributed consensus algorithms like Raft guarantee CP characteristics under network partitions.';
+      } else {
+        q1Msg.className = 'text-[11px] p-2 rounded bg-rose-50 text-rose-800 border border-rose-200';
+        q1Msg.textContent = '✗ Incorrect. The correct answer is B: Distributed Consensus Quorum (e.g. Raft).';
+      }
+
+      // Q2 check (Correct: A)
+      const q2Box = document.getElementById('q2Box');
+      const q2Msg = q2Box.querySelector('.feedback-msg');
+      q2Msg.classList.remove('hidden');
+      if (q2 === 'A') {
+        score++;
+        q2Msg.className = 'text-[11px] p-2 rounded bg-emerald-50 text-emerald-800 border border-emerald-200';
+        q2Msg.textContent = '✓ Correct! Circuit breakers stop recurring timeout failures from pulling down the entire microservice ecosystem.';
+      } else {
+        q2Msg.className = 'text-[11px] p-2 rounded bg-rose-50 text-rose-800 border border-rose-200';
+        q2Msg.textContent = '✗ Incorrect. The correct answer is A: Prevent cascading failures by failing fast.';
+      }
+
+      // Q3 check (Correct: B)
+      const q3Box = document.getElementById('q3Box');
+      const q3Msg = q3Box.querySelector('.feedback-msg');
+      q3Msg.classList.remove('hidden');
+      if (q3 === 'B') {
+        score++;
+        q3Msg.className = 'text-[11px] p-2 rounded bg-emerald-50 text-emerald-800 border border-emerald-200';
+        q3Msg.textContent = '✓ Correct! Target 65-75% capacity gives sufficient headroom for resilience.';
+      } else {
+        q3Msg.className = 'text-[11px] p-2 rounded bg-rose-50 text-rose-800 border border-rose-200';
+        q3Msg.textContent = '✗ Incorrect. The correct answer is B: 65-75% nominal utilization with autoscaling headroom.';
+      }
+
+      const badge = document.getElementById('quizBadge');
+      badge.textContent = `Score: ${score} / 3`;
+      if (score === 3) {
+        badge.className = 'text-xs font-bold px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-300';
+        alert('Congratulations! You scored 3/3 and unlocked Module 4!');
+      } else {
+        badge.className = 'text-xs font-bold px-2.5 py-1 rounded-full bg-amber-50 text-amber-700 border border-amber-300';
+      }
+    }
+
+    function resetQuiz() {
+      document.getElementById('quizForm').reset();
+      document.querySelectorAll('.feedback-msg').forEach(el => el.classList.add('hidden'));
+      const badge = document.getElementById('quizBadge');
+      badge.textContent = 'Score: 0 / 3';
+      badge.className = 'text-xs font-bold px-2.5 py-1 rounded-full bg-white text-brand border border-brand/20';
+    }
+  </script>
+
+  <!-- Shared Footer -->
+  <footer class="w-full py-4 px-6 text-center text-xs text-slate-500 border-t border-slate-200/50 bg-white/40 backdrop-blur-sm mt-12">
+    <div class="flex flex-wrap items-center justify-center gap-4">
+      <span>© 2025 Capacity Connect. All rights reserved.</span>
+      <span>•</span>
+      <a href="#" class="hover:text-brand hover:underline">Privacy Policy</a>
+      <span>•</span>
+      <a href="#" class="hover:text-brand hover:underline">Terms of Service</a>
+      <span>•</span>
+      <a href="#" class="hover:text-brand hover:underline">Help Center</a>
+    </div>
+  </footer>
+</body>
+</html>
