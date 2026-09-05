@@ -129,6 +129,179 @@ async function callLLMAPI(prompt, systemPrompt = '', schema = null) {
 }
 
 // ============================================================
+// Master Curriculum Map
+// Maps skill keywords to courses that address those gaps.
+// Used for dynamic course assignment based on missing skills.
+// ============================================================
+
+const CURRICULUM_MAP = [
+  {
+    courseId: 1,
+    title: 'Cloud Infrastructure & High-Availability Scaling',
+    category: 'Cloud Architecture',
+    skills: [
+      'cloud', 'aws', 'azure', 'gcp', 'kubernetes', 'docker', 'load balancing',
+      'scaling', 'high availability', 'ha', 'multi-region', 'failover',
+      'auto-scaling', 'resilience', 'circuit breaker', 'envoy', 'resilience4j'
+    ],
+    addressGap: (missing) =>
+      `Missing cloud architecture, scaling, or high-availability skills needed for ${missing}`
+  },
+  {
+    courseId: 2,
+    title: 'Enterprise Data Governance & ISO 27001 Security',
+    category: 'Security & Compliance',
+    skills: [
+      'security', 'iso 27001', 'compliance', 'rbac', 'encryption',
+      'zero trust', 'audit', 'governance', 'data protection', 'cryptography',
+      'kms', 'key management', 'incident response', 'penetration testing'
+    ],
+    addressGap: (missing) =>
+      `Missing security/compliance or governance skills needed for ${missing}`
+  },
+  {
+    courseId: 3,
+    title: 'Distributed Systems Design & Microservices Engineering',
+    category: 'Software Engineering',
+    skills: [
+      'microservices', 'saga', 'distributed systems', 'kafka', 'paxos',
+      'raft', 'opentelemetry', 'event-driven', 'event sourcing',
+      'domain-driven design', 'ddd', 'consensus', 'distributed transactions',
+      'observability', 'tracing'
+    ],
+    addressGap: (missing) =>
+      `Missing distributed systems or microservices skills needed for ${missing}`
+  }
+];
+
+// ============================================================
+// Input Validation
+// ============================================================
+
+function looksLikeGibberish(text) {
+  if (!text || typeof text !== 'string') return true;
+  const cleaned = text.trim();
+  if (cleaned.length < 20) return true;
+
+  const words = cleaned.split(/\s+/).filter(w => w.length > 0);
+  if (words.length < 3) return true;
+
+  const lower = cleaned.toLowerCase();
+  const keyboardRows = ['qwertyuiop', 'asdfghjkl', 'zxcvbnm'];
+  const rowHits = keyboardRows.reduce((count, row) => {
+    let hits = 0;
+    for (let i = 0; i < row.length - 2; i++) {
+      if (lower.includes(row.substring(i, i + 3))) hits++;
+    }
+    return count + hits;
+  }, 0);
+  if (rowHits >= 3) return true;
+
+  const repeatedChars = (cleaned.match(/(.)\1{4,}/g) || []).length;
+  if (repeatedChars > 5) return true;
+
+  const hasSomeAlpha = words.some(w => /[a-zA-Z]{2,}/.test(w));
+  if (!hasSomeAlpha) return true;
+
+  const randomCharRatio = (cleaned.match(/[^a-zA-Z0-9\s.,!?'"-]/g) || []).length / cleaned.length;
+  if (randomCharRatio > 0.4) return true;
+
+  return false;
+}
+
+// ============================================================
+// Skill Extraction Helpers
+// ============================================================
+
+function extractSkillsFromText(text) {
+  const lower = text.toLowerCase();
+  const found = new Set();
+
+  CURRICULUM_MAP.forEach(course => {
+    course.skills.forEach(skill => {
+      if (lower.includes(skill)) {
+        found.add(skill);
+      }
+    });
+  });
+
+  const genericTech = [
+    'python', 'javascript', 'java', 'c++', 'c#', 'go', 'rust', 'typescript',
+    'react', 'vue', 'angular', 'node.js', 'express', 'django', 'flask',
+    'sql', 'nosql', 'mongodb', 'postgresql', 'mysql', 'redis',
+    'git', 'ci/cd', 'agile', 'scrum', 'linux', 'bash', 'terraform',
+    'ansible', 'jenkins', 'github actions', 'rest', 'graphql'
+  ];
+
+  genericTech.forEach(tech => {
+    if (lower.includes(tech)) {
+      found.add(tech);
+    }
+  });
+
+  return Array.from(found);
+}
+
+function identifyMissingSkills(detectedSkills, targetRole) {
+  const roleLower = (targetRole || '').toLowerCase();
+  const roleSkillMap = {
+    'cloud architect': ['cloud', 'aws', 'azure', 'gcp', 'kubernetes', 'docker', 'high availability', 'scaling', 'load balancing', 'terraform'],
+    'security engineer': ['security', 'iso 27001', 'compliance', 'zero trust', 'encryption', 'rbac', 'audit'],
+    'devops engineer': ['kubernetes', 'docker', 'ci/cd', 'terraform', 'ansible', 'jenkins', 'monitoring'],
+    'software engineer': ['microservices', 'distributed systems', 'rest', 'graphql', 'git', 'agile'],
+    'data engineer': ['sql', 'nosql', 'etl', 'kafka', 'data governance'],
+    'backend engineer': ['node.js', 'python', 'java', 'sql', 'microservices', 'rest', 'git']
+  };
+
+  const required = roleSkillMap[roleLower] || [
+    'cloud', 'security', 'microservices', 'kubernetes', 'docker',
+    'ci/cd', 'git', 'sql', 'rest', 'agile'
+  ];
+
+  const detectedLower = detectedSkills.map(s => s.toLowerCase());
+  return required.filter(skill => !detectedLower.includes(skill));
+}
+
+function assignCoursesForMissingSkills(missingSkills) {
+  const assigned = [];
+  const assignedCourseIds = new Set();
+
+  missingSkills.forEach(skill => {
+    const skillLower = skill.toLowerCase();
+    CURRICULUM_MAP.forEach(course => {
+      if (!assignedCourseIds.has(course.courseId)) {
+        const matches = course.skills.some(s => skillLower.includes(s) || s.includes(skillLower));
+        if (matches) {
+          assignedCourseIds.add(course.courseId);
+          assigned.push({
+            course_id: `COURSE-${String(course.courseId).padStart(3, '0')}`,
+            title: course.title,
+            addresses_gap: course.addressGap(skill),
+            quiz_required: true,
+            passing_score: '80%',
+            status: 'Locked until enrolled'
+          });
+        }
+      }
+    });
+  });
+
+  return assigned;
+}
+
+function buildCertificationPath(assignedCourses, targetRole) {
+  const trackName = targetRole
+    ? `Capacity Connect Certified Specialist in ${targetRole}`
+    : 'Capacity Connect Certified Specialist';
+
+  return {
+    track_name: trackName,
+    unlocked: false,
+    unlock_condition: 'Pass all assigned module quizzes with >= 80%'
+  };
+}
+
+// ============================================================
 // Mock data for fallback mode
 // ============================================================
 
@@ -475,16 +648,29 @@ router.post('/skill-gap-analysis', async (req, res) => {
   try {
     const { resumeText, userId, targetRole, department } = req.body || {};
 
-    if (!resumeText || resumeText.length < 20) {
+    // STEP 1: Input Validation
+    if (!resumeText || typeof resumeText !== 'string') {
       return res.status(400).json({
-        error: 'Validation failed',
-        message: 'resumeText is required (minimum 20 characters)'
+        status: 'Invalid Input',
+        message: 'Please upload a valid resume or paste readable professional experience.'
+      });
+    }
+
+    if (looksLikeGibberish(resumeText)) {
+      return res.status(400).json({
+        status: 'Invalid Input',
+        message: 'Please upload a valid resume or paste readable professional experience.'
       });
     }
 
     const roleContext = targetRole || department || 'enterprise engineering';
 
-    const prompt = `
+    // STEP 2: Extract skills and identify gaps
+    let detectedSkills = [];
+    let missingSkills = [];
+
+    if (GEMINI_API_KEY) {
+      const prompt = `
 You are an AI resume and skill gap analyzer for an enterprise learning platform.
 
 Analyze the following resume/profile text for a ${roleContext} role:
@@ -494,92 +680,70 @@ ${resumeText.substring(0, 4000)}
 --- END RESUME ---
 
 1. Extract all technical skills mentioned (languages, tools, frameworks, platforms, cloud services, methodologies).
-2. Identify skill gaps compared to a comprehensive enterprise engineering competency framework.
-3. Recommend specific courses from these categories: Cloud Architecture, Security & Compliance, DevOps, Distributed Systems, Software Engineering, Data Engineering, AI/ML, Infrastructure.
-4. Suggest an auto-enrollment pathway (ordered list of courses).
+2. Identify skill gaps compared to the target role requirements.
+3. Return ONLY valid JSON with these keys:
+   - detectedSkills: array of strings
+   - missingSkills: array of strings`;
 
-For each recommended course include:
-- courseId (numeric, use values 1-110 where 1-3 are core courses)
-- title
-- category
-- matchScore (0-100, how well this addresses the gap)
-- priority ('high', 'medium', 'low')
-- reason (why this course is recommended)
-
-Also include:
-- detectedSkills (array of strings)
-- missingSkills (array of strings)
-- suggestedEnrollments (array of { courseId, title, pathway })
-
-Return as a JSON object with keys: detectedSkills, missingSkills, recommendedCourses, suggestedEnrollments, summary.`;
-
-    const schema = {
-      type: 'object',
-      properties: {
-        detectedSkills: { type: 'array', items: { type: 'string' } },
-        missingSkills: { type: 'array', items: { type: 'string' } },
-        recommendedCourses: {
-          type: 'array',
-          items: {
-            type: 'object',
-            properties: {
-              courseId: { type: 'integer' },
-              title: { type: 'string' },
-              category: { type: 'string' },
-              matchScore: { type: 'integer', minimum: 0, maximum: 100 },
-              priority: { type: 'string' },
-              reason: { type: 'string' }
-            },
-            required: ['courseId', 'title', 'category', 'matchScore', 'priority', 'reason']
-          }
+      const schema = {
+        type: 'object',
+        properties: {
+          detectedSkills: { type: 'array', items: { type: 'string' } },
+          missingSkills: { type: 'array', items: { type: 'string' } }
         },
-        suggestedEnrollments: {
-          type: 'array',
-          items: {
-            type: 'object',
-            properties: {
-              courseId: { type: 'integer' },
-              title: { type: 'string' },
-              pathway: { type: 'string' }
-            },
-            required: ['courseId', 'title', 'pathway']
-          }
-        },
-        summary: { type: 'string' }
-      },
-      required: ['detectedSkills', 'missingSkills', 'recommendedCourses', 'suggestedEnrollments', 'summary']
-    };
+        required: ['detectedSkills', 'missingSkills']
+      };
 
-    const result = await callLLMAPI(prompt, '', schema);
+      const result = await callLLMAPI(prompt, '', schema);
 
-    if (result.usedMock || !result.data) {
-      return res.json({
-        ...MOCK_SKILL_GAP,
-        detectedSkills: MOCK_SKILL_GAP.detectedSkills,
-        missingSkills: MOCK_SKILL_GAP.missingSkills,
-        recommendedCourses: MOCK_RECOMMENDATIONS,
-        suggestedEnrollments: MOCK_SKILL_GAP.suggestedEnrollments,
-        summary: MOCK_SKILL_GAP.summary,
-        source: 'mock',
-        model: 'fallback',
-        userId: userId || null,
-        error: result.error || null
-      });
+      if (!result.usedMock && result.data) {
+        detectedSkills = result.data.detectedSkills || [];
+        missingSkills = result.data.missingSkills || [];
+      } else {
+        detectedSkills = extractSkillsFromText(resumeText);
+        missingSkills = identifyMissingSkills(detectedSkills, roleContext);
+      }
+    } else {
+      detectedSkills = extractSkillsFromText(resumeText);
+      missingSkills = identifyMissingSkills(detectedSkills, roleContext);
     }
 
+    // STEP 3: Assign ONLY courses that address missing skills
+    const assignedCourses = assignCoursesForMissingSkills(missingSkills);
+    const certificationPath = buildCertificationPath(assignedCourses, targetRole);
+
+    // If no specific courses matched but we have missing skills, assign all relevant courses
+    const finalAssigned = assignedCourses.length > 0
+      ? assignedCourses
+      : CURRICULUM_MAP.map(course => ({
+          course_id: `COURSE-${String(course.courseId).padStart(3, '0')}`,
+          title: course.title,
+          addresses_gap: `General skill gap in ${course.category}`,
+          quiz_required: true,
+          passing_score: '80%',
+          status: 'Locked until enrolled'
+        }));
+
     res.json({
-      ...result.data,
-      source: 'ai',
-      model: GEMINI_MODEL,
-      userId: userId || null
+      status: 'success',
+      learner_id: userId || 'anonymous',
+      detected_skills: detectedSkills,
+      missing_skills: missingSkills,
+      assigned_courses: finalAssigned,
+      certification_path: certificationPath,
+      detectedSkills,
+      missingSkills,
+      recommendedCourses: finalAssigned,
+      suggestedEnrollments: finalAssigned.map(c => ({ courseId: c.course_id, title: c.title, pathway: c.addresses_gap })),
+      summary: `Detected ${detectedSkills.length} skills. Found ${missingSkills.length} skill gaps. Assigned ${finalAssigned.length} targeted course(s).`,
+      source: GEMINI_API_KEY ? 'ai' : 'mock',
+      model: GEMINI_API_KEY ? GEMINI_MODEL : 'fallback'
     });
   } catch (err) {
     console.error('[AI] Skill gap analysis error:', err);
-
-    res.status(200).json({
-      ...MOCK_SKILL_GAP,
-      source: 'mock',
-      model: 'error-fallback',
+    res.status(500).json({
+      status: 'error',
+      message: 'Skill gap analysis failed',
       error: err.message
     });
   }
