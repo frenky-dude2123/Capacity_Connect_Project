@@ -58,12 +58,12 @@ async function getUserById(userId) {
       .from('users')
       .select('*')
       .eq('id', userId)
-      .single();
+      .limit(1);
     if (error) {
       console.error('[Supabase] getUserById error:', error.message);
       return null;
     }
-    return data;
+    return data?.[0] || null;
   } catch (err) {
     console.error('[Supabase] getUserById exception:', err.message);
     return null;
