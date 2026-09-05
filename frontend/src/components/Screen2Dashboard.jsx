@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
 const API_BASE_URL = 'http://localhost:5000/api/user/dashboard';
+const AI_API_URL = 'http://localhost:5000/api/ai';
 
 /**
  * Screen 2: Learner Dashboard Stitch Component
@@ -10,6 +11,9 @@ export default function Screen2Dashboard({ userId = 'u_learner1', onOpenCourse, 
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [aiRecs, setAiRecs] = useState(null);
+  const [aiLoading, setAiLoading] = useState(false);
+  const [aiError, setAiError] = useState(null);
 
   const fetchDashboard = async () => {
     setLoading(true);
@@ -29,6 +33,30 @@ export default function Screen2Dashboard({ userId = 'u_learner1', onOpenCourse, 
   useEffect(() => {
     fetchDashboard();
   }, [userId]);
+
+  const fetchAIRecommendations = async () => {
+    setAiLoading(true);
+    setAiError(null);
+    try {
+      const weakAreas = [
+        { topic: 'Security & Compliance', score: 45, courseId: 2 },
+        { topic: 'Distributed Systems', score: 60, courseId: 3 },
+        { topic: 'Cloud Architecture', score: 68, courseId: 1 }
+      ];
+      const response = await fetch(`${AI_API_URL}/recommendations`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId, weakAreas, numRecommendations: 3 }),
+      });
+      if (!response.ok) throw new Error(`HTTP ${response.status}: AI recommendations failed`);
+      const json = await response.json();
+      setAiRecs(json);
+    } catch (err) {
+      setAiError(err.message || 'Error connecting to AI recommendation service');
+    } finally {
+      setAiLoading(false);
+    }
+  };
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
@@ -203,6 +231,72 @@ export default function Screen2Dashboard({ userId = 'u_learner1', onOpenCourse, 
                 </div>
               ))}
             </div>
+          </div>
+
+          {/* AI Course Recommendations (Topic 9) */}
+          <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-bold text-slate-900 flex items-center gap-2">
+                <span className="text-indigo-600">🤖 AI Recommendations</span>
+              </h3>
+              <button
+                onClick={fetchAIRecommendations}
+                disabled={aiLoading}
+                className={`px-3 py-1.5 rounded-lg text-xs font-bold transition ${
+                  aiLoading
+                    ? 'bg-slate-200 text-slate-400 cursor-not-allowed'
+                    : 'bg-indigo-600 hover:bg-indigo-700 text-white'
+                }`}
+              >
+                {aiLoading ? 'Generating...' : aiRecs ? 'Refresh' : 'Generate with AI'}
+              </button>
+            </div>
+
+            {aiLoading && (
+              <div className="py-10 text-center">
+                <div className="w-8 h-8 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin mx-auto mb-3"></div>
+                <p className="text-sm text-slate-600">AI analyzing weak areas and generating recommendations...</p>
+              </div>
+            )}
+
+            {aiError && !aiLoading && (
+              <p className="text-xs text-amber-600 font-semibold">Using sample data: {aiError}</p>
+            )}
+
+            {!aiLoading && aiRecs && (
+              <div className="space-y-3">
+                <p className={`text-xs font-semibold ${aiRecs.source === 'ai' ? 'text-emerald-600' : 'text-amber-600'}`}>
+                  {aiRecs.source === 'ai' ? 'Powered by Gemini LLM' : 'Using sample recommendations'}
+                </p>
+                <p className="text-xs text-slate-500">{aiRecs.summary}</p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {aiRecs.recommendations?.map((rec) => (
+                    <div key={rec.courseId} className="p-4 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100">
+                      <div className="flex items-center gap-2 mb-2">
+                        <span className="px-2 py-0.5 bg-blue-100 text-blue-800 text-[10px] font-bold rounded">
+                          {rec.category}
+                        </span>
+                        <span className="px-2 py-0.5 bg-slate-200 text-slate-700 text-[10px] font-bold rounded">
+                          {rec.difficulty}
+                        </span>
+                      </div>
+                      <h4 className="text-sm font-bold text-slate-900 mb-1">{rec.title}</h4>
+                      <p className="text-xs text-slate-600 mb-2 line-clamp-2">{rec.reason}</p>
+                      <button
+                        onClick={onOpenCatalog}
+                        className="text-xs font-semibold text-indigo-600 hover:underline text-left"
+                      >
+                        View in Catalog →
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {!aiLoading && !aiRecs && !aiError && (
+              <p className="text-xs text-slate-500">Click "Generate with AI" to get personalized recommendations based on your weak quiz areas.</p>
+            )}
           </div>
         </div>
       )}

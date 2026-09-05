@@ -6,6 +6,7 @@ import Page4Detail from './components/Page4Detail';
 import Page5Player from './components/Page5Player';
 import Screen6Certificate from './components/Screen6Certificate';
 import Screen7Admin from './components/Screen7Admin';
+import Screen8SkillGap from './components/Screen8SkillGap';
 
 export default function App() {
   const [currentScreen, setCurrentScreen] = useState('2');
@@ -107,6 +108,14 @@ export default function App() {
             >
               7: Admin
             </button>
+            <button
+              onClick={() => setCurrentScreen('8')}
+              className={`px-2.5 py-1.5 rounded-lg transition ${
+                currentScreen === '8' ? 'bg-indigo-900 text-white shadow-sm' : 'text-slate-600 hover:text-slate-900'
+              }`}
+            >
+              8: AI Skill Gap
+            </button>
           </div>
 
           {/* Mobile switcher select */}
@@ -123,6 +132,7 @@ export default function App() {
               <option value="5">Page 5: Player ({selectedCourseId})</option>
               <option value="6">Screen 6: Certificate</option>
               <option value="7">Screen 7: Admin</option>
+              <option value="8">Screen 8: AI Skill Gap</option>
             </select>
           </div>
         </div>
@@ -174,6 +184,13 @@ export default function App() {
         {currentScreen === '7' && (
           <Screen7Admin
             onBackToDashboard={() => handleNavigate(2)}
+          />
+        )}
+        {currentScreen === '8' && (
+          <Screen8SkillGap
+            userId={currentUser.id}
+            onBackToDashboard={() => handleNavigate(2)}
+            onEnrollCourse={(courseId) => setSelectedCourseId(courseId)}
           />
         )}
       </main>

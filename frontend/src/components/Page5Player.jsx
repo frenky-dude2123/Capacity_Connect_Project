@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
 const API_BASE_URL = 'http://localhost:5000/api/courses';
+const AI_API_URL = 'http://localhost:5000/api/ai';
 
 /**
  * Page 5: Lesson Player Component (Google Stitch)
@@ -19,6 +20,12 @@ export default function Page5Player({ courseId = 1, onBackToCatalog, onBackToDet
   const [selectedOption, setSelectedOption] = useState(null);
   const [quizSubmitted, setQuizSubmitted] = useState(false);
   const [isCorrect, setIsCorrect] = useState(null);
+
+  // AI Quiz Generator state (Topic 8)
+  const [aiQuiz, setAiQuiz] = useState(null);
+  const [aiLoading, setAiLoading] = useState(false);
+  const [aiError, setAiError] = useState(null);
+  const [aiAnswers, setAiAnswers] = useState([]);
 
   const fetchPlayerData = async (id) => {
     setLoading(true);
@@ -74,6 +81,47 @@ export default function Page5Player({ courseId = 1, onBackToCatalog, onBackToDet
     setSelectedOption(null);
     setQuizSubmitted(false);
     setIsCorrect(null);
+  };
+
+  const generateAIQuiz = async () => {
+    setAiLoading(true);
+    setAiError(null);
+    setAiQuiz(null);
+    setAiAnswers([]);
+    try {
+      const topic = playerData?.title || `Course ${courseId}`;
+      const response = await fetch(`${AI_API_URL}/generate-quiz`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          courseId,
+          numQuestions: 3,
+          topic,
+          difficulty: 'intermediate',
+          readingContent: playerData?.readingContent,
+        }),
+      });
+      if (!response.ok) throw new Error(`HTTP ${response.status}: AI quiz generation failed`);
+      const data = await response.json();
+      setAiQuiz(data);
+    } catch (err) {
+      setAiError(err.message || 'Error connecting to AI quiz service');
+    } finally {
+      setAiLoading(false);
+    }
+  };
+
+  const handleAISelect = (qIdx, ansIdx) => {
+    const newAnswers = [...aiAnswers];
+    newAnswers[qIdx] = ansIdx;
+    setAiAnswers(newAnswers);
+  };
+
+  const aiSubmitted = aiAnswers.length === (aiQuiz?.questions?.length || 0);
+
+  const aiCorrect = (qIdx) => {
+    const q = aiQuiz?.questions?.[qIdx];
+    return aiAnswers[qIdx] !== undefined && aiAnswers[qIdx] === q?.correctIndex;
   };
 
   return (
@@ -300,6 +348,124 @@ export default function Page5Player({ courseId = 1, onBackToCatalog, onBackToDet
                 ) : (
                   <p className="text-xs text-slate-400">No quiz attached to this lesson.</p>
                 )}
+
+                {/* AI Quiz Generator (Topic 8) */}
+                <div className="mt-6 pt-6 border-t border-slate-200 space-y-4">
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
+                      <span>🤖 AI Quiz Generator</span>
+                    </h3>
+                    <button
+                      onClick={generateAIQuiz}
+                      disabled={aiLoading}
+                      className={`px-4 py-2 rounded-lg text-xs font-bold transition ${
+                        aiLoading
+                          ? 'bg-slate-200 text-slate-400 cursor-not-allowed'
+                          : 'bg-indigo-600 hover:bg-indigo-700 text-white'
+                      }`}
+                    >
+                      {aiLoading ? 'Generating...' : 'Generate AI Quiz'}
+                    </button>
+                  </div>
+
+                  {aiError && (
+                    <p className="text-xs text-amber-600 font-semibold">
+                      Using sample questions: {aiError}
+                    </p>
+                  )}
+
+                  {aiQuiz &&
+                    aiQuiz.questions?.map((q, qIdx) => (
+                      <div key={qIdx} className="p-4 rounded-xl border border-slate-200 bg-slate-50">
+                        <div className="flex justify-between items-start mb-3">
+                          <span className="text-xs font-bold text-slate-400 uppercase">
+                            Question {qIdx + 1} of {aiQuiz.count}
+                          </span>
+                          {aiSubmitted && (
+                            <span
+                              className={`px-2.5 py-1 rounded-full text-xs font-bold ${
+                                aiCorrect(qIdx)
+                                  ? 'bg-emerald-100 text-emerald-800'
+                                  : 'bg-red-100 text-red-800'
+                              }`}
+                            >
+                              {aiCorrect(qIdx) ? '✓ Correct' : '✕ Incorrect'}
+                            </span>
+                          )}
+                        </div>
+
+                        <h4 className="text-sm font-semibold text-slate-800 mb-3">
+                          {q.question}
+                        </h4>
+
+                        <div className="space-y-2">
+                          {q.options?.map((opt, idx) => {
+                            const checked = aiAnswers[qIdx] === idx;
+                            const isCorrect = idx === q.correctIndex;
+                            let borderStyle =
+                              'border-slate-200 hover:border-indigo-400 bg-white';
+                            if (aiSubmitted) {
+                              if (isCorrect)
+                                borderStyle =
+                                  'border-emerald-500 bg-emerald-50/70 text-emerald-950 font-semibold';
+                              else if (checked && !isCorrect)
+                                borderStyle = 'border-red-500 bg-red-50/70 text-red-950';
+                            } else if (checked) {
+                              borderStyle = 'border-indigo-700 bg-indigo-50/50';
+                            }
+                            return (
+                              <label
+                                key={idx}
+                                className={`flex items-start gap-3 p-3 rounded-xl border-2 transition cursor-pointer ${borderStyle}`}
+                              >
+                                <input
+                                  type="radio"
+                                  name={`ai-q${qIdx}`}
+                                  disabled={aiSubmitted}
+                                  checked={checked}
+                                  onChange={() => handleAISelect(qIdx, idx)}
+                                  className="mt-1 w-4 h-4 text-indigo-600 focus:ring-indigo-500"
+                                />
+                                <div className="flex-1 text-sm text-slate-800 leading-snug">
+                                  {opt}
+                                </div>
+                              </label>
+                            );
+                          })}
+                        </div>
+
+                        {aiSubmitted && q.explanation && (
+                          <div className="mt-3 p-3 bg-blue-50 rounded-lg border border-blue-200">
+                            <p className="text-xs text-blue-900">
+                              <span className="font-bold">Explanation:</span> {q.explanation}
+                            </p>
+                          </div>
+                        )}
+                      </div>
+                    ))}
+
+                  {aiQuiz && aiSubmitted && (
+                    <div className="mt-4 p-4 bg-indigo-50 rounded-xl border border-indigo-200">
+                      <p className="text-sm font-bold text-indigo-900">
+                        AI Quiz Score:{' '}
+                        {aiQuiz.questions.filter((_, i) => aiCorrect(i)).length} /{' '}
+                        {aiQuiz.questions.length}
+                      </p>
+                      <p className="text-xs text-indigo-700 mt-1">
+                        Source:{' '}
+                        {aiQuiz.source === 'ai'
+                          ? 'Generated by Gemini LLM'
+                          : 'Sample questions (API unavailable)'}
+                      </p>
+                    </div>
+                  )}
+
+                  {!aiLoading && !aiQuiz && !aiError && (
+                    <p className="text-xs text-slate-500">
+                      Click "Generate AI Quiz" to create dynamic questions on this topic.
+                    </p>
+                  )}
+                </div>
               </div>
             )}
           </div>

@@ -1,8 +1,11 @@
+require('dotenv').config();
+
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
 const coursesRouter = require('./routes/courses');
 const coreRouter = require('./routes/core');
+const aiRouter = require('./routes/ai');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -37,11 +40,17 @@ app.get('/', (req, res) => {
       admin: {
         stats: 'GET /api/admin/stats'
       },
-      courses: {
-        catalog: 'GET /api/courses/catalog',
-        detail: 'GET /api/courses/detail/:id',
-        player: 'GET /api/courses/player/:id'
-      }
+       courses: {
+         catalog: 'GET /api/courses/catalog',
+         detail: 'GET /api/courses/detail/:id',
+         player: 'GET /api/courses/player/:id'
+       },
+       ai: {
+         quizGenerator: 'POST /api/ai/generate-quiz',
+         recommendations: 'POST /api/ai/recommendations',
+         skillGapAnalysis: 'POST /api/ai/skill-gap-analysis',
+         health: 'GET /api/ai/health'
+       }
     }
   });
 });
@@ -63,6 +72,9 @@ app.use('/api', coreRouter);
 
 // Mount Courses router for Pages 3, 4, 5
 app.use('/api/courses', coursesRouter);
+
+// Mount AI routes for Topics 8, 9, 10
+app.use('/api/ai', aiRouter);
 
 // 404 handler for undefined API routes or SPA fallback
 app.use((req, res) => {
