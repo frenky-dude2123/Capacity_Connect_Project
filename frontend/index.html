@@ -1409,9 +1409,9 @@
     // ROOT APP
     // ==========================================
     function App() {
-      const [screen, setScreen] = React.useState('2');
+      const [screen, setScreen] = React.useState('1');
       const [courseId, setCourseId] = React.useState(1);
-      const [user, setUser] = React.useState({ id: 'b1febd00-ad1c-50f9-bce9-7cc0e4e4f9b9', name: 'Jane Doe', role: 'trainee' });
+      const [user, setUser] = React.useState(null);
       const [theme, setTheme] = React.useState(getInitialTheme);
 
       const toggleTheme = () => {
@@ -1423,9 +1423,13 @@
         });
       };
 
-      const roleAllowed = (allowedRoles) => allowedRoles.includes(user.role);
+      const roleAllowed = (allowedRoles) => !!user && allowedRoles.includes(user.role);
 
       const navigate = (target) => {
+        if (!user) {
+          setScreen('1');
+          return;
+        }
         const roleMap = {
           trainee: '2',
           trainer: '2',
@@ -1454,7 +1458,7 @@
                 <span className="w-8 h-8 rounded-xl bg-blue-900 text-white flex items-center justify-center font-bold text-xs">CC</span>
                 <div>
                   <span className="font-bold text-sm text-slate-900 dark:text-slate-100">Capacity Connect</span>
-                  <span className="text-[10px] text-slate-400 dark:text-slate-500 block">{user.name} ({user.role})</span>
+                  <span className="text-[10px] text-slate-400 dark:text-slate-500 block">{user ? `${user.name} (${user.role})` : 'Not signed in'}</span>
                 </div>
               </div>
 
@@ -1490,14 +1494,21 @@
 
           <main className="pb-16 bg-slate-100 dark:bg-slate-950 text-slate-900 dark:text-slate-100">
             <ToastContainer />
-            {screen === '1' && <Screen1Auth onAuthSuccess={(d) => { if (d.user) setUser(d.user); const role = d.user?.role; const target = role === 'admin' ? '7' : role === 'trainer' ? '2' : '2'; setScreen(target); }} onNavigate={navigate} />}
-            {screen === '2' && roleAllowed(['trainee', 'trainer', 'admin']) && <Screen2Dashboard userId={user.id} onOpenCourse={(id) => { setCourseId(id); setScreen('5'); }} onOpenCert={(id) => { setCourseId(id); setScreen('6'); }} onOpenCatalog={() => setScreen('3')} />}
-            {screen === '3' && roleAllowed(['trainee', 'trainer', 'admin']) && <Page3Catalog onSelectCourse={(id) => { setCourseId(id); setScreen('4'); }} onLaunchPlayer={(id) => { setCourseId(id); setScreen('5'); }} />}
-            {screen === '4' && roleAllowed(['trainee', 'trainer', 'admin']) && <Page4Detail courseId={courseId} onBack={() => setScreen('3')} onLaunchPlayer={(id) => { setCourseId(id); setScreen('5'); }} />}
-            {screen === '5' && roleAllowed(['trainee', 'trainer', 'admin']) && <Page5Player courseId={courseId} onBack={() => navigate('2')} />}
-            {screen === '6' && roleAllowed(['trainee', 'trainer', 'admin']) && <Screen6Certificate userId={user.id} courseId={courseId} onBack={() => navigate('2')} />}
-            {screen === '7' && roleAllowed(['admin']) && <Screen7Admin onBack={() => navigate('2')} />}
-            {screen === '8' && roleAllowed(['trainee', 'trainer', 'admin']) && <Screen8SkillGap userId={user.id} onBack={() => navigate('2')} onEnrollCourse={(id, title) => { setCourseId(id); alert('Enrolled in ' + title + '. Opening course...'); setScreen('5'); }} />}
+            {screen === '1' && <Screen1Auth onAuthSuccess={(d) => { if (d.user) setUser(d.user); const role = d.user?.role; const target = role === 'admin' ? '7' : '2'; setScreen(target); }} onNavigate={navigate} />}
+            {user && screen === '2' && roleAllowed(['trainee', 'trainer', 'admin']) && <Screen2Dashboard userId={user.id} onOpenCourse={(id) => { setCourseId(id); setScreen('5'); }} onOpenCert={(id) => { setCourseId(id); setScreen('6'); }} onOpenCatalog={() => setScreen('3')} />}
+            {user && screen === '3' && roleAllowed(['trainee', 'trainer', 'admin']) && <Page3Catalog onSelectCourse={(id) => { setCourseId(id); setScreen('4'); }} onLaunchPlayer={(id) => { setCourseId(id); setScreen('5'); }} />}
+            {user && screen === '4' && roleAllowed(['trainee', 'trainer', 'admin']) && <Page4Detail courseId={courseId} onBack={() => setScreen('3')} onLaunchPlayer={(id) => { setCourseId(id); setScreen('5'); }} />}
+            {user && screen === '5' && roleAllowed(['trainee', 'trainer', 'admin']) && <Page5Player courseId={courseId} onBack={() => navigate('2')} />}
+            {user && screen === '6' && roleAllowed(['trainee', 'trainer', 'admin']) && <Screen6Certificate userId={user.id} courseId={courseId} onBack={() => navigate('2')} />}
+            {user && screen === '7' && roleAllowed(['admin']) && <Screen7Admin onBack={() => navigate('2')} />}
+            {user && screen === '8' && roleAllowed(['trainee', 'trainer', 'admin']) && <Screen8SkillGap userId={user.id} onBack={() => navigate('2')} onEnrollCourse={(id, title) => { setCourseId(id); alert('Enrolled in ' + title + '. Opening course...'); setScreen('5'); }} />}
+            {!user && screen !== '1' && (
+              <div className="max-w-xl mx-auto px-4 py-20 text-center">
+                <p className="text-2xl font-extrabold text-slate-900 dark:text-slate-100 mb-2">Not Signed In</p>
+                <p className="text-sm text-slate-600 dark:text-slate-300">Please log in to access your dashboard.</p>
+                <button onClick={() => setScreen('1')} className="mt-4 px-4 py-2 bg-blue-900 text-white rounded-lg text-xs font-bold btn-micro">Go to Login</button>
+              </div>
+            )}
             {(screen === '7' && !roleAllowed(['admin'])) && (
               <div className="max-w-xl mx-auto px-4 py-20 text-center">
                 <p className="text-2xl font-extrabold text-slate-900 dark:text-slate-100 mb-2">Not Authorized</p>
