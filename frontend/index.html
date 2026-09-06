@@ -300,9 +300,9 @@
         { screen: '6', label: 'My Certifications', icon: '🎓' },
       ],
       trainer: [
-        { screen: '9', label: 'Trainer Dashboard', icon: '📋' },
+        { screen: '9', tab: 'roster', label: 'Trainer Dashboard', icon: '📋' },
         { screen: '3', label: 'Course Catalog', icon: '📚' },
-        { screen: '5', label: 'Quiz Questions', icon: '❓' },
+        { screen: '9', tab: 'questions', label: 'Quiz Questions', icon: '❓' },
         { screen: '8', label: 'Skill Gap Scanner', icon: '🤖' },
       ],
       admin: [
@@ -332,14 +332,14 @@
           </div>
           <nav className="flex-1 py-2 space-y-0.5">
             {items.map((item) => {
-              const isActive = user?.role === 'admin'
-                ? (activeTab === item.tab)
-                : (currentScreen === item.screen);
+                const isActive = user?.role === 'admin'
+                  ? (activeTab === item.tab)
+                  : (currentScreen === item.screen && (!item.tab || activeTab === item.tab));
               return (
                 <button
                   key={`${user?.role}-${item.label}`}
                   onClick={() => {
-                    if (user?.role === 'admin' && item.tab) {
+                    if (item.tab) {
                       setActiveTab(item.tab);
                     }
                     onNavigate(item.screen);
@@ -1315,8 +1315,7 @@
     // ==========================================
     // SCREEN 9: TRAINER DASHBOARD (table/list-based, indigo theme)
     // ==========================================
-    function Screen9Trainer({ userId, user, onNavigate }) {
-      const [activeTab, setActiveTab] = React.useState('roster');
+    function Screen9Trainer({ userId, user, onNavigate, activeTab, setActiveTab }) {
       const [students, setStudents] = React.useState([]);
       const [loading, setLoading] = React.useState({ roster: true, questions: true });
       const [questions, setQuestions] = React.useState([]);
@@ -1485,6 +1484,13 @@
         }
       }, [screen, user]);
 
+      // Set default tab per role when user logs in
+      React.useEffect(() => {
+        if (!user) return;
+        if (user.role === 'admin') setActiveAdminTab('pending');
+        if (user.role === 'trainer') setActiveAdminTab('roster');
+      }, [user]);
+
       const themeClass = user ? ROLE_THEMES[user.role] : '';
 
       return (
@@ -1610,7 +1616,7 @@
                   <Sidebar user={user} currentScreen={screen} onNavigate={navigate} activeTab={activeAdminTab} setActiveTab={setActiveAdminTab} />
                 </aside>
                 <div className="flex-1 overflow-y-auto">
-                  <Screen9Trainer userId={user.id} user={user} onNavigate={navigate} />
+                  <Screen9Trainer userId={user.id} user={user} onNavigate={navigate} activeTab={activeAdminTab} setActiveTab={setActiveAdminTab} />
                 </div>
               </div>
             )}
