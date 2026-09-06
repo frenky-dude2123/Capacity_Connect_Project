@@ -164,7 +164,46 @@ on conflict (email) do update set
   subjects = 'ISO 27001, Zero Trust, Security Architecture';
 
 -- =============================================================
--- 7. Related tables (optional — uncomment to extend the schema)
+-- 7. Materials table — Trainer-uploaded content (videos, notes, documents)
+--    Tied to a course and the trainer who uploaded it.
+-- =============================================================
+
+create table if not exists public.materials (
+  id              uuid    primary key default gen_random_uuid(),
+  course_id       bigint  not null,
+  trainer_id      uuid    references public.users(id) on delete cascade,
+  type            text    check (type in ('video', 'notes', 'document'))
+                      not null default 'notes',
+  title           text    not null,
+  description     text,
+  url             text,             -- URL/link for video or document
+  content         text,             -- Text content for notes
+  file_name       text,             -- Original file name if uploaded
+  file_size       integer,
+  mime_type       text,
+  is_active       boolean not null default true,
+  created_at      timestamp with time zone default timezone('utc'::text, now()),
+  updated_at      timestamp with time zone default timezone('utc'::text, now())
+);
+
+create index if not exists materials_course_idx on public.materials (course_id);
+create index if not exists materials_trainer_idx on public.materials (trainer_id);
+create index if not exists materials_type_idx on public.materials (type);
+
+drop trigger if exists materials_updated_at on public.materials;
+create trigger materials_updated_at
+  before update on public.materials
+  for each row
+  execute function public.handle_updated_at();
+
+alter table public.materials enable row level security;
+
+drop policy if exists "Service role can manage all materials" on public.materials;
+create policy "Service role can manage all materials" on public.materials
+  for all using (auth.role() = 'service_role');
+
+-- =============================================================
+-- 8. Related tables (optional — uncomment to extend the schema)
 -- =============================================================
 
 -- Tracks which users are enrolled in which courses, plus progress

@@ -6,6 +6,7 @@ const path = require('path');
 const coursesRouter = require('./routes/courses');
 const coreRouter = require('./routes/core');
 const aiRouter = require('./routes/ai');
+const materialsRouter = require('./routes/materials');
 const { authMiddleware } = require('./lib/supabaseClient');
 
 const app = express();
@@ -54,12 +55,19 @@ app.get('/', (req, res) => {
          detail: 'GET /api/courses/detail/:id',
          player: 'GET /api/courses/player/:id'
        },
-       ai: {
-         quizGenerator: 'POST /api/ai/generate-quiz',
-         recommendations: 'POST /api/ai/recommendations',
-         skillGapAnalysis: 'POST /api/ai/skill-gap-analysis',
-         health: 'GET /api/ai/health'
-       }
+        ai: {
+          quizGenerator: 'POST /api/ai/generate-quiz',
+          recommendations: 'POST /api/ai/recommendations',
+          skillGapAnalysis: 'POST /api/ai/skill-gap-analysis',
+          health: 'GET /api/ai/health'
+        },
+        materials: {
+          courses: 'GET /api/materials/courses (trainer)',
+          myMaterials: 'GET /api/materials/my-materials (trainer)',
+          create: 'POST /api/materials (trainer)',
+          delete: 'DELETE /api/materials/:id (trainer)',
+          courseMaterials: 'GET /api/materials/course/:courseId (trainee, trainer)'
+        }
     }
   });
 });
@@ -85,6 +93,9 @@ app.use('/api/courses', authMiddleware, coursesRouter);
 
 // Mount AI routes for Topics 8, 9, 10 (health check is public via /api/ai/health)
 app.use('/api/ai', aiRouter);
+
+// Mount Materials routes for Trainer Upload + Trainee Content Library
+app.use('/api/materials', authMiddleware, materialsRouter);
 
 // 404 handler for undefined API routes or SPA fallback
 app.use((req, res) => {

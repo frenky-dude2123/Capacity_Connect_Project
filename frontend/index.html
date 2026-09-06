@@ -45,11 +45,11 @@
       --color-primary-bg: 236, 255, 248;   /* emerald-50 */
       --color-primary-border: 185, 233, 227; /* emerald-200 */
     }
-    .theme-trainee .sidebar-bg { background-color: rgb(15 23 42 / 0.6); }
-    .theme-trainee .sidebar-item { color: rgb(148 163 184); }
-    .theme-trainee .sidebar-item-active { background-color: rgb(16 158 142 / 0.15); color: rgb(16 158 142); }
-    .theme-trainee .sidebar-item:hover { background-color: rgb(16 158 142 / 0.1); }
-    .theme-trainee .portal-bg { background-color: #0f172a; }
+    .theme-trainee .sidebar-bg { background-color: #2e1f40; }
+    .theme-trainee .sidebar-item { color: #d8d0ff; }
+    .theme-trainee .sidebar-item-active { background-color: rgba(245, 158, 11, 0.15); color: #f59e0b; }
+    .theme-trainee .sidebar-item:hover { background-color: rgba(252, 226, 204, 0.1); }
+    .theme-trainee .portal-bg { background-color: #2a1b3d; }
 
     /* ===== TRAINER THEME ===== */
     .theme-trainer {
@@ -59,11 +59,11 @@
       --color-primary-bg: 238, 233, 255;  /* indigo-50 */
       --color-primary-border: 199, 201, 234; /* indigo-200 */
     }
-    .theme-trainer .sidebar-bg { background-color: rgb(25 27 40 / 0.8); }
-    .theme-trainer .sidebar-item { color: rgb(148 163 184); }
-    .theme-trainer .sidebar-item-active { background-color: rgb(79 70 229 / 0.15); color: rgb(79 70 229); }
-    .theme-trainer .sidebar-item:hover { background-color: rgb(79 70 229 / 0.1); }
-    .theme-trainer .portal-bg { background-color: #0f172a; }
+    .theme-trainer .sidebar-bg { background-color: #1e2242; }
+    .theme-trainer .sidebar-item { color: #ddd6ff; }
+    .theme-trainer .sidebar-item-active { background-color: rgba(139, 92, 246, 0.15); color: #a78bfa; }
+    .theme-trainer .sidebar-item:hover { background-color: rgba(236, 230, 255, 0.1); }
+    .theme-trainer .portal-bg { background-color: #1e2242; }
 
     /* ===== ADMIN THEME ===== */
     .theme-admin {
@@ -73,16 +73,144 @@
       --color-primary-bg: 255, 245, 245;  /* rose-50 */
       --color-primary-border: 252, 182, 182; /* rose-200 */
     }
-    .theme-admin .sidebar-bg { background-color: rgb(15 23 42); }
-    .theme-admin .sidebar-item { color: rgb(148 163 184 / 70%); }
-    .theme-admin .sidebar-item-active { background-color: rgb(180 27 63 / 0.2); color: rgb(248 113, 137); }
-    .theme-admin .sidebar-item:hover { background-color: rgb(180 27 63 / 0.1); }
-    .theme-admin .portal-bg { background-color: #020617; }
+    .theme-admin .sidebar-bg { background-color: #321a28; }
+    .theme-admin .sidebar-item { color: #ffd6e0; }
+    .theme-admin .sidebar-item-active { background-color: rgba(217, 119, 6, 0.2); color: #fb923c; }
+    .theme-admin .sidebar-item:hover { background-color: rgba(255, 224, 214, 0.1); }
+    .theme-admin .portal-bg { background-color: #1e152e; }
 
-    /* Dark mode adjustments */
-    .dark.theme-trainee .sidebar-bg { background-color: rgb(15 23 42); }
-    .dark.theme-trainer .sidebar-bg { background-color: rgb(15 23 42); }
-    .dark.theme-admin .sidebar-bg { background-color: rgb(15 23 42); }
+    /* ===== DARK MODE: PLUM/MAUVE PALETTE ===== */
+    /* Deep plum/mauve backgrounds, pale lavender-blue text, warm terracotta accents */
+
+    /* Body and main background — deep plum, not black */
+    .dark body { background-color: #1e152e !important; }
+    .dark .theme-wrapper { background-color: #1e152e !important; }
+    .dark .dark\:bg-slate-950 { background-color: #1e152e !important; }
+
+    /* Card/form backgrounds — warm plum, not pure black */
+    .dark .bg-white,
+    .dark .dark\:bg-slate-900 { background-color: #2a1b3d !important; }
+    .dark .dark\:bg-slate-800,
+    .dark .bg-slate-800 { background-color: #322549 !important; }
+    .dark .dark\:bg-slate-700,
+    .dark .bg-slate-700 { background-color: #4a3a6a !important; }
+    .dark .bg-slate-100 { background-color: #322549 !important; }
+    .dark .bg-emerald-50 { background-color: #202d20 !important; }
+
+    /* Text overrides — pale lavendar-blue for strong contrast */
+    .dark .dark\:text-slate-100,
+    .dark .dark\:text-slate-200,
+    .dark .dark\:text-slate-300,
+    .dark .text-slate-100,
+    .dark .text-slate-200,
+    .dark .text-slate-300 { color: #d8d0ff !important; }
+    .dark .dark\:text-slate-400,
+    .dark .text-slate-400 { color: #b8adff !important; }
+    .dark .dark\:text-slate-500,
+    .dark .text-slate-500 { color: #a89bff !important; }
+    .dark .text-slate-700,
+    .dark .dark\:text-slate-600,
+    .dark .text-slate-600,
+    .dark .dark\:text-blue-950,
+    .dark .text-blue-950 { color: #d8d0ff !important; }
+
+    /* Borders — muted plum-purple */
+    .dark .dark\:border-slate-700,
+    .dark .border-slate-700,
+    .dark .dark\:border-slate-200,
+    .dark .border-slate-200 { border-color: #5a4a7a !important; }
+
+    /* ===== SIDEBAR: per-role plum backgrounds with contrasting text ===== */
+
+    /* Trainee: plum with warm undertones, pale lavendar-blue text, amber/terracotta accent */
+    .dark.theme-trainee .sidebar-bg { background-color: #2e1f40 !important; border-color: #5a4a7a !important; }
+    .dark.theme-trainee .sidebar-item { color: #d8d0ff !important; }
+    .dark.theme-trainee .sidebar-item-active { background-color: rgba(245, 158, 11, 0.15) !important; color: #f59e0b !important; }
+    .dark.theme-trainee .sidebar-item:hover { background-color: rgba(252, 226, 204, 0.1) !important; }
+    .dark.theme-trainee .portal-bg { background-color: #2e1f40 !important; }
+
+    /* Trainer: cooler plum/indigo, pale lavendar-blue text, violet accent */
+    .dark.theme-trainer .sidebar-bg { background-color: #1e2242 !important; border-color: #3a4066 !important; }
+    .dark.theme-trainer .sidebar-item { color: #ddd6ff !important; }
+    .dark.theme-trainer .sidebar-item-active { background-color: rgba(139, 92, 246, 0.15) !important; color: #a78bfa !important; }
+    .dark.theme-trainer .sidebar-item:hover { background-color: rgba(236, 230, 255, 0.1) !important; }
+    .dark.theme-trainer .portal-bg { background-color: #1e2242 !important; }
+
+    /* Admin: deep plum-burgundy, pale lavendar-blue with slight pink tint for text, terracotta accent */
+    .dark.theme-admin .sidebar-bg { background-color: #321a28 !important; border-color: #5a3a4a !important; }
+    .dark.theme-admin .sidebar-item { color: #ffd6e0 !important; }
+    .dark.theme-admin .sidebar-item-active { background-color: rgba(217, 119, 6, 0.2) !important; color: #fb923c !important; }
+    .dark.theme-admin .sidebar-item:hover { background-color: rgba(255, 224, 214, 0.1) !important; }
+    .dark.theme-admin .portal-bg { background-color: #1e152e !important; }
+
+    /* ===== INPUT FIELDS: fix text/background merging ===== */
+    .dark input[type="email"],
+    .dark input[type="password"],
+    .dark input[type="text"],
+    .dark input[type="name"],
+    .dark input[type="qualification"],
+    .dark textarea {
+      color: #e0d6ff !important;
+      background-color: #3a2a54 !important;
+      border-color: #5a4a7a !important;
+    }
+    .dark input::placeholder,
+    .dark textarea::placeholder {
+      color: #b8adff !important;
+    }
+
+    /* Progress bar backgrounds */
+    .dark .bg-slate-100 { background-color: #322549 !important; }
+
+    /* Demo buttons text fix — was text-slate-700 (invisible on dark bg) */
+    .dark .btn-micro { color: inherit !important; }
+
+     /* Toast notifications */
+    .dark .dark\:bg-emerald-900 { background-color: #143d30 !important; }
+    .dark .dark\:bg-red-900 { background-color: #451a1a !important; }
+    .dark .dark\:bg-amber-900 { background-color: #42210b !important; }
+    .dark .dark\:bg-indigo-900 { background-color: #2e1e5e !important; }
+    .dark .dark\:bg-blue-900 { background-color: #1e2a5a !important; }
+
+    /* Additional text colors lacking dark variants */
+    .dark .text-blue-900,
+    .dark .dark\:text-blue-900 { color: #d8d0ff !important; }
+    .dark .text-blue-950 { color: #e0d6ff !important; }
+    .dark .text-red-600,
+    .dark .dark\:text-red-600 { color: #fca5a5 !important; }
+    .dark .text-emerald-900 { color: #a7f3d0 !important; }
+    .dark .text-emerald-800 { color: #6ee7b7 !important; }
+    .dark .text-emerald-700 { color: #34d399 !important; }
+    .dark .text-purple-800,
+    .dark .dark\:text-purple-800 { color: #c4b5ff !important; }
+    .dark .text-amber-700 { color: #fcd34d !important; }
+    .dark .text-indigo-900 { color: #a78bfa !important; }
+    .dark .text-teal-900 { color: #99f6e4 !important; }
+    .dark .text-teal-800 { color: #5eeccb !important; }
+    .dark .text-white { color: #f8fafc !important; }
+
+    /* Additional background colors lacking dark variants */
+    .dark .bg-blue-900,
+    .dark .dark\:bg-blue-900 { background-color: #1e2a5a !important; }
+    .dark .bg-blue-950 { background-color: #171f3b !important; }
+    .dark .bg-emerald-50 { background-color: #202d20 !important; }
+    .dark .bg-emerald-100 { background-color: #143d30 !important; }
+    .dark .bg-red-50,
+    .dark .dark\:bg-red-50 { background-color: #451a1a !important; }
+    .dark .bg-amber-100 { background-color: #42210b !important; }
+    .dark .bg-slate-50 { background-color: #2a1b3d !important; }
+    .dark .bg-indigo-100 { background-color: #2e1e5e !important; }
+    .dark .bg-indigo-900 { background-color: #2e1e5e !important; }
+    .dark .bg-indigo-50 { background-color: #322549 !important; }
+    .dark .bg-teal-50 { background-color: #202d20 !important; }
+    .dark .bg-teal-900 { background-color: #143d30 !important; }
+    .dark .bg-purple-800 { background-color: #3a2a54 !important; }
+
+    /* Chart canvas text in dark mode */
+    .dark canvas { filter: invert(1) hue-rotate(180deg) !important; }
+
+    /* Fix placeholder text in dark mode for all inputs */
+    .dark ::placeholder { color: #b8adff !important; opacity: 0.7; }
 
     /*Scrollbar*/
     ::-webkit-scrollbar { width: 6px; }
@@ -98,7 +226,7 @@
   <!-- Chart.js for Admin Analytics -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
 </head>
-<body class="bg-slate-100 dark:bg-slate-950 min-h-screen text-slate-900 dark:text-slate-100 font-sans">
+  <body class="bg-slate-100 dark:bg-[#1e152e] min-h-screen text-slate-900 dark:text-[#d8d0ff] font-sans">
   <div id="root"></div>
 
   <script type="text/babel">
@@ -144,7 +272,7 @@
       return (
         <div className="fixed top-20 right-4 z-[60] space-y-2 w-80">
           {toasts.map(t => (
-            <div key={t.id} className={`${colors[t.type] || colors.success} px-4 py-3 rounded-xl shadow-lg text-xs font-semibold transition-all duration-300`}>
+            <div key={t.id} className={(colors[t.type] || colors.success) + "px-4 py-3 rounded-xl shadow-lg text-xs font-semibold transition-all duration-300"}>
               {t.message}
             </div>
           ))}
@@ -186,6 +314,27 @@
       const progress = loadProgress();
       if (!progress.currentCourseId || !progress.currentLectureId) return null;
       return { courseId: progress.currentCourseId, lectureId: progress.currentLectureId, timestamp: progress.currentTimestamp, completedLectures: progress.completedLectures || [] };
+    }
+
+    // ==========================================
+    // EMBED URL & PROGRESS HELPERS (kept outside JSX
+    // to avoid crashing the in-browser Babel parser)
+    // ==========================================
+    function getEmbedUrl(url) {
+      if (!url) return url;
+      if (url.includes('youtube.com') || url.includes('youtu.be')) {
+        const videoId = url.includes('youtu.be')
+          ? url.split('/').pop()
+          : url.split('v=')[1]?.split('&')[0];
+        return 'https://www.youtube-nocookie.com/embed/' + videoId;
+      }
+      if (url.includes('vimeo.com')) {
+        return 'https://player.vimeo.com/video/' + url.split('/').pop();
+      }
+      return url;
+    }
+    function getProgressPercent(completedCount, totalItems) {
+      return Math.round((completedCount / Math.max(1, totalItems)) * 100);
     }
 
     // ==========================================
@@ -278,6 +427,7 @@
       '7': ['admin'],
       '8': ['trainee', 'trainer'],
       '9': ['trainer'],
+      '10': ['trainee', 'trainer'],
     };
 
     function getRoleScreens(role) {
@@ -296,12 +446,14 @@
       trainee: [
         { screen: '2', label: 'My Dashboard', icon: '📊' },
         { screen: '3', label: 'Course Catalog', icon: '📚' },
+        { screen: '10', label: 'Course Materials', icon: '📁' },
         { screen: '8', label: 'AI Skill Gap Scanner', icon: '🤖' },
         { screen: '6', label: 'My Certifications', icon: '🎓' },
       ],
       trainer: [
         { screen: '9', tab: 'roster', label: 'Trainer Dashboard', icon: '📋' },
         { screen: '3', label: 'Course Catalog', icon: '📚' },
+        { screen: '9', tab: 'upload', label: 'Upload Content', icon: '📤' },
         { screen: '9', tab: 'questions', label: 'Quiz Questions', icon: '❓' },
         { screen: '8', label: 'Skill Gap Scanner', icon: '🤖' },
       ],
@@ -320,7 +472,7 @@
       const items = SIDEBAR_ITEMS[user?.role] || [];
       const roleLabel = user?.role?.charAt(0).toUpperCase() + user?.role?.slice(1) || '';
       return (
-        <div className={`sidebar-bg flex flex-col h-full w-64 border-r border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 overflow-y-auto`}>
+        <div className="sidebar-bg flex flex-col h-full w-64 border-r border-slate-200 dark:border-slate-700 overflow-y-auto">
           <div className="p-4 border-b border-slate-200 dark:border-slate-700 flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-white dark:bg-slate-900 flex items-center justify-center text-xl border border-slate-200 dark:border-slate-700">
               {user?.role === 'trainee' ? '🎓' : user?.role === 'trainer' ? '👩‍🏫' : '🛡️'}
@@ -337,18 +489,14 @@
                   : (currentScreen === item.screen && (!item.tab || activeTab === item.tab));
               return (
                 <button
-                  key={`${user?.role}-${item.label}`}
+                  key={user?.role + '-' + item.label}
                   onClick={() => {
                     if (item.tab) {
                       setActiveTab(item.tab);
                     }
                     onNavigate(item.screen);
                   }}
-                  className={`sidebar-item flex items-center gap-3 px-4 py-2.5 text-xs rounded-lg mx-2 transition-all ${
-                    isActive
-                      ? (user?.role === 'admin' ? 'sidebar-item-active font-semibold' : 'sidebar-item-active font-semibold')
-                      : ''
-                  } btn-micro`}
+                  className={"sidebar-item flex items-center gap-3 px-4 py-2.5 text-xs rounded-lg mx-2 transition-all btn-micro " + (isActive ? 'sidebar-item-active font-semibold' : '')}
                 >
                   <span className="text-base">{item.icon}</span>
                   <span>{item.label}</span>
@@ -377,7 +525,7 @@
       if (!user) return <div className="pt-16">{children}</div>;
 
       return (
-        <div className={`theme-wrapper ${themeClass} flex h-[calc(100vh-64px)] overflow-hidden`}>
+        <div className={"theme-wrapper " + (themeClass) + "flex h-screen overflow-hidden"}>  
           <aside className="hidden md:flex">
             <Sidebar
               user={user}
@@ -387,7 +535,7 @@
               setActiveTab={setActiveTab}
             />
           </aside>
-          <main className={`flex-1 overflow-y-auto portal-bg text-slate-900 dark:text-slate-100`}>
+          <main className="flex-1 overflow-y-auto portal-bg text-slate-900 dark:text-slate-100">
             {children}
           </main>
         </div>
@@ -436,7 +584,7 @@
       return (
         <div className="max-w-xl mx-auto px-4 py-8 md:px-6">
           <div className="text-center mb-6">
-            <span className="px-3 py-1 rounded-full text-xs font-semibold bg-blue-100 text-blue-900">Role Authentication</span>
+             <span className="px-3 py-1 rounded-full text-xs font-semibold bg-blue-100 text-blue-900 dark:bg-indigo-900/30 dark:text-indigo-200">Role Authentication</span>
             <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-slate-100 mt-2">
               {isLogin ? 'Sign In to Capacity Connect' : 'Create Enterprise Account'}
             </h1>
@@ -444,58 +592,58 @@
 
           <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm p-6 sm:p-8">
             <div className="flex bg-slate-100 dark:bg-slate-800 p-1 rounded-xl mb-6 text-xs font-bold">
-              <button onClick={() => setIsLogin(true)} className={`flex-1 py-2 rounded-lg ${isLogin ? 'bg-white dark:bg-slate-900 text-blue-950 shadow-sm' : 'text-slate-500 dark:text-slate-400'}`}>Sign In</button>
-              <button onClick={() => setIsLogin(false)} className={`flex-1 py-2 rounded-lg ${!isLogin ? 'bg-white dark:bg-slate-900 text-blue-950 shadow-sm' : 'text-slate-500 dark:text-slate-400'}`}>Sign Up</button>
+                <button onClick={() => setIsLogin(true)} className={"flex-1 py-2 rounded-lg " + (isLogin ? 'bg-white dark:bg-slate-800 text-blue-950 shadow-sm dark:text-slate-100' : 'text-slate-500 dark:text-slate-400')}>Sign In</button>
+                <button onClick={() => setIsLogin(false)} className={"flex-1 py-2 rounded-lg " + (!isLogin ? 'bg-white dark:bg-slate-800 text-blue-950 shadow-sm dark:text-slate-100' : 'text-slate-500 dark:text-slate-400')}>Sign Up</button>
             </div>
 
             <div className="mb-4 p-3 bg-slate-50 dark:bg-slate-800 rounded-xl flex gap-2">
-              <button onClick={() => { setEmail('jane.doe@enterprise.com'); setPassword('password123'); setIsLogin(true); }} className="px-2.5 py-1 text-xs bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg text-slate-700 btn-micro">🎓 Trainee Demo</button>
-              <button onClick={() => { setEmail('elena.rostova@enterprise.com'); setPassword('trainer123'); setIsLogin(true); }} className="px-2.5 py-1 text-xs bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg text-slate-700 btn-micro">👩‍🏫 Trainer Demo</button>
-              <button onClick={() => { setEmail('admin@capacityconnect.io'); setPassword('admin123'); setIsLogin(true); }} className="px-2.5 py-1 text-xs bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg text-purple-800">🛡️ Admin Demo</button>
+                <button onClick={() => { setEmail('jane.doe@enterprise.com'); setPassword('password123'); setIsLogin(true); }} className="px-2.5 py-1 text-xs bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-slate-700 dark:text-slate-300 btn-micro">🎓 Trainee Demo</button>
+                <button onClick={() => { setEmail('elena.rostova@enterprise.com'); setPassword('trainer123'); setIsLogin(true); }} className="px-2.5 py-1 text-xs bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-slate-700 dark:text-slate-300 btn-micro">👩‍🏫 Trainer Demo</button>
+                <button onClick={() => { setEmail('admin@capacityconnect.io'); setPassword('admin123'); setIsLogin(true); }} className="px-2.5 py-1 text-xs bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-purple-800 dark:text-purple-300 btn-micro">🛡️ Admin Demo</button>
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-4">
-              {!isLogin && <input type="text" required placeholder="Full Name" value={name} onChange={e => setName(e.target.value)} className="w-full px-3.5 py-2 rounded-lg border border-slate-200 dark:border-slate-700 text-sm" />}
-              <input type="email" required placeholder="Email" value={email} onChange={e => setEmail(e.target.value)} className="w-full px-3.5 py-2 rounded-lg border border-slate-200 dark:border-slate-700 text-sm" />
-              <input type="password" required placeholder="Password" value={password} onChange={e => setPassword(e.target.value)} className="w-full px-3.5 py-2 rounded-lg border border-slate-200 dark:border-slate-700 text-sm" />
+               {!isLogin && <input type="text" required placeholder="Full Name" value={name} onChange={e => setName(e.target.value)} className="w-full px-3.5 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm text-slate-900 dark:text-slate-100" />}
+               <input type="email" required placeholder="Email" value={email} onChange={e => setEmail(e.target.value)} className="w-full px-3.5 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm text-slate-900 dark:text-slate-100" />
+               <input type="password" required placeholder="Password" value={password} onChange={e => setPassword(e.target.value)} className="w-full px-3.5 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm text-slate-900 dark:text-slate-100" />
 
               {!isLogin && (
                 <div className="space-y-3">
                   <div>
-                    <label className="block text-xs font-semibold text-slate-700 mb-1">Sign up as</label>
+                    <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Sign up as</label>
                     <div className="flex gap-2">
-                      <button type="button" onClick={() => setSignupRole('trainee')} className={`flex-1 py-2 rounded-lg border-2 text-xs font-black transition ${signupRole === 'trainee' ? 'border-teal-900 bg-teal-50 text-teal-900' : 'border-slate-200 text-slate-600'}`}>Trainee</button>
-                      <button type="button" onClick={() => setSignupRole('trainer')} className={`flex-1 py-2 rounded-lg border-2 text-xs font-black transition ${signupRole === 'trainer' ? 'border-indigo-900 bg-indigo-50 text-indigo-900' : 'border-slate-200 text-slate-600'}`}>Trainer</button>
+                      <button type="button" onClick={() => setSignupRole('trainee')} className={"flex-1 py-2 rounded-lg border-2 text-xs font-black transition " + (signupRole === 'trainee' ? 'border-teal-900 bg-teal-50 dark:bg-teal-900/30 text-teal-800 dark:text-teal-200' : 'border-slate-200 dark:border-slate-600 text-slate-600 dark:text-slate-400')}>Trainee</button>
+                      <button type="button" onClick={() => setSignupRole('trainer')} className={"flex-1 py-2 rounded-lg border-2 text-xs font-black transition " + (signupRole === 'trainer' ? 'border-indigo-900 bg-indigo-50 dark:bg-indigo-900/30 text-indigo-800 dark:text-indigo-200' : 'border-slate-200 dark:border-slate-600 text-slate-600 dark:text-slate-400')}>Trainer</button>
                     </div>
-                    <p className="text-[10px] text-slate-400 mt-1">Admin accounts cannot be self-registered.</p>
+                    <p className="text-[10px] text-slate-400 dark:text-slate-400 mt-1">Admin accounts cannot be self-registered.</p>
                   </div>
                   {signupRole === 'trainee' && (
                     <div className="space-y-2">
-                      <input type="text" placeholder="Qualification (optional)" value={qualification} onChange={e => setQualification(e.target.value)} className="w-full px-3.5 py-2 rounded-lg border border-slate-200 dark:border-slate-700 text-sm" />
-                      <input type="text" placeholder="Skills (comma separated)" value={skills} onChange={e => setSkills(e.target.value)} className="w-full px-3.5 py-2 rounded-lg border border-slate-200 dark:border-slate-700 text-sm" />
+                      <input type="text" placeholder="Qualification (optional)" value={qualification} onChange={e => setQualification(e.target.value)} className="w-full px-3.5 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm text-slate-900 dark:text-slate-100" />
+                      <input type="text" placeholder="Skills (comma separated)" value={skills} onChange={e => setSkills(e.target.value)} className="w-full px-3.5 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm text-slate-900 dark:text-slate-100" />
                     </div>
                   )}
                   {signupRole === 'trainer' && (
                     <div className="space-y-2">
-                      <input type="text" placeholder="Subjects / Skills you can teach" value={subjects} onChange={e => setSubjects(e.target.value)} className="w-full px-3.5 py-2 rounded-lg border border-slate-200 dark:border-slate-700 text-sm" />
+                      <input type="text" placeholder="Subjects / Skills you can teach" value={subjects} onChange={e => setSubjects(e.target.value)} className="w-full px-3.5 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm text-slate-900 dark:text-slate-100" />
                     </div>
                   )}
                 </div>
               )}
 
-              {error && <p className="text-xs text-red-600 font-semibold">{error}</p>}
+              {error && <p className="text-xs text-red-400 font-semibold">{error}</p>}
 
-              <button type="submit" disabled={loading} className="w-full py-2.5 bg-blue-900 text-white rounded-xl text-xs font-black shadow-md btn-micro">
+              <button type="submit" disabled={loading} className="w-full py-2.5 bg-blue-900 hover:bg-blue-800 text-white rounded-xl text-xs font-black shadow-md btn-micro">
                 {loading ? 'Submitting...' : isLogin ? 'Sign In' : 'Create Account'}
               </button>
             </form>
 
             {authData && (
-              <div className="mt-4 p-4 bg-emerald-50 dark:bg-emerald-900/30 border border-emerald-200 rounded-xl text-xs text-emerald-900 space-y-2">
+              <div className="mt-4 p-4 bg-emerald-50 dark:bg-emerald-900/30 border border-emerald-200 dark:border-emerald-800 rounded-xl text-xs text-emerald-900 dark:text-emerald-200 space-y-2">
                 {authData.status === 'pending' ? (
                   <div>
                     <p className="font-bold text-amber-700">⏳ {authData.message || 'Your account is awaiting admin approval.'}</p>
-                    <p className="text-[11px] text-slate-600">You will be able to log in once an admin approves your account.</p>
+                    <p className="text-[11px] text-slate-600 dark:text-slate-400">You will be able to log in once an admin approves your account.</p>
                   </div>
                 ) : (
                   <>
@@ -582,7 +730,7 @@
                     <h2 className="text-lg font-black text-slate-900 dark:text-slate-100">Continue Learning</h2>
                     <p className="text-sm text-slate-600 dark:text-slate-300 mt-1">Resume Lecture {continueWatching.lectureId}: {currentCourse.title}</p>
                     <div className="mt-3 w-full bg-slate-100 dark:bg-slate-800 rounded-full h-2 overflow-hidden">
-                      <div className="bg-teal-900 h-2 rounded-full" style={{ width: `${Math.round((continueWatching.completedLectures.length / Math.max(1, currentCourse.syllabus?.length || 1)) * 100)}%` }}></div>
+                      <div className="bg-teal-900 h-2 rounded-full" style={{ width: getProgressPercent(continueWatching.completedLectures.length, currentCourse.syllabus?.length || 1) + '%' }}></div>
                     </div>
                   </div>
                   <button onClick={() => { setCourseId(continueWatching.courseId); setScreen('5'); }} className="px-5 py-2.5 bg-teal-900 text-white rounded-xl text-xs font-black shadow btn-micro">Resume ▶</button>
@@ -601,7 +749,7 @@
                         <span>Progress</span><span>{c.progressPercent}%</span>
                       </div>
                       <div className="w-full bg-slate-100 dark:bg-slate-800 rounded-full h-2 overflow-hidden">
-                        <div className="bg-teal-900 h-2 rounded-full" style={{ width: `${c.progressPercent}%` }}></div>
+                        <div className="bg-teal-900 h-2 rounded-full" style={{ width: c.progressPercent + '%' }}></div>
                       </div>
                     </div>
                   </div>
@@ -622,9 +770,7 @@
               <button
                 onClick={fetchAIRecommendations}
                 disabled={aiLoading}
-                className={`px-3 py-1.5 rounded-lg text-xs font-black transition ${
-                  aiLoading ? 'bg-slate-200 dark:bg-slate-700 text-slate-400 dark:text-slate-500 cursor-not-allowed' : 'bg-indigo-600 hover:bg-indigo-700 text-white'
-                }`}
+                className={"px-3 py-1.5 rounded-lg text-xs font-black transition " + (aiLoading ? 'bg-slate-200 dark:bg-slate-700 text-slate-400 dark:text-slate-500 cursor-not-allowed' : 'bg-indigo-600 hover:bg-indigo-700 text-white')}
               >
                 {aiLoading ? 'Generating...' : aiRecs ? 'Refresh AI Recs' : 'Generate with AI'}
               </button>
@@ -643,7 +789,7 @@
 
             {!aiLoading && aiRecs && (
               <div className="space-y-3">
-                <p className={`text-xs font-black ${aiRecs.source === 'ai' ? 'text-emerald-600' : 'text-amber-600'}`}>
+                <p className={"text-xs font-black " + (aiRecs.source === 'ai' ? 'text-emerald-600' : 'text-amber-600')}>
                   {aiRecs.source === 'ai' ? 'Powered by Gemini LLM' : 'Using sample recommendations'}
                 </p>
                 <p className="text-xs text-slate-500 dark:text-slate-400">{aiRecs.summary}</p>
@@ -894,8 +1040,8 @@
                         let borderStyle = 'border-slate-200 dark:border-slate-700 hover:border-indigo-400 bg-white dark:bg-slate-900';
                         if (isSelected) borderStyle = 'border-indigo-700 bg-indigo-50 dark:bg-indigo-900/30';
                         return (
-                          <label key={i} className={`flex items-start gap-3 p-3 rounded-xl border-2 transition cursor-pointer ${borderStyle}`}>
-                            <input type="radio" name={`q${currentQuestionIndex}`} disabled={quizFinished} checked={isSelected} onChange={() => handleQuizAnswer(currentQuestionIndex, i)} className="mt-1 w-4 h-4 text-indigo-600" />
+                          <label key={i} className={"flex items-start gap-3 p-3 rounded-xl border-2 transition cursor-pointer " + (borderStyle)}>
+                            <input type="radio" name={"q" + currentQuestionIndex} disabled={quizFinished} checked={isSelected} onChange={() => handleQuizAnswer(currentQuestionIndex, i)} className="mt-1 w-4 h-4 text-indigo-600" />
                             <div className="flex-1 text-sm text-slate-800 dark:text-slate-200 leading-snug">{opt}</div>
                           </label>
                         );
@@ -926,7 +1072,7 @@
                         const isCorrect = userAnswer === q.correctIndex;
                         const isAnswered = userAnswer !== undefined;
                         return (
-                          <div key={i} className={`p-3 rounded-xl border-2 ${isCorrect ? 'border-emerald-500 bg-emerald-50 dark:bg-emerald-900/30' : 'border-red-500 bg-red-50 dark:bg-red-900/30'}`}>
+                          <div key={i} className={"p-3 rounded-xl border-2 " + (isCorrect ? 'border-emerald-500 bg-emerald-50 dark:bg-emerald-900/30' : 'border-red-500 bg-red-50 dark:bg-red-900/30')}>
                             <p className="text-xs font-semibold text-slate-800 dark:text-slate-200 mb-1">Q{i + 1}: {q.question}</p>
                             <p className="text-xs text-slate-600 dark:text-slate-300">Your answer: {isAnswered ? q.options[userAnswer] : 'Not answered'}</p>
                             {!isCorrect && <p className="text-xs text-emerald-700 font-black">Correct answer: {q.options[q.correctIndex]}</p>}
@@ -1095,9 +1241,9 @@
               <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-slate-100 mt-1">Capacity Telemetry</h1>
             </div>
             <div className="flex gap-2">
-              <button onClick={() => setActiveTab('pending')} className={`px-4 py-2 rounded-xl text-xs font-black transition ${activeTab === 'pending' ? 'bg-amber-600 text-white' : 'bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300'}`}>Pending Approvals</button>
-              <button onClick={() => setActiveTab('all')} className={`px-4 py-2 rounded-xl text-xs font-black transition ${activeTab === 'all' ? 'bg-slate-900 text-white' : 'bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300'}`}>All Users</button>
-              <button onClick={() => setActiveTab('directory')} className={`px-4 py-2 rounded-xl text-xs font-black transition ${activeTab === 'directory' ? 'bg-slate-900 text-white' : 'bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300'}`}>User Directory</button>
+              <button onClick={() => setActiveTab('pending')} className={"px-4 py-2 rounded-xl text-xs font-black transition " + (activeTab === 'pending' ? 'bg-amber-600 text-white' : 'bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300')}>Pending Approvals</button>
+              <button onClick={() => setActiveTab('all')} className={"px-4 py-2 rounded-xl text-xs font-black transition " + (activeTab === 'all' ? 'bg-slate-900 text-white' : 'bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300')}>All Users</button>
+              <button onClick={() => setActiveTab('directory')} className={"px-4 py-2 rounded-xl text-xs font-black transition " + (activeTab === 'directory' ? 'bg-slate-900 text-white' : 'bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300')}>User Directory</button>
               <button onClick={onBack} className="px-4 py-2 bg-slate-900 text-white rounded-xl text-xs font-black btn-micro">← Back to Learner View</button>
             </div>
           </div>
@@ -1226,7 +1372,7 @@
         <div className="max-w-5xl mx-auto px-4 py-8 space-y-8">
           <div className="flex items-center justify-between pb-6 border-b border-slate-200 dark:border-slate-700">
             <div>
-              <span className={`px-2.5 py-0.5 rounded-full text-xs font-black ${user?.role === 'trainee' ? 'bg-teal-100 text-teal-900' : 'bg-indigo-100 text-indigo-900'}`}>AI Skill Gap Scanner</span>
+              <span className={"px-2.5 py-0.5 rounded-full text-xs font-black " + (user?.role === 'trainee' ? 'bg-teal-100 text-teal-900' : 'bg-indigo-100 text-indigo-900')}>AI Skill Gap Scanner</span>
               <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-slate-100 mt-2">Resume / Skill Gap Analysis</h1>
               <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 mt-1">Upload your profile or paste resume text for AI-powered skill gap analysis and personalized pathway recommendations.</p>
             </div>
@@ -1244,7 +1390,7 @@
               <textarea value={resumeText} onChange={(e) => setResumeText(e.target.value)} placeholder="Paste your resume or profile text here..." className="w-full h-32 px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-sm resize-y focus:ring-2 focus:ring-indigo-300" disabled={scanning} />
             </div>
             {error && <p className="text-xs text-red-600 font-black">{error}</p>}
-            <button onClick={handleScan} disabled={scanning || !resumeText.trim()} className={`px-6 py-2.5 rounded-xl text-xs font-black shadow transition ${scanning || !resumeText.trim() ? 'bg-slate-200 dark:bg-slate-700 text-slate-400 cursor-not-allowed' : 'bg-indigo-600 hover:bg-indigo-700 text-white'}`}>
+            <button onClick={handleScan} disabled={scanning || !resumeText.trim()} className={"px-6 py-2.5 rounded-xl text-xs font-black shadow transition " + (scanning || !resumeText.trim() ? 'bg-slate-200 dark:bg-slate-700 text-slate-400 cursor-not-allowed' : 'bg-indigo-600 hover:bg-indigo-700 text-white')}>
               {scanning ? 'Scanning with AI...' : 'Scan for Skills & Recommend Pathways'}
             </button>
           </div>
@@ -1256,19 +1402,41 @@
               <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm p-6">
                 <div className="flex items-center justify-between mb-4">
                   <h2 className="text-lg font-black text-slate-900 dark:text-slate-100">Scan Results</h2>
-                  <span className={`text-xs px-2 py-1 rounded ${result.source === 'ai' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}`}>{result.source === 'ai' ? 'AI Generated' : 'Sample Data'}</span>
+                  <span className={"text-xs px-2 py-1 rounded " + (result.source === 'ai' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800')}>{result.source === 'ai' ? 'AI Generated' : 'Sample Data'}</span>
                 </div>
                 <p className="text-sm text-slate-600 dark:text-slate-300 mb-4">{result.summary}</p>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
                     <h3 className="text-sm font-black text-slate-800 dark:text-slate-200 mb-2">Detected Skills ({result.detectedSkills?.length || 0})</h3>
                     <div className="flex flex-wrap gap-1.5">{result.detectedSkills?.map((s, i) => (<span key={i} className="px-2.5 py-1 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-800 text-xs rounded-lg">{s}</span>))}</div>
+                    {result.unrecognized_skills && result.unrecognized_skills.length > 0 && (
+                      <div className="mt-2 pt-2 border-t border-slate-200 dark:border-slate-700">
+                        <h4 className="text-[10px] font-black uppercase text-slate-400 dark:text-slate-500 mb-1">Uncategorized Skills</h4>
+                        <div className="flex flex-wrap gap-1.5">{result.unrecognized_skills.map((s, i) => (<span key={i} className="px-2 py-0.5 bg-slate-200 dark:bg-slate-700 text-slate-700 text-[10px] font-black rounded">{s}</span>))}</div>
+                      </div>
+                    )}
                   </div>
                   <div>
                     <h3 className="text-sm font-black text-slate-800 dark:text-slate-200 mb-2">Missing Skills ({result.missingSkills?.length || 0})</h3>
                     <div className="flex flex-wrap gap-1.5">{result.missingSkills?.map((s, i) => (<span key={i} className="px-2.5 py-1 bg-red-50 dark:bg-red-900/30 text-red-800 text-xs rounded-lg">{s}</span>))}</div>
+                    {result.missing_skills_without_courses && result.missing_skills_without_courses.length > 0 && (
+                      <div className="mt-2 pt-2 border-t border-slate-200 dark:border-slate-700">
+                        <h4 className="text-[10px] font-black uppercase text-slate-500 dark:text-slate-400 mb-1">No matching course yet</h4>
+                        <div className="flex flex-wrap gap-1.5">{result.missing_skills_without_courses.map((s, i) => (<span key={i} className="px-2 py-0.5 bg-amber-100 text-amber-800 text-[10px] font-black rounded">{s}</span>))}</div>
+                      </div>
+                    )}
                   </div>
                 </div>
+                {result.skill_categories && result.skill_categories.length > 0 && (
+                  <div className="mt-4 pt-4 border-t border-slate-200 dark:border-slate-700">
+                    <h3 className="text-xs font-black uppercase text-slate-400 dark:text-slate-500 mb-2">Skill Categories Detected</h3>
+                    <div className="flex flex-wrap gap-1.5">
+                      {result.skill_categories.map((c, i) => (
+                        <span key={i} className="px-2.5 py-1 bg-indigo-100 dark:bg-indigo-900/30 text-indigo-800 text-xs rounded-lg">{c}</span>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
 
               <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm p-6">
@@ -1279,13 +1447,13 @@
                         <div className="flex-1">
                           <div className="flex items-center gap-2">
                             <span className="px-2 py-0.5 bg-slate-100 dark:bg-slate-800 text-slate-700 text-[10px] font-black rounded">{c.category}</span>
-                            <span className={`px-2 py-0.5 text-[10px] font-black rounded ${priorityColor}`}>{c.priority}</span>
+                            <span className={"px-2 py-0.5 text-xs font-black rounded " + priorityColor}>{c.priority}</span>
                             <span className="text-[10px] text-slate-400 dark:text-slate-500">Match: {c.matchScore}%</span>
                           </div>
                           <h4 className="text-sm font-black text-slate-900 dark:text-slate-100 mt-1">{c.title}</h4>
                           <p className="text-xs text-slate-600 dark:text-slate-300 mt-1">{c.reason}</p>
                         </div>
-                        <button onClick={() => handleEnroll(c.courseId, c.title)} disabled={isEnrolled} className={`px-3.5 py-1.5 rounded-lg text-xs font-black transition btn-micro ${isEnrolled ? 'bg-slate-100 dark:bg-slate-800 text-slate-400 cursor-not-allowed' : 'bg-indigo-600 hover:bg-indigo-700 text-white'}`}>
+                        <button onClick={() => handleEnroll(c.courseId, c.title)} disabled={isEnrolled} className={"px-3.5 py-1.5 rounded-lg text-xs font-black transition btn-micro " + (isEnrolled ? 'bg-slate-100 dark:bg-slate-800 text-slate-400 cursor-not-allowed' : 'bg-indigo-600 hover:bg-indigo-700 text-white')}>
                           {isEnrolled ? 'Enrolled ✓' : 'Auto-Enroll'}
                         </button>
                       </div>
@@ -1298,7 +1466,7 @@
                   <h3 className="text-base font-black text-slate-900 dark:text-slate-100 mb-3">Suggested Learning Pathways</h3>
                   <div className="space-y-2">
                     {result.suggestedEnrollments.map((e, i) => (
-                      <div key={`${e.courseId}-${i}`} className="flex items-center gap-3 p-2.5 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-100">
+                      <div key={e.courseId + '-' + i} className="flex items-center gap-3 p-2.5 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-100">
                         <span className="w-6 h-6 rounded-full bg-indigo-900 text-white flex items-center justify-center text-xs font-black">{i + 1}</span>
                         <div><span className="text-xs uppercase font-black text-slate-400 dark:text-slate-500">{e.pathway}</span><p className="text-sm font-semibold text-slate-900 dark:text-slate-100">{e.title}</p></div>
                       </div>
@@ -1312,13 +1480,17 @@
       );
     }
 
-    // ==========================================
+     // ==========================================
     // SCREEN 9: TRAINER DASHBOARD (table/list-based, indigo theme)
     // ==========================================
     function Screen9Trainer({ userId, user, onNavigate, activeTab, setActiveTab }) {
       const [students, setStudents] = React.useState([]);
-      const [loading, setLoading] = React.useState({ roster: true, questions: true });
+      const [loading, setLoading] = React.useState({ roster: true, questions: true, courses: true, materials: true });
       const [questions, setQuestions] = React.useState([]);
+      const [courses, setCourses] = React.useState([]);
+      const [materials, setMaterials] = React.useState([]);
+      const [uploadForm, setUploadForm] = React.useState({ course_id: '', type: 'video', title: '', description: '', url: '', content: '', file: null });
+      const [uploadLoading, setUploadLoading] = React.useState(false);
 
       const fetchStudents = React.useCallback(async () => {
         setLoading(l => ({ ...l, roster: true }));
@@ -1336,9 +1508,73 @@
         finally { setLoading(l => ({ ...l, questions: false })); }
       }, []);
 
-      React.useEffect(() => { fetchStudents(); fetchQuestions(); }, [fetchStudents, fetchQuestions]);
+      const fetchCourses = React.useCallback(async () => {
+        setLoading(l => ({ ...l, courses: true }));
+        try {
+          setCourses((await apiRequest(`${API_BASE}/materials/courses`)) || []);
+        } catch (err) { console.error('[Materials]', err.message); setCourses([]); }
+        finally { setLoading(l => ({ ...l, courses: false })); }
+      }, []);
+
+      const fetchMyMaterials = React.useCallback(async () => {
+        setLoading(l => ({ ...l, materials: true }));
+        try {
+          setMaterials((await apiRequest(`${API_BASE}/materials/my-materials`)) || []);
+        } catch (err) { console.error('[Materials]', err.message); setMaterials([]); }
+        finally { setLoading(l => ({ ...l, materials: false })); }
+      }, []);
+
+      const handleUploadSubmit = async (e) => {
+        e.preventDefault();
+        if (!uploadForm.course_id || !uploadForm.title) {
+          showToast('Please select a course and enter a title.', 'error');
+          return;
+        }
+        setUploadLoading(true);
+        try {
+          const payload = {
+            course_id: uploadForm.course_id,
+            type: uploadForm.type,
+            title: uploadForm.title.trim(),
+            description: uploadForm.description.trim() || null,
+            url: uploadForm.url.trim() || null,
+            content: uploadForm.content.trim() || null,
+          };
+          if (uploadForm.file) {
+            payload.file_name = uploadForm.file.name;
+            payload.mime_type = uploadForm.file.type;
+            payload.file_size = uploadForm.file.size;
+          }
+          await apiRequest(`${API_BASE}/materials`, { method: 'POST', body: JSON.stringify(payload) });
+          showToast(`Uploaded ${uploadForm.type} material.`, 'success');
+          setUploadForm({ course_id: '', type: 'video', title: '', description: '', url: '', content: '', file: null });
+          fetchMyMaterials();
+        } catch (err) {
+          showToast(`Upload failed: ${err.message}`, 'error');
+        } finally {
+          setUploadLoading(false);
+        }
+      };
+
+      const handleDeleteMaterial = async (id) => {
+        try {
+          await apiRequest(`${API_BASE}/materials/${id}`, { method: 'DELETE' });
+          showToast('Material deleted.', 'success');
+          fetchMyMaterials();
+        } catch (err) {
+          showToast(`Delete failed: ${err.message}`, 'error');
+        }
+      };
+
+      React.useEffect(() => { fetchStudents(); fetchQuestions(); fetchCourses(); fetchMyMaterials(); }, [fetchStudents, fetchQuestions, fetchCourses, fetchMyMaterials]);
 
       const formatDate = (d) => { if (!d) return '—'; try { return new Date(d).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }); } catch { return '—'; } };
+
+      const getTypeIcon = (t) => {
+        if (t === 'video') return '🎥';
+        if (t === 'document') return '📄';
+        return '📝';
+      };
 
       return (
         <div className="max-w-7xl mx-auto px-4 py-8 space-y-8">
@@ -1348,9 +1584,11 @@
               <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-slate-100 mt-1">Trainer Dashboard: {user?.name}</h1>
             </div>
             <div className="flex gap-2">
-              <button onClick={() => setActiveTab('roster')} className={`px-4 py-2 rounded-xl text-xs font-black transition ${activeTab === 'roster' ? 'bg-indigo-700 text-white' : 'bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300'}`}>Student Roster</button>
-              <button onClick={() => setActiveTab('questions')} className={`px-4 py-2 rounded-xl text-xs font-black transition ${activeTab === 'questions' ? 'bg-indigo-700 text-white' : 'bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300'}`}>Quiz Questions</button>
-              <button onClick={() => setActiveTab('courses')} className={`px-4 py-2 rounded-xl text-xs font-black transition ${activeTab === 'courses' ? 'bg-indigo-700 text-white' : 'bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300'}`}>My Courses</button>
+              <button onClick={() => setActiveTab('roster')} className={"px-4 py-2 rounded-xl text-xs font-black transition " + (activeTab === 'roster' ? 'bg-indigo-700 text-white' : 'bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300')}>Student Roster</button>
+              <button onClick={() => setActiveTab('upload')} className={"px-4 py-2 rounded-xl text-xs font-black transition " + (activeTab === 'upload' ? 'bg-indigo-700 text-white' : 'bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300')}>Upload Content</button>
+              <button onClick={() => setActiveTab('my-materials')} className={"px-4 py-2 rounded-xl text-xs font-black transition " + (activeTab === 'my-materials' ? 'bg-indigo-700 text-white' : 'bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300')}>My Materials</button>
+              <button onClick={() => setActiveTab('questions')} className={"px-4 py-2 rounded-xl text-xs font-black transition " + (activeTab === 'questions' ? 'bg-indigo-700 text-white' : 'bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300')}>Quiz Questions</button>
+              <button onClick={() => setActiveTab('courses')} className={"px-4 py-2 rounded-xl text-xs font-black transition " + (activeTab === 'courses' ? 'bg-indigo-700 text-white' : 'bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300')}>My Courses</button>
             </div>
           </div>
 
@@ -1378,6 +1616,150 @@
             </div>
           )}
 
+          {activeTab === 'upload' && (
+            <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm p-6">
+              <h2 className="text-base font-black text-slate-900 dark:text-slate-100 mb-4">Upload Learning Content</h2>
+              <form onSubmit={handleUploadSubmit} className="space-y-4">
+                <div>
+                  <label className="block text-xs font-black text-slate-700 dark:text-slate-300 mb-1">Course</label>
+                  <select
+                    value={uploadForm.course_id}
+                    onChange={(e) => setUploadForm({ ...uploadForm, course_id: e.target.value })}
+                    className="w-full px-3.5 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm text-slate-900 dark:text-slate-100"
+                    required
+                    disabled={loading.courses}
+                  >
+                    <option value="">Select a course...</option>
+                    {courses.map(c => <option key={c.id} value={c.id}>{c.title}</option>)}
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-black text-slate-700 dark:text-slate-300 mb-1">Content Type</label>
+                  <div className="flex gap-3">
+                    {['video', 'notes', 'document'].map(t => (
+                      <label key={t} className="flex items-center gap-2 text-xs">
+                        <input
+                          type="radio"
+                          name="type"
+                          value={t}
+                          checked={uploadForm.type === t}
+                          onChange={(e) => setUploadForm({ ...uploadForm, type: e.target.value })}
+                          className="w-4 h-4 text-indigo-600"
+                        />
+                        <span className={uploadForm.type === t ? 'text-indigo-600 font-black' : 'text-slate-600 dark:text-slate-400'}>
+                          {t === 'video' ? 'Video URL' : t === 'notes' ? 'Notes Text' : 'Document Link'}
+                        </span>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-black text-slate-700 dark:text-slate-300 mb-1">Title</label>
+                  <input
+                    type="text"
+                    placeholder="Enter content title..."
+                    value={uploadForm.title}
+                    onChange={(e) => setUploadForm({ ...uploadForm, title: e.target.value })}
+                    className="w-full px-3.5 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm text-slate-900 dark:text-slate-100"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-black text-slate-700 dark:text-slate-300 mb-1">Description (optional)</label>
+                  <textarea
+                    value={uploadForm.description}
+                    onChange={(e) => setUploadForm({ ...uploadForm, description: e.target.value })}
+                    placeholder="Brief description..."
+                    className="w-full h-20 px-3.5 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm text-slate-900 dark:text-slate-100 resize-y"
+                  />
+                </div>
+
+                {uploadForm.type === 'video' && (
+                  <div>
+                    <label className="block text-xs font-black text-slate-700 dark:text-slate-300 mb-1">Video URL (YouTube, Vimeo, etc.)</label>
+                    <input
+                      type="url"
+                      placeholder="https://youtube.com/watch?v=..."
+                      value={uploadForm.url}
+                      onChange={(e) => setUploadForm({ ...uploadForm, url: e.target.value })}
+                      className="w-full px-3.5 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm text-slate-900 dark:text-slate-100"
+                    />
+                  </div>
+                )}
+
+                {uploadForm.type === 'notes' && (
+                  <div>
+                    <label className="block text-xs font-black text-slate-700 dark:text-slate-300 mb-1">Notes Content</label>
+                    <textarea
+                      value={uploadForm.content}
+                      onChange={(e) => setUploadForm({ ...uploadForm, content: e.target.value })}
+                      placeholder="Enter study notes or content here..."
+                      className="w-full h-32 px-3.5 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm text-slate-900 dark:text-slate-100 resize-y"
+                    />
+                  </div>
+                )}
+
+                {uploadForm.type === 'document' && (
+                  <div>
+                    <label className="block text-xs font-black text-slate-700 dark:text-slate-300 mb-1">Document URL (Google Drive, PDF link, etc.)</label>
+                    <input
+                      type="url"
+                      placeholder="https://drive.google.com/..."
+                      value={uploadForm.url}
+                      onChange={(e) => setUploadForm({ ...uploadForm, url: e.target.value })}
+                      className="w-full px-3.5 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm text-slate-900 dark:text-slate-100"
+                    />
+                  </div>
+                )}
+
+                <button
+                  type="submit"
+                  disabled={uploadLoading || !uploadForm.course_id || !uploadForm.title}
+                  className="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-black disabled:opacity-50 btn-micro"
+                >
+                  {uploadLoading ? 'Uploading...' : 'Upload Content'}
+                </button>
+              </form>
+            </div>
+          )}
+
+          {activeTab === 'my-materials' && (
+            <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm p-6">
+              <h2 className="text-base font-black text-slate-900 dark:text-slate-100 mb-4">My Uploaded Materials ({materials.length})</h2>
+              {loading.materials ? (
+                <div className="py-10 text-center text-sm text-slate-500">Loading materials...</div>
+              ) : materials.length === 0 ? (
+                <div className="py-10 text-center text-sm text-slate-500">No materials uploaded yet. Use the Upload Content tab to add your first.</div>
+              ) : (
+                <div className="space-y-3">
+                  {materials.map(m => (
+                    <div key={m.id} className="p-4 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 flex items-center justify-between gap-3">
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2 mb-1">
+                          <span className="text-lg">{getTypeIcon(m.type)}</span>
+                          <span className="px-2 py-0.5 bg-indigo-100 text-indigo-800 text-[10px] font-black rounded uppercase">{m.type}</span>
+                          <span className="px-2 py-0.5 bg-slate-200 dark:bg-slate-700 text-slate-700 text-[10px] font-black rounded">Course: {m.course_id}</span>
+                        </div>
+                        <h3 className="text-sm font-black text-slate-900 dark:text-slate-100">{m.title}</h3>
+                        {m.description && <p className="text-xs text-slate-600 dark:text-slate-300 mt-1">{m.description}</p>}
+                        <p className="text-[10px] text-slate-500 dark:text-slate-400 mt-1">{formatDate(m.created_at)}</p>
+                      </div>
+                      <button
+                        onClick={() => handleDeleteMaterial(m.id)}
+                        className="px-2.5 py-1 bg-red-100 text-red-800 rounded text-[10px] font-black btn-micro"
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+
           {activeTab === 'questions' && (
             <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm p-6">
               <h2 className="text-base font-black text-slate-900 dark:text-slate-100 mb-4">Quiz Question Bank</h2>
@@ -1389,12 +1771,12 @@
                         <div className="flex-1">
                           <div className="flex items-center gap-2 mb-2">
                             <span className="px-2 py-0.5 bg-indigo-100 text-indigo-800 text-[10px] font-black rounded">{q.topic || 'General'}</span>
-                            <span className={`px-2 py-0.5 text-[10px] font-black rounded ${q.correct ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}`}>{q.correct !== undefined ? `Answer: ${q.correct}` : 'Unassigned'}</span>
+                            <span className={"px-2 py-0.5 text-xs font-black rounded " + (q.correct ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800')}>{q.correct !== undefined ? `Answer: ${q.correct}` : 'Unassigned'}</span>
                           </div>
                           <p className="text-sm font-semibold text-slate-800 dark:text-slate-200 mb-2">{q.question}</p>
                           <div className="flex flex-wrap gap-1.5">
                             {q.options?.map((opt, j) => (
-                              <span key={j} className={`px-2.5 py-1 text-xs rounded ${q.correct === j ? 'bg-emerald-100 text-emerald-800 font-black' : 'bg-slate-200 dark:bg-slate-700 text-slate-600'}`}>{String.fromCharCode(65 + j)}. {opt}</span>
+                              <span key={j} className={"px-2.5 py-1 text-xs rounded " + (q.correct === j ? 'bg-emerald-100 text-emerald-800 font-black' : 'bg-slate-200 dark:bg-slate-700 text-slate-600')}>{String.fromCharCode(65 + j)}. {opt}</span>
                             ))}
                           </div>
                         </div>
@@ -1424,6 +1806,168 @@
                   </div>
                 </div>
               </div>
+            </div>
+          )}
+        </div>
+      );
+    }
+
+    // ==========================================
+    // SCREEN 10: COURSE MATERIALS (trainee view, teal/emerald theme)
+    // ==========================================
+    function Screen10CourseMaterials({ user, userId, courseId, onBack, onOpenQuiz }) {
+      const [course, setCourse] = React.useState(null);
+      const [materials, setMaterials] = React.useState([]);
+      const [loading, setLoading] = React.useState(true);
+      const [activeType, setActiveType] = React.useState('all');
+
+      React.useEffect(() => {
+        setLoading(true);
+        Promise.all([
+          apiRequest(`${API_BASE}/courses/detail/${courseId}`).then(setCourse).catch(err => console.error('[Materials]', err.message)),
+          apiRequest(`${API_BASE}/materials/course/${courseId}`).then(setMaterials).catch(err => console.error('[Materials]', err.message))
+        ]).finally(() => setLoading(false));
+      }, [courseId]);
+
+      const getTypeIcon = (t) => {
+        if (t === 'video') return '🎥';
+        if (t === 'document') return '📄';
+        return '📝';
+      };
+
+      const getTypeColor = (t) => {
+        if (t === 'video') return 'bg-blue-100 text-blue-800';
+        if (t === 'document') return 'bg-purple-100 text-purple-800';
+        return 'bg-emerald-100 text-emerald-800';
+      };
+
+      const filtered = materials.filter(m => activeType === 'all' || m.type === activeType);
+      const videos = materials.filter(m => m.type === 'video');
+      const documents = materials.filter(m => m.type === 'document');
+      const notes = materials.filter(m => m.type === 'notes');
+
+      return (
+        <div className="max-w-5xl mx-auto px-4 py-6 md:py-8 space-y-6">
+          <button onClick={onBack} className="text-xs font-black bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 px-3 py-1.5 rounded-lg btn-micro">← Back to Dashboard</button>
+
+          {loading ? (
+            <div className="py-10 text-center text-sm text-slate-500 dark:text-slate-400">Loading course materials...</div>
+          ) : (
+            <div className="space-y-6">
+              <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-700 p-6">
+                <h1 className="text-2xl font-extrabold text-slate-900 dark:text-slate-100">{course?.title || 'Course Materials'}</h1>
+                <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Instructor: {course?.instructor || 'N/A'}</p>
+              </div>
+
+              <div className="flex gap-2 overflow-x-auto pb-1">
+                {[
+                  { key: 'all', label: 'All Content' },
+                  { key: 'video', label: '🎥 Videos' },
+                  { key: 'notes', label: '📝 Notes' },
+                  { key: 'document', label: '📄 Documents' }
+                ].map(t => (
+                  <button
+                    key={t.key}
+                    onClick={() => setActiveType(t.key)}
+                    className={"px-4 py-2 rounded-lg text-xs font-black whitespace-nowrap btn-micro transition " + (activeType === t.key ? 'bg-teal-900 text-white' : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700')}
+                  >
+                    {t.label}
+                  </button>
+                ))}
+              </div>
+
+              {filtered.length === 0 ? (
+                <div className="py-12 text-center bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-700">
+                  <div className="text-4xl mb-2">📂</div>
+                  <p className="text-sm text-slate-500 dark:text-slate-400">No {activeType === 'all' ? '' : "'" + activeType + "' "}materials available for this course yet.</p>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {filtered.map(m => (
+                    <div key={m.id} className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-700 p-4 sm:p-6">
+                      <div className="flex items-start gap-4">
+                        <span className="text-2xl flex-shrink-0 mt-1">{getTypeIcon(m.type)}</span>
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2 mb-2 flex-wrap">
+                            <span className={"px-2 py-0.5 text-xs font-black rounded " + getTypeColor(m.type)}>{m.type.toUpperCase()}</span>
+                            <span className="text-xs text-slate-400 dark:text-slate-500">{new Date(m.created_at).toLocaleDateString()}</span>
+                          </div>
+                          <h2 className="text-lg font-black text-slate-900 dark:text-slate-100 mb-2">{m.title}</h2>
+                          {m.description && <p className="text-sm text-slate-600 dark:text-slate-300 mb-3">{m.description}</p>}
+
+                          {m.type === 'video' && m.url && (
+                            <div className="mb-3">
+                              {m.url.includes('youtube.com') || m.url.includes('youtu.be') || m.url.includes('vimeo.com') ? (
+                                <div className="aspect-video bg-black rounded-xl overflow-hidden">
+                                  <iframe
+                                    src={getEmbedUrl(m.url)}
+                                    className="w-full h-full"
+                                    allowFullScreen
+                                    title={m.title}
+                                  />
+                                </div>
+                              ) : (
+                                <video
+                                  src={m.url}
+                                  controls
+                                  className="w-full rounded-xl aspect-video bg-black"
+                                  title={m.title}
+                                />
+                              )}
+                            </div>
+                          )}
+
+                          {m.type === 'notes' && m.content && (
+                            <div className="bg-slate-50 dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-4 mb-3 max-h-64 overflow-y-auto">
+                              <pre className="text-xs text-slate-700 dark:text-slate-300 whitespace-pre-wrap break-words">{m.content}</pre>
+                            </div>
+                          )}
+
+                          {m.type === 'document' && m.url && (
+                            <div className="mb-3">
+                              <a
+                                href={m.url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="inline-flex items-center gap-2 px-4 py-2 bg-teal-900 text-white rounded-xl text-xs font-black btn-micro"
+                              >
+                                📥 Download / View Document
+                              </a>
+                            </div>
+                          )}
+
+                          {m.file_name && (
+                            <p className="text-xs text-slate-500 dark:text-slate-400 mt-2">File: {m.file_name}</p>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+
+                  {user?.role === 'trainee' && [
+                    { label: '📋 Quiz: Module Assessment', action: () => onOpenQuiz && onOpenQuiz() },
+                    { label: '📋 Quiz: Security Fundamentals', action: () => onOpenQuiz && onOpenQuiz() }
+                  ].map((quiz, i) => (
+                    <div key={i} className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-700 p-4 sm:p-6">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                          <span className="text-2xl">❓</span>
+                          <div>
+                            <h3 className="text-sm font-black text-slate-900 dark:text-slate-100">{quiz.label}</h3>
+                            <p className="text-xs text-slate-500 dark:text-slate-400">5 questions • 10 min estimate</p>
+                          </div>
+                        </div>
+                        <button
+                          onClick={quiz.action}
+                          className="px-4 py-2 bg-teal-900 text-white rounded-xl text-xs font-black btn-micro"
+                        >
+                          Take Quiz
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           )}
         </div>
@@ -1494,7 +2038,7 @@
       const themeClass = user ? ROLE_THEMES[user.role] : '';
 
       return (
-        <div className={`theme-wrapper ${themeClass} ${theme === 'dark' ? 'dark' : ''}`}>
+        <div className={"theme-wrapper " + (themeClass) + (theme === 'dark' ? 'dark' : '')}>
           {!user && (
             <header className="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-700 sticky top-0 z-50">
               <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
@@ -1502,7 +2046,7 @@
                   <span className="w-8 h-8 rounded-xl bg-blue-900 text-white flex items-center justify-center font-black text-xs">CC</span>
                   <div><span className="font-black text-sm text-slate-900 dark:text-slate-100">Capacity Connect</span><span className="text-[10px] text-slate-400 dark:text-slate-500 block">Not signed in</span></div>
                 </div>
-                <button onClick={toggleTheme} className={`px-2.5 py-1.5 rounded-lg ${theme === 'dark' ? 'bg-slate-800 text-yellow-300 border border-slate-600' : 'bg-white text-blue-950 shadow-sm border border-slate-200'} btn-micro`}>
+                <button onClick={toggleTheme} className={"px-2.5 py-1.5 rounded-lg " + (theme === 'dark' ? 'bg-slate-800 text-yellow-300 border border-slate-600' : 'bg-white text-blue-950 shadow-sm border border-slate-200') + "btn-micro"}>
                   {theme === 'dark' ? '☀️ Light' : '🌙 Dark'}
                 </button>
               </div>
@@ -1520,7 +2064,7 @@
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
-                  <button onClick={toggleTheme} className={`px-2.5 py-1.5 rounded-lg ${theme === 'dark' ? 'bg-slate-800 text-yellow-300 border border-slate-600' : 'bg-white text-blue-950 shadow-sm border border-slate-200'} btn-micro`}>
+                  <button onClick={toggleTheme} className={"px-2.5 py-1.5 rounded-lg " + (theme === 'dark' ? 'bg-slate-800 text-yellow-300 border border-slate-600' : 'bg-white text-blue-950 shadow-sm border border-slate-200') + "btn-micro"}>
                     {theme === 'dark' ? '☀️ Light' : '🌙 Dark'}
                   </button>
                 </div>
@@ -1617,6 +2161,28 @@
                 </aside>
                 <div className="flex-1 overflow-y-auto">
                   <Screen9Trainer userId={user.id} user={user} onNavigate={navigate} activeTab={activeAdminTab} setActiveTab={setActiveAdminTab} />
+                </div>
+              </div>
+            )}
+
+            {user && screen === '10' && roleAllowed(['trainee', 'trainer']) && (
+              <div className="flex">
+                <aside className="hidden md:block w-64 border-r border-slate-200 dark:border-slate-700">
+                  <Sidebar user={user} currentScreen={screen} onNavigate={navigate} activeTab={activeAdminTab} setActiveTab={setActiveAdminTab} />
+                </aside>
+                <div className="flex-1 overflow-y-auto">
+                  <Screen10CourseMaterials
+                    user={user}
+                    userId={user.id}
+                    courseId={courseId}
+                    onBack={() => navigate(user?.role === 'trainer' ? '9' : '2')}
+                    onOpenQuiz={() => {
+                      if (user?.role === 'trainee') {
+                        setCourseId(courseId);
+                        navigate('5');
+                      }
+                    }}
+                  />
                 </div>
               </div>
             )}

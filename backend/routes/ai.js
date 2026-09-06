@@ -143,7 +143,8 @@ const CURRICULUM_MAP = [
     skills: [
       'cloud', 'aws', 'azure', 'gcp', 'kubernetes', 'docker', 'load balancing',
       'scaling', 'high availability', 'ha', 'multi-region', 'failover',
-      'auto-scaling', 'resilience', 'circuit breaker', 'envoy', 'resilience4j'
+      'auto-scaling', 'resilience', 'circuit breaker', 'envoy', 'resilience4j',
+      'terraform', 'ansible', 'jenkins', 'github actions', 'ci/cd'
     ],
     addressGap: (missing) =>
       `Missing cloud architecture, scaling, or high-availability skills needed for ${missing}`
@@ -155,7 +156,8 @@ const CURRICULUM_MAP = [
     skills: [
       'security', 'iso 27001', 'compliance', 'rbac', 'encryption',
       'zero trust', 'audit', 'governance', 'data protection', 'cryptography',
-      'kms', 'key management', 'incident response', 'penetration testing'
+      'kms', 'key management', 'incident response', 'penetration testing',
+      'risk management', 'risk assessment', 'vulnerability', 'soc 2', 'hipaa', 'gdpr'
     ],
     addressGap: (missing) =>
       `Missing security/compliance or governance skills needed for ${missing}`
@@ -168,12 +170,114 @@ const CURRICULUM_MAP = [
       'microservices', 'saga', 'distributed systems', 'kafka', 'paxos',
       'raft', 'opentelemetry', 'event-driven', 'event sourcing',
       'domain-driven design', 'ddd', 'consensus', 'distributed transactions',
-      'observability', 'tracing'
+      'observability', 'tracing', 'api', 'rest api', 'graphql'
     ],
     addressGap: (missing) =>
       `Missing distributed systems or microservices skills needed for ${missing}`
   }
 ];
+
+// ============================================================
+// Expanded Skill Category Maps
+// Covers non-technical and cross-functional skill domains.
+// ============================================================
+
+const SKILL_CATEGORIES = {
+  'Project Management': {
+    icon: '📋',
+    skills: [
+      'agile', 'scrum', 'kanban', 'waterfall', 'pmp', 'csp', 'csm', 'safe',
+      'stakeholder management', 'stakeholder engagement', 'risk management',
+      'risk mitigation', 'risk assessment', 'budget management', 'budget tracking',
+      'cost management', 'resource planning', 'resource allocation', 'schedule management',
+      'timeline management', 'gantt', 'project planning', 'project lifecycle',
+      'work breakdown structure', 'wbs', 'critical path', 'scope management',
+      'vendor management', 'contract management', 'portfolio management',
+      'program management', 'project governance', 'change management',
+      'issue tracking', 'jira', 'trello', 'asana', 'monday.com', 'basecamp',
+      'ms project', 'microsoft project', 'prince2', 'scrum master',
+      'product owner', 'sprint planning', 'sprint retrospective', 'sprint review'
+    ],
+    courseIds: []
+  },
+  'Business & Operations': {
+    icon: '📊',
+    skills: [
+      'strategic planning', 'business strategy', 'operations management',
+      'process improvement', 'process optimization', 'operational excellence',
+      'lean', 'lean six sigma', 'six sigma', 'kaizen', 'continuous improvement',
+      'quality management', 'quality assurance', 'qa', 'kpis', 'kpi',
+      'okrs', 'okr', 'business analysis', 'requirements gathering',
+      'gap analysis', 'business process', 'workflow design', 'workflow optimization',
+      'supply chain', 'logistics', 'vendor relations', 'client relations',
+      'account management', 'relationship management', 'cross-functional',
+      'stakeholder analysis'
+    ],
+    courseIds: []
+  },
+  'Marketing & Analytics': {
+    icon: '📈',
+    skills: [
+      'digital marketing', 'digital advertising', 'google analytics',
+      'google ads', 'facebook ads', 'linkedin ads', 'seo', 'search engine optimization',
+      'sem', 'paid search', 'organic search', 'content marketing',
+      'email marketing', 'campaign management', 'campaign strategy',
+      'brand management', 'social media marketing', 'influencer marketing',
+      'conversion optimization', 'conversion rate optimization', 'cro',
+      'marketing automation', 'hubspot', 'market research', 'data analysis',
+      'analytics', 'tableau', 'power bi', 'looker', 'data visualization',
+      'a/b testing', 'multivariate testing', 'user testing',
+      'user research', 'customer journey', 'customer experience', 'cx',
+      'net promoter score', 'nps'
+    ],
+    courseIds: []
+  },
+  'Finance & Administration': {
+    icon: '💰',
+    skills: [
+      'financial reporting', 'financial analysis', 'budgeting', 'financial planning',
+      'forecasting', 'variance analysis', 'cost accounting', 'managerial accounting',
+      'excel', 'excel modeling', 'advanced excel', 'pivot tables',
+      'vlookup', 'financial modeling', 'valuation', 'investment analysis',
+      'risk assessment', 'compliance', 'regulatory reporting',
+      'contract management', 'procurement', 'expense management',
+      'invoice processing', 'accounts payable', 'accounts receivable',
+      'general ledger', 'bookkeeping', 'quarterly reporting',
+      'annual reporting', 'tax preparation', 'audit support'
+    ],
+    courseIds: []
+  },
+  'Soft Skills & Leadership': {
+    icon: '🤝',
+    skills: [
+      'leadership', 'team leadership', 'leadership development',
+      'conflict resolution', 'conflict management', 'negotiation',
+      'communication', 'written communication', 'verbal communication',
+      'presentation', 'public speaking', 'presentation skills',
+      'interpersonal skills', 'emotional intelligence', 'eq',
+      'influence', 'collaboration', 'collaborative leadership',
+      'coaching', 'mentoring', 'delegation', 'decision making',
+      'critical thinking', 'problem solving', 'analytical thinking',
+      'adaptability', 'change management', 'resilience',
+      'time management', 'priority management', 'stress management'
+    ],
+    courseIds: []
+  },
+  'Certifications': {
+    icon: '🏆',
+    skills: [
+      'pmp', 'csp', 'csm', 'cspo', 'safe scrum master', 'safe agilist',
+      'google analytics', 'google ads', 'google cloud', 'aws certified',
+      'azure certified', 'itil', 'cisa', 'cissp', 'cisa', 'cism',
+      'six sigma green belt', 'six sigma black belt', 'lean six sigma',
+      'chartered financial analyst', 'cfa', 'cpa', 'accA', 'ACCA',
+      'PRINCE2', 'PMI-ACP', 'PgMP', 'PfMP', 'CBAP', 'CCBA',
+      'AWS Certified Solutions Architect', 'Google Cloud Professional',
+      'Microsoft Certified', 'Cisco CCNA', 'CompTIA', 'CISSP'
+    ],
+    courseIds: []
+  }
+};
 
 // ============================================================
 // Input Validation
@@ -188,6 +292,9 @@ function looksLikeGibberish(text) {
   if (words.length < 3) return true;
 
   const lower = cleaned.toLowerCase();
+
+  // Check for long runs of keyboard-row characters (real gibberish pattern)
+  // But use a more conservative threshold: 3+ consecutive identical-ish patterns
   const keyboardRows = ['qwertyuiop', 'asdfghjkl', 'zxcvbnm'];
   const rowHits = keyboardRows.reduce((count, row) => {
     let hits = 0;
@@ -196,16 +303,27 @@ function looksLikeGibberish(text) {
     }
     return count + hits;
   }, 0);
-  if (rowHits >= 3) return true;
+  // Only flag as gibberish if there are MANY keyboard row sequences AND
+  // the text is short (indicating random typing, not a real resume)
+  if (rowHits >= 5 && cleaned.length < 200) return true;
 
-  const repeatedChars = (cleaned.match(/(.)\1{4,}/g) || []).length;
-  if (repeatedChars > 5) return true;
+  // Check for excessive repeated characters (e.g., "aaaaaa")
+  const repeatedChars = (cleaned.match(/(.)\1{5,}/g) || []).length;
+  if (repeatedChars > 3) return true;
 
+  // Must have at least some alphabetic words
   const hasSomeAlpha = words.some(w => /[a-zA-Z]{2,}/.test(w));
   if (!hasSomeAlpha) return true;
 
-  const randomCharRatio = (cleaned.match(/[^a-zA-Z0-9\s.,!?'"-]/g) || []).length / cleaned.length;
-  if (randomCharRatio > 0.4) return true;
+  // Check for excessive random/special characters (not typical in resumes)
+  const randomCharRatio = (cleaned.match(/[^a-zA-Z0-9\s.,!?'"\-():/]/g) || []).length / Math.max(cleaned.length, 1);
+  if (randomCharRatio > 0.3 && cleaned.length < 200) return true;
+
+  // Check for minimum word diversity — if 80%+ of words are duplicates, likely gibberish
+  const wordFreq = {};
+  words.forEach(w => { wordFreq[w.toLowerCase()] = (wordFreq[w.toLowerCase()] || 0) + 1; });
+  const uniqueRatio = Object.keys(wordFreq).length / words.length;
+  if (uniqueRatio < 0.3 && words.length > 10) return true;
 
   return false;
 }
@@ -214,29 +332,53 @@ function looksLikeGibberish(text) {
 // Skill Extraction Helpers
 // ============================================================
 
+// All tech skills from CURRICULUM_MAP plus a comprehensive generic tech list
+const ALL_TECH_SKILLS = [];
+CURRICULUM_MAP.forEach(c => { c.skills.forEach(s => ALL_TECH_SKILLS.push(s)); });
+[
+  'python', 'javascript', 'java', 'c++', 'c#', 'rust', 'typescript',
+  'react', 'vue', 'angular', 'node.js', 'express', 'django', 'flask',
+  'sql', 'nosql', 'mongodb', 'postgresql', 'mysql', 'redis',
+  'git', 'ci/cd', 'agile', 'scrum', 'linux', 'bash', 'terraform',
+  'ansible', 'jenkins', 'github actions', 'rest', 'graphql',
+  'html', 'css', 'sass', 'webpack', 'docker', 'kubernetes',
+  'aws', 'azure', 'gcp', 'cloud', 'serverless', 'lambda', 'firebase',
+  'machine learning', 'tensorflow', 'pytorch',
+  'data science', 'data analysis', 'pandas', 'numpy', 'matplotlib',
+  'testing', 'junit', 'cypress', 'jest', 'vitest', 'selenium',
+  'docker compose', 'elasticsearch', 'rabbitmq', 'redis',
+  'spring', 'hibernate', 'maven', 'gradle', 'webpack',
+  'aws lambda', 'cloud functions', 'aws ec2', 'amazon s3'
+].forEach(t => ALL_TECH_SKILLS.push(t));
+
+// Flatten all skill categories into a single lookup
+const ALL_DETECTED_SKILLS = [...ALL_TECH_SKILLS];
+Object.values(SKILL_CATEGORIES).forEach(cat => {
+  cat.skills.forEach(s => ALL_DETECTED_SKILLS.push(s));
+});
+
 function extractSkillsFromText(text) {
   const lower = text.toLowerCase();
   const found = new Set();
 
-  CURRICULUM_MAP.forEach(course => {
-    course.skills.forEach(skill => {
-      if (lower.includes(skill)) {
-        found.add(skill);
+  // Sort by length descending to match longer phrases first (e.g., "project management" before "project")
+  const allSkills = [...ALL_DETECTED_SKILLS].sort((a, b) => b.length - a.length);
+
+  allSkills.forEach(skill => {
+    const skillLower = skill.toLowerCase();
+    // For multi-word skills or abbreviations (2+ chars), use simple includes
+    if (skillLower.length >= 2) {
+      if (lower.includes(skillLower)) {
+        // Additional check: for very short skills (2-3 chars), ensure word boundary
+        if (skillLower.length <= 3) {
+          const regex = new RegExp('\\b' + skillLower.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '\\b');
+          if (regex.test(lower)) {
+            found.add(skill);
+          }
+        } else {
+          found.add(skill);
+        }
       }
-    });
-  });
-
-  const genericTech = [
-    'python', 'javascript', 'java', 'c++', 'c#', 'go', 'rust', 'typescript',
-    'react', 'vue', 'angular', 'node.js', 'express', 'django', 'flask',
-    'sql', 'nosql', 'mongodb', 'postgresql', 'mysql', 'redis',
-    'git', 'ci/cd', 'agile', 'scrum', 'linux', 'bash', 'terraform',
-    'ansible', 'jenkins', 'github actions', 'rest', 'graphql'
-  ];
-
-  genericTech.forEach(tech => {
-    if (lower.includes(tech)) {
-      found.add(tech);
     }
   });
 
@@ -245,25 +387,48 @@ function extractSkillsFromText(text) {
 
 function identifyMissingSkills(detectedSkills, targetRole) {
   const roleLower = (targetRole || '').toLowerCase();
+
+  // Role-based skill requirements (expanded)
   const roleSkillMap = {
+    'project manager': ['agile', 'scrum', 'pmp', 'stakeholder management', 'budget management', 'risk management', 'jira'],
+    'project coordinator': ['agile', 'scrum', 'stakeholder management', 'jira', 'trello', 'risk management', 'budget tracking'],
+    'scrum master': ['scrum', 'csm', 'agile', 'sprint planning', 'sprint retrospective', 'stakeholder management'],
     'cloud architect': ['cloud', 'aws', 'azure', 'gcp', 'kubernetes', 'docker', 'high availability', 'scaling', 'load balancing', 'terraform'],
-    'security engineer': ['security', 'iso 27001', 'compliance', 'zero trust', 'encryption', 'rbac', 'audit'],
-    'devops engineer': ['kubernetes', 'docker', 'ci/cd', 'terraform', 'ansible', 'jenkins', 'monitoring'],
-    'software engineer': ['microservices', 'distributed systems', 'rest', 'graphql', 'git', 'agile'],
-    'data engineer': ['sql', 'nosql', 'etl', 'kafka', 'data governance'],
-    'backend engineer': ['node.js', 'python', 'java', 'sql', 'microservices', 'rest', 'git']
+    'cloud engineer': ['cloud', 'aws', 'azure', 'gcp', 'kubernetes', 'docker', 'terraform', 'ci/cd'],
+    'security engineer': ['security', 'iso 27001', 'compliance', 'zero trust', 'encryption', 'rbac', 'audit', 'risk assessment'],
+    'devops engineer': ['kubernetes', 'docker', 'ci/cd', 'terraform', 'ansible', 'jenkins', 'monitoring', 'git'],
+    'software engineer': ['microservices', 'distributed systems', 'rest', 'graphql', 'git', 'agile', 'javascript'],
+    'data engineer': ['sql', 'nosql', 'etl', 'kafka', 'data governance', 'python', 'aws'],
+    'backend engineer': ['node.js', 'python', 'java', 'sql', 'microservices', 'rest', 'git'],
+    'data analyst': ['excel', 'sql', 'python', 'tableau', 'power bi', 'data analysis', 'google analytics'],
+    'marketing analyst': ['google analytics', 'excel', 'data analysis', 'seo', 'digital marketing', 'tableau'],
+    'business analyst': ['business analysis', 'requirements gathering', 'excel', 'process improvement', 'data analysis'],
+    'operations manager': ['operations management', 'process optimization', 'lean', 'supply chain', 'vendor relations'],
+    'product manager': ['product management', 'agile', 'scrum', 'stakeholder management', 'roadmap', 'prioritization']
   };
 
-  const required = roleSkillMap[roleLower] || [
-    'cloud', 'security', 'microservices', 'kubernetes', 'docker',
-    'ci/cd', 'git', 'sql', 'rest', 'agile'
-  ];
+  // Find the best matching role (check if roleLower contains or is contained in a key)
+  let required = null;
+  for (const [key, skills] of Object.entries(roleSkillMap)) {
+    if (roleLower.includes(key)) {
+      required = skills;
+      break;
+    }
+  }
+
+  if (!required) {
+    // Default: require a broad set of enterprise skills across categories
+    required = [
+      'communication', 'problem solving', 'teamwork', 'leadership',
+      'project management', 'data analysis', 'critical thinking'
+    ];
+  }
 
   const detectedLower = detectedSkills.map(s => s.toLowerCase());
-  return required.filter(skill => !detectedLower.includes(skill));
+  return required.filter(skill => !detectedLower.includes(skill.toLowerCase()));
 }
 
-function assignCoursesForMissingSkills(missingSkills) {
+function assignCoursesForMissingSkills(missingSkills, detectedSkills = []) {
   const assigned = [];
   const assignedCourseIds = new Set();
 
@@ -275,8 +440,9 @@ function assignCoursesForMissingSkills(missingSkills) {
         if (matches) {
           assignedCourseIds.add(course.courseId);
           assigned.push({
-            course_id: `COURSE-${String(course.courseId).padStart(3, '0')}`,
+            course_id: 'COURSE-' + String(course.courseId).padStart(3, '0'),
             title: course.title,
+            category: course.category,
             addresses_gap: course.addressGap(skill),
             quiz_required: true,
             passing_score: '80%',
@@ -288,6 +454,65 @@ function assignCoursesForMissingSkills(missingSkills) {
   });
 
   return assigned;
+}
+
+function findClosestCourseForSkill(skill) {
+  const skillLower = skill.toLowerCase();
+  for (const course of CURRICULUM_MAP) {
+    if (course.skills.some(s => skillLower.includes(s) || s.includes(skillLower))) {
+      return {
+        courseId: course.courseId,
+        title: course.title,
+        category: course.category
+      };
+    }
+  }
+  return null;
+}
+
+function getCategoriesForSkills(skills) {
+  const categories = new Set();
+  const matched = [];
+
+  skills.forEach(skill => {
+    const skillLower = skill.toLowerCase();
+    let categorized = false;
+    
+    Object.entries(SKILL_CATEGORIES).forEach(([catName, cat]) => {
+      // Sort by length descending to match longer phrases first
+      const sortedSkills = [...cat.skills].sort((a, b) => b.length - a.length);
+      for (const s of sortedSkills) {
+        const sLower = s.toLowerCase();
+        if (skillLower.length <= 3) {
+          const regex = new RegExp('\\b' + sLower.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '\\b');
+          if (regex.test(skillLower)) {
+            categories.add(catName);
+            matched.push({ skill, category: catName });
+            categorized = true;
+            break;
+          }
+        } else {
+          if (skillLower.includes(sLower) || sLower.includes(skillLower)) {
+            categories.add(catName);
+            matched.push({ skill, category: catName });
+            categorized = true;
+            break;
+          }
+        }
+      }
+    });
+    
+    if (!categorized) {
+      // Check if it's a tech skill
+      const techMatch = ALL_TECH_SKILLS.some(t => t.toLowerCase() === skillLower);
+      if (techMatch) {
+        categories.add('Technical/CS');
+        matched.push({ skill, category: 'Technical/CS' });
+      }
+    }
+  });
+
+  return { categories: Array.from(categories), matched };
 }
 
 function buildCertificationPath(assignedCourses, targetRole) {
@@ -683,17 +908,20 @@ Analyze the following resume/profile text for a ${roleContext} role:
 ${resumeText.substring(0, 4000)}
 --- END RESUME ---
 
-1. Extract all technical skills mentioned (languages, tools, frameworks, platforms, cloud services, methodologies).
+1. Extract all skills mentioned (technical skills, tools, frameworks, methodologies,
+   soft skills, certifications, business/operations skills, marketing skills, etc.).
 2. Identify skill gaps compared to the target role requirements.
 3. Return ONLY valid JSON with these keys:
-   - detectedSkills: array of strings
-   - missingSkills: array of strings`;
+   - detectedSkills: array of strings (all skills found in resume)
+   - missingSkills: array of strings (skills the target role needs that are missing)
+   - detectedSkillsCategories: array of objects { skill, category } mapping each detected skill to its category (Project Management, Business & Operations, Marketing & Analytics, Finance & Administration, Soft Skills & Leadership, Certifications, or Technical/CS)`;
 
       const schema = {
         type: 'object',
         properties: {
           detectedSkills: { type: 'array', items: { type: 'string' } },
-          missingSkills: { type: 'array', items: { type: 'string' } }
+          missingSkills: { type: 'array', items: { type: 'string' } },
+          detectedSkillsCategories: { type: 'array', items: { type: 'object' } }
         },
         required: ['detectedSkills', 'missingSkills']
       };
@@ -712,34 +940,72 @@ ${resumeText.substring(0, 4000)}
       missingSkills = identifyMissingSkills(detectedSkills, roleContext);
     }
 
-    // STEP 3: Assign ONLY courses that address missing skills
-    const assignedCourses = assignCoursesForMissingSkills(missingSkills);
+    // Categorize detected skills
+    const skillCategories = getCategoriesForSkills(detectedSkills);
+
+    // STEP 3: Assign courses that address missing skills
+    const assignedCourses = assignCoursesForMissingSkills(missingSkills, detectedSkills);
     const certificationPath = buildCertificationPath(assignedCourses, targetRole);
 
-    // If no specific courses matched but we have missing skills, assign all relevant courses
+    // Handle missing skills that don't have a matching course
+    const unmatchedMissingSkills = [];
+    missingSkills.forEach(skill => {
+      const course = findClosestCourseForSkill(skill);
+      if (!course) {
+        unmatchedMissingSkills.push(skill);
+      }
+    });
+
+    // If no specific courses matched but we have missing skills, assign general recommendations
     const finalAssigned = assignedCourses.length > 0
       ? assignedCourses
-      : CURRICULUM_MAP.map(course => ({
-          course_id: `COURSE-${String(course.courseId).padStart(3, '0')}`,
-          title: course.title,
-          addresses_gap: `General skill gap in ${course.category}`,
-          quiz_required: true,
-          passing_score: '80%',
-          status: 'Locked until enrolled'
-        }));
+      : (missingSkills.length > 0
+          ? CURRICULUM_MAP.slice(0, 2).map(course => ({
+              course_id: 'COURSE-' + String(course.courseId).padStart(3, '0'),
+              title: course.title,
+              category: course.category,
+              addresses_gap: 'General skill gap coverage for ' + course.category.toLowerCase(),
+              quiz_required: true,
+              passing_score: '80%',
+              status: 'Locked until enrolled'
+            }))
+          : []);
+
+    // Build unrecognized skills info (detected skills with no matching course or category)
+    const unrecognizedSkills = detectedSkills.filter(s => {
+      const course = findClosestCourseForSkill(s);
+      if (course) return false;
+      const sLower = s.toLowerCase();
+      // Check ALL_TECH_SKILLS and SKILL_CATEGORIES
+      const inTechSkills = ALL_TECH_SKILLS.some(t => t.toLowerCase() === sLower);
+      const inCategories = Object.values(SKILL_CATEGORIES).some(cat =>
+        cat.skills.some(skill => skill.toLowerCase() === sLower)
+      );
+      return !inTechSkills && !inCategories;
+    });
 
     res.json({
       status: 'success',
       learner_id: userId || 'anonymous',
+      target_role: roleContext,
       detected_skills: detectedSkills,
       missing_skills: missingSkills,
+      detected_skills_categories: skillCategories.matched,
+      skill_categories: skillCategories.categories,
       assigned_courses: finalAssigned,
       certification_path: certificationPath,
+      unrecognized_skills: unrecognizedSkills,
+      missing_skills_without_courses: unmatchedMissingSkills,
       detectedSkills,
       missingSkills,
       recommendedCourses: finalAssigned,
-      suggestedEnrollments: finalAssigned.map(c => ({ courseId: c.course_id, title: c.title, pathway: c.addresses_gap })),
-      summary: `Detected ${detectedSkills.length} skills. Found ${missingSkills.length} skill gaps. Assigned ${finalAssigned.length} targeted course(s).`,
+      suggestedEnrollments: finalAssigned.map(c => ({
+        courseId: c.course_id,
+        title: c.title,
+        pathway: c.category
+      })),
+      summary: `Detected ${detectedSkills.length} skills across ${skillCategories.categories.length} discipline(s). ` +
+        `Found ${missingSkills.length} skill gaps. ${assignedCourses.length > 0 ? assignedCourses.length + ' targeted course(s) assigned.' : missingSkills.length > 0 ? 'No direct course match found for gaps — general recommendations provided.' : 'No skill gaps detected.'}`,
       source: GEMINI_API_KEY ? 'ai' : 'mock',
       model: GEMINI_API_KEY ? GEMINI_MODEL : 'fallback'
     });
