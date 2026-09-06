@@ -6,6 +6,7 @@ const path = require('path');
 const coursesRouter = require('./routes/courses');
 const coreRouter = require('./routes/core');
 const aiRouter = require('./routes/ai');
+const { authMiddleware } = require('./lib/supabaseClient');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -38,7 +39,15 @@ app.get('/', (req, res) => {
         detail: 'GET /api/certificate/:userId/:courseId'
       },
       admin: {
-        stats: 'GET /api/admin/stats'
+        stats: 'GET /api/admin/stats',
+        pendingUsers: 'GET /api/admin/pending-users',
+        allUsers: 'GET /api/admin/users',
+        approveUser: 'POST /api/admin/users/:userId/approve',
+        rejectUser: 'POST /api/admin/users/:userId/reject'
+      },
+      trainer: {
+        students: 'GET /api/trainer/students',
+        quizQuestions: 'GET /api/trainer/quiz-questions'
       },
        courses: {
          catalog: 'GET /api/courses/catalog',
@@ -67,13 +76,14 @@ app.get('/api/health', (req, res) => {
 app.use('/api/auth', coreRouter.authRouter);
 app.use('/api/user', coreRouter.userRouter);
 app.use('/api/certificate', coreRouter.certRouter);
-app.use('/api/admin', coreRouter.adminRouter);
+app.use('/api/admin', authMiddleware, coreRouter.adminRouter);
+app.use('/api/trainer', authMiddleware, coreRouter.trainerRouter);
 app.use('/api', coreRouter);
 
 // Mount Courses router for Pages 3, 4, 5
-app.use('/api/courses', coursesRouter);
+app.use('/api/courses', authMiddleware, coursesRouter);
 
-// Mount AI routes for Topics 8, 9, 10
+// Mount AI routes for Topics 8, 9, 10 (health check is public via /api/ai/health)
 app.use('/api/ai', aiRouter);
 
 // 404 handler for undefined API routes or SPA fallback

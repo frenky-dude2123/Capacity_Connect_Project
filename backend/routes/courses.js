@@ -1,12 +1,13 @@
 const express = require('express');
 const router = express.Router();
-const { isSupabaseAvailable, supabase } = require('../lib/supabaseClient');
+const { isSupabaseAvailable, supabase, authMiddleware, requireRole } = require('../lib/supabaseClient');
 
 /**
  * 1. GET /api/courses/catalog
  * Returns list of all courses from Supabase.
+ * Protected: authenticated users (trainee, trainer, admin).
  */
-router.get('/catalog', async (req, res) => {
+router.get('/catalog', authMiddleware, requireRole('trainee', 'trainer'), async (req, res) => {
   try {
     if (!isSupabaseAvailable) {
       return res.status(500).json({ error: 'Database not configured', details: 'Supabase is not available' });
@@ -32,8 +33,9 @@ router.get('/catalog', async (req, res) => {
 /**
  * 2. GET /api/courses/detail/:id
  * Returns specific course info from Supabase.
+ * Protected: authenticated users (trainee, trainer, admin).
  */
-router.get('/detail/:id', async (req, res) => {
+router.get('/detail/:id', authMiddleware, requireRole('trainee', 'trainer'), async (req, res) => {
   try {
     if (!isSupabaseAvailable) {
       return res.status(500).json({ error: 'Database not configured', details: 'Supabase is not available' });
@@ -69,8 +71,9 @@ router.get('/detail/:id', async (req, res) => {
 /**
  * 3. GET /api/courses/player/:id
  * Returns lesson player data from Supabase.
+ * Protected: authenticated users (trainee, trainer, admin).
  */
-router.get('/player/:id', async (req, res) => {
+router.get('/player/:id', authMiddleware, requireRole('trainee', 'trainer'), async (req, res) => {
   try {
     if (!isSupabaseAvailable) {
       return res.status(500).json({ error: 'Database not configured', details: 'Supabase is not available' });

@@ -6,7 +6,9 @@ const {
   getUserById,
   getUserByEmail,
   createUser,
-  supabase
+  supabase,
+  authMiddleware,
+  requireRole
 } = require('../lib/supabaseClient');
 
 // Separate sub-routers
@@ -14,6 +16,7 @@ const authRouter = express.Router();
 const userRouter = express.Router();
 const certRouter = express.Router();
 const adminRouter = express.Router();
+const trainerRouter = express.Router();
 
 // Master core router combining all four
 const coreRouter = express.Router();
@@ -186,20 +189,9 @@ authRouter.post('/signup', async (req, res) => {
 // ==========================================
 // ROLE-BASED ACCESS MIDDLEWARE
 // ==========================================
-
-function requireRole(...allowedRoles) {
-  return (req, res, next) => {
-    const user = req.user || req.body || {};
-    const role = user.role;
-    if (!role || !allowedRoles.includes(role)) {
-      return res.status(403).json({
-        error: 'Forbidden',
-        message: `Access denied. Required role: ${allowedRoles.join(' or ')}.`
-      });
-    }
-    next();
-  };
-}
+// authMiddleware and requireRole are imported from ../lib/supabaseClient
+// (see top of file). authMiddleware populates req.user from the Bearer
+// token; requireRole enforces role-based access on a per-route basis.
 
 // ==========================================
 // TOPIC 2: LEARNER DASHBOARD
@@ -207,8 +199,9 @@ function requireRole(...allowedRoles) {
 
 /**
  * GET /api/user/dashboard/:userId
+ * Protected: authenticated users only (trainee, trainer, admin).
  */
-userRouter.get('/dashboard/:userId', async (req, res) => {
+userRouter.get('/dashboard/:userId', authMiddleware, requireRole('trainee', 'trainer'), async (req, res) => {
   try {
     const { userId } = req.params;
 
@@ -316,8 +309,9 @@ userRouter.get('/dashboard/:userId', async (req, res) => {
 
 /**
  * GET /api/certificate/:userId/:courseId
+ * Protected: authenticated users only (trainee, trainer, admin).
  */
-certRouter.get('/:userId/:courseId', async (req, res) => {
+certRouter.get('/:userId/:courseId', authMiddleware, requireRole('trainee', 'trainer'), async (req, res) => {
   try {
     const { userId, courseId } = req.params;
 
@@ -442,14 +436,254 @@ adminRouter.get('/stats', requireRole('admin'), async (req, res) => {
   }
 });
 
+// ==========================================
+// TOPIC 7: ADMIN DASHBOARD (continued)
+// ==========================================
+
+/**
+ * GET /api/admin/pending-users
+ * Protected: admin only.
+ * Returns all users with status = 'pending', including
+ * department/qualification/subjects and created_at.
+ */
+adminRouter.get('/pending-users', requireRole('admin'), async (req, res) => {
+  try {
+    if (!isSupabaseAvailable) {
+      return res.status(500).json({ error: 'Database not configured', details: 'Supabase is not available' });
+    }
+
+    const { data: pendingUsers, error: usersError } = await supabase
+      .from('users')
+      .select('id, name, email, role, status, department, qualification, skills, subjects, created_at')
+      .eq('status', 'pending')
+      .order('created_at', { ascending: true });
+
+    if (usersError) {
+      console.error('[Admin] Pending users error:', usersError.message);
+      return res.status(500).json({ error: 'Failed to fetch pending users', details: usersError.message });
+    }
+
+    res.status(200).json({
+      count: pendingUsers?.length || 0,
+      pendingUsers: (pendingUsers || []).map(u => ({
+        id: u.id,
+        name: u.name,
+        email: u.email,
+        role: u.role,
+        status: u.status,
+        department: u.department || null,
+        qualification: u.qualification || null,
+        skills: u.skills || null,
+        subjects: u.subjects || null,
+        created_at: u.created_at
+      }))
+    });
+  } catch (err) {
+    console.error('[Admin] Pending users error:', err.message);
+    res.status(500).json({ error: 'Failed to fetch pending users', details: err.message });
+  }
+});
+
+/**
+ * POST /api/admin/users/:userId/approve
+ * Protected: admin only.
+ * Sets a user's status to 'approved'.
+ */
+adminRouter.post('/users/:userId/approve', requireRole('admin'), async (req, res) => {
+  try {
+    const { userId } = req.params;
+
+    if (!isSupabaseAvailable) {
+      return res.status(500).json({ error: 'Database not configured', details: 'Supabase is not available' });
+    }
+
+    const { data, error } = await supabase
+      .from('users')
+      .update({ status: 'approved' })
+      .eq('id', userId)
+      .select('id, name, email, role, status, created_at')
+      .single();
+
+    if (error) {
+      console.error('[Admin] Approve user error:', error.message);
+      if (error.code === 'PGRST116') {
+        return res.status(404).json({ error: 'User not found', message: `No user found with ID: ${userId}` });
+      }
+      return res.status(500).json({ error: 'Failed to approve user', details: error.message });
+    }
+
+    if (!data) {
+      return res.status(404).json({ error: 'User not found', message: `No user found with ID: ${userId}` });
+    }
+
+    res.status(200).json({
+      message: 'User approved successfully',
+      user: {
+        id: data.id,
+        name: data.name,
+        email: data.email,
+        role: data.role,
+        status: data.status,
+        created_at: data.created_at
+      }
+    });
+  } catch (err) {
+    console.error('[Admin] Approve user error:', err.message);
+    res.status(500).json({ error: 'Failed to approve user', details: err.message });
+  }
+});
+
+/**
+ * POST /api/admin/users/:userId/reject
+ * Protected: admin only.
+ * Sets a user's status to 'rejected' (does not delete the row).
+ */
+adminRouter.post('/users/:userId/reject', requireRole('admin'), async (req, res) => {
+  try {
+    const { userId } = req.params;
+
+    if (!isSupabaseAvailable) {
+      return res.status(500).json({ error: 'Database not configured', details: 'Supabase is not available' });
+    }
+
+    const { data, error } = await supabase
+      .from('users')
+      .update({ status: 'rejected' })
+      .eq('id', userId)
+      .select('id, name, email, role, status, created_at')
+      .single();
+
+    if (error) {
+      console.error('[Admin] Reject user error:', error.message);
+      if (error.code === 'PGRST116') {
+        return res.status(404).json({ error: 'User not found', message: `No user found with ID: ${userId}` });
+      }
+      return res.status(500).json({ error: 'Failed to reject user', details: error.message });
+    }
+
+    if (!data) {
+      return res.status(404).json({ error: 'User not found', message: `No user found with ID: ${userId}` });
+    }
+
+    res.status(200).json({
+      message: 'User rejected successfully',
+      user: {
+        id: data.id,
+        name: data.name,
+        email: data.email,
+        role: data.role,
+        status: data.status,
+        created_at: data.created_at
+      }
+    });
+  } catch (err) {
+    console.error('[Admin] Reject user error:', err.message);
+    res.status(500).json({ error: 'Failed to reject user', details: err.message });
+  }
+});
+
+/**
+ * GET /api/admin/users
+ * Protected: admin only.
+ * Returns ALL users with role and status for role-management view.
+ */
+adminRouter.get('/users', requireRole('admin'), async (req, res) => {
+  try {
+    if (!isSupabaseAvailable) {
+      return res.status(500).json({ error: 'Database not configured', details: 'Supabase is not available' });
+    }
+
+    const { data: allUsers, error: usersError } = await supabase
+      .from('users')
+      .select('id, name, email, role, status, department, created_at')
+      .order('created_at', { ascending: false });
+
+    if (usersError) {
+      console.error('[Admin] All users error:', usersError.message);
+      return res.status(500).json({ error: 'Failed to fetch users', details: usersError.message });
+    }
+
+    res.status(200).json({
+      count: allUsers?.length || 0,
+      users: (allUsers || []).map(u => ({
+        id: u.id,
+        name: u.name,
+        email: u.email,
+        role: u.role,
+        status: u.status,
+        department: u.department || null,
+        created_at: u.created_at
+      }))
+    });
+  } catch (err) {
+    console.error('[Admin] All users error:', err.message);
+    res.status(500).json({ error: 'Failed to fetch users', details: err.message });
+  }
+});
+
+/**
+ * GET /api/trainer/students
+ * Protected: trainer only.
+ * Returns all approved trainee users (students the trainer may oversee).
+ */
+trainerRouter.get('/students', authMiddleware, requireRole('trainer'), async (req, res) => {
+  try {
+    if (!isSupabaseAvailable) {
+      return res.status(500).json({ error: 'Database not configured', details: 'Supabase is not available' });
+    }
+    const { data, error } = await supabase
+      .from('users')
+      .select('id, name, email, role, department, created_at')
+      .eq('role', 'trainee')
+      .eq('status', 'approved')
+      .order('created_at', { ascending: false });
+    if (error) {
+      console.error('[Trainer] Students error:', error.message);
+      return res.status(500).json({ error: 'Failed to fetch students', details: error.message });
+    }
+    res.status(200).json((data || []).map(u => ({
+      id: u.id, name: u.name, email: u.email, role: u.role,
+      department: u.department || null, created_at: u.created_at, progress: '0%'
+    })));
+  } catch (err) {
+    console.error('[Trainer] Students error:', err.message);
+    res.status(500).json({ error: 'Failed to fetch students', details: err.message });
+  }
+});
+
+/**
+ * GET /api/trainer/quiz-questions
+ * Protected: trainer only.
+ * Returns quiz questions from the course pool (local questions as fallback).
+ */
+trainerRouter.get('/quiz-questions', authMiddleware, requireRole('trainer'), async (req, res) => {
+  try {
+    const { MOCK_QUIZ_QUESTIONS } = require('./ai');
+    const questions = MOCK_QUIZ_QUESTIONS.map(q => ({
+      id: q.question.substring(0, 50),
+      topic: 'General',
+      question: q.question,
+      options: q.options,
+      correct: q.correctIndex
+    }));
+    res.status(200).json(questions);
+  } catch (err) {
+    console.error('[Trainer] Quiz questions error:', err.message);
+    res.status(500).json({ error: 'Failed to fetch quiz questions', details: err.message });
+  }
+});
+
 // Wire onto core router
 coreRouter.use('/auth', authRouter);
 coreRouter.use('/user', userRouter);
 coreRouter.use('/certificate', certRouter);
-coreRouter.use('/admin', adminRouter);
+coreRouter.use('/admin', authMiddleware, adminRouter);
+coreRouter.use('/trainer', trainerRouter);
 
 module.exports = coreRouter;
 module.exports.authRouter = authRouter;
 module.exports.userRouter = userRouter;
 module.exports.certRouter = certRouter;
 module.exports.adminRouter = adminRouter;
+module.exports.trainerRouter = trainerRouter;
+module.exports.authMiddleware = authMiddleware;

@@ -122,6 +122,47 @@ function fallbackAppendUser(usersArray, user) {
   return user;
 }
 
+/**
+ * Auth middleware: reads the Authorization header, extracts the token,
+ * looks up the user by ID, and sets req.user.
+ * Token format: mock-jwt-token-{userId}-{timestamp}
+ * Safe to call on every request — if no token is present, it just calls next().
+ */
+function authMiddleware(req, res, next) {
+  const authHeader = req.headers['authorization'] || '';
+  if (authHeader.startsWith('Bearer ')) {
+    const token = authHeader.substring(7);
+    const match = token.match(/^mock-jwt-token-(.+)-(\d+)$/);
+    if (match) {
+      const userId = match[1];
+      getUserById(userId).then(user => {
+        if (user) req.user = user;
+        next();
+      }).catch(() => next());
+      return;
+    }
+  }
+  next();
+}
+
+/**
+ * requireRole: returns an Express middleware that checks req.user (set by
+ * authMiddleware) against one or more allowed roles.
+ * Usage: router.get('/path', authMiddleware, requireRole('admin'), handler)
+ */
+function requireRole(...allowedRoles) {
+  return (req, res, next) => {
+    const role = req.user?.role;
+    if (!role || !allowedRoles.includes(role)) {
+      return res.status(403).json({
+        error: 'Forbidden',
+        message: `Access denied. Required role: ${allowedRoles.join(' or ')}.`
+      });
+    }
+    next();
+  };
+}
+
 module.exports = {
   supabase,
   isSupabaseAvailable,
@@ -131,4 +172,6 @@ module.exports = {
   getUserByEmail,
   createUser,
   fallbackAppendUser,
+  authMiddleware,
+  requireRole,
 };

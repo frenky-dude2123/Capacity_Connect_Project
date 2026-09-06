@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const { authMiddleware, requireRole } = require('../lib/supabaseClient');
 
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY || '';
 const GEMINI_MODEL = process.env.GEMINI_MODEL || 'gemini-2.5-flash';
@@ -424,8 +425,9 @@ const MOCK_SKILL_GAP = {
  * Returns: { questions: [{ question, options, correctIndex, explanation }], source, model }
  *
  * Source field is "ai" when generated via LLM, "mock" when using fallback data.
+ * Protected: authenticated users (trainee, trainer, admin).
  */
-router.post('/generate-quiz', async (req, res) => {
+router.post('/generate-quiz', authMiddleware, requireRole('trainee', 'trainer'), async (req, res) => {
   try {
     const { courseId, numQuestions = 3, topic, difficulty = 'intermediate', readingContent } = req.body || {};
 
@@ -524,8 +526,9 @@ Return as a JSON array under the key "questions".`;
  *
  * Accepts: { userId, weakAreas: [{ topic, score, courseId? }], enrolledCourses?, numRecommendations? }
  * Returns: { recommendations: [...], summary, source, model }
+ * Protected: authenticated users (trainee, trainer, admin).
  */
-router.post('/recommendations', async (req, res) => {
+router.post('/recommendations', authMiddleware, requireRole('trainee', 'trainer'), async (req, res) => {
   try {
     const {
       userId,
@@ -643,8 +646,9 @@ Return as a JSON object with a "recommendations" array.`;
  *
  * Accepts: { resumeText, userId?, targetRole?, department? }
  * Returns: { detectedSkills, missingSkills, recommendedCourses, suggestedEnrollments, summary, source, model }
+ * Protected: authenticated users (trainee, trainer, admin).
  */
-router.post('/skill-gap-analysis', async (req, res) => {
+router.post('/skill-gap-analysis', authMiddleware, requireRole('trainee', 'trainer'), async (req, res) => {
   try {
     const { resumeText, userId, targetRole, department } = req.body || {};
 
@@ -756,6 +760,7 @@ ${resumeText.substring(0, 4000)}
 /**
  * GET /api/ai/health
  * Returns the status of the AI service configuration.
+ * This endpoint is public (no auth required).
  */
 router.get('/health', (req, res) => {
   const keyConfigured = !!GEMINI_API_KEY;
@@ -778,4 +783,14 @@ router.get('/health', (req, res) => {
   });
 });
 
+/**
+ * GET /api/trainer/quiz-questions
+ * Protected: trainer only.
+ * Returns quiz questions from the course pool.
+ * (The route is defined in core.js using LOCAL_QUIZ_POOL below.)
+ */
+
+// Export mock data so core.js can reuse it for the trainer quiz-questions route
 module.exports = router;
+module.exports.MOCK_QUIZ_QUESTIONS = MOCK_QUIZ_QUESTIONS;
+module.exports.MOCK_RECOMMENDATIONS = MOCK_RECOMMENDATIONS;
