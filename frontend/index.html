@@ -288,6 +288,9 @@
       const headers = { ...(options.headers || {}) };
       if (options.headers) delete options.headers;
       if (token) headers['Authorization'] = `Bearer ${token}`;
+      if (options.body && !headers['Content-Type'] && !headers['content-type']) {
+        headers['Content-Type'] = 'application/json';
+      }
       return fetch(url, { ...options, headers });
     }
     async function apiRequest(url, options = {}) {

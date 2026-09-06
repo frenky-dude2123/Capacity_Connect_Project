@@ -174,6 +174,100 @@ const CURRICULUM_MAP = [
     ],
     addressGap: (missing) =>
       `Missing distributed systems or microservices skills needed for ${missing}`
+  },
+  {
+    courseId: 4,
+    title: 'Project Management Essentials: Agile, Scrum & Stakeholder Delivery',
+    category: 'Project Management',
+    skills: [
+      'agile', 'scrum', 'kanban', 'waterfall', 'pmp', 'csp', 'csm', 'cspo',
+      'safe', 'product owner', 'scrum master', 'stakeholder management',
+      'stakeholder engagement', 'risk management', 'risk mitigation',
+      'budget management', 'budget tracking', 'cost management',
+      'resource planning', 'resource allocation', 'timeline management',
+      'schedule management', 'project planning', 'project management',
+      'project lifecycle', 'critical path', 'scope management',
+      'vendor management', 'contract management', 'portfolio management',
+      'program management', 'project governance', 'change management',
+      'issue tracking', 'jira', 'trello', 'asana', 'monday.com', 'basecamp',
+      'ms project', 'microsoft project', 'prince2', 'sprint planning',
+      'sprint review', 'sprint retrospective'
+    ],
+    addressGap: (missing) =>
+      `Missing project management skills needed for ${missing}`
+  },
+  {
+    courseId: 5,
+    title: 'Business Analysis & Operations Excellence',
+    category: 'Business & Operations',
+    skills: [
+      'strategic planning', 'business strategy', 'operations management',
+      'process improvement', 'process optimization', 'operational excellence',
+      'lean', 'lean six sigma', 'six sigma', 'kaizen', 'continuous improvement',
+      'quality management', 'quality assurance', 'kpis', 'okr', 'okrs',
+      'business analysis', 'requirements gathering', 'gap analysis',
+      'business process', 'workflow design', 'workflow optimization', 'teamwork',
+      'supply chain', 'logistics', 'vendor relations', 'client relations',
+      'account management', 'relationship management', 'cross-functional',
+      'stakeholder analysis'
+    ],
+    addressGap: (missing) =>
+      `Missing business analysis or operations skills needed for ${missing}`
+  },
+  {
+    courseId: 6,
+    title: 'Marketing Analytics & Data-Driven Insights',
+    category: 'Marketing & Analytics',
+    skills: [
+      'digital marketing', 'digital advertising', 'google analytics',
+      'google ads', 'facebook ads', 'linkedin ads', 'seo',
+      'search engine optimization', 'sem', 'paid search', 'organic search',
+      'content marketing', 'email marketing', 'campaign management',
+      'campaign strategy', 'brand management', 'social media marketing',
+      'influencer marketing', 'conversion optimization', 'conversion rate optimization', 'cro',
+      'marketing automation', 'hubspot', 'market research', 'data analysis',
+      'analytics', 'tableau', 'power bi', 'looker', 'data visualization',
+      'a/b testing', 'multivariate testing', 'user testing', 'user research',
+      'customer journey', 'customer experience', 'cx', 'net promoter score', 'nps'
+    ],
+    addressGap: (missing) =>
+      `Missing analytics or marketing skills needed for ${missing}`
+  },
+  {
+    courseId: 7,
+    title: 'Soft Skills & Leadership for High-Performing Teams',
+    category: 'Soft Skills & Leadership',
+    skills: [
+      'leadership', 'team leadership', 'leadership development',
+      'conflict resolution', 'conflict management', 'negotiation', 'teamwork',
+      'communication', 'written communication', 'verbal communication',
+      'presentation', 'public speaking', 'presentation skills',
+      'interpersonal skills', 'emotional intelligence', 'eq', 'influence',
+      'collaboration', 'collaborative leadership', 'coaching', 'mentoring',
+      'delegation', 'decision making', 'critical thinking', 'problem solving',
+      'analytical thinking', 'adaptability', 'change management',
+      'time management', 'priority management', 'stress management'
+    ],
+    addressGap: (missing) =>
+      `Missing soft-skills or leadership skills needed for ${missing}`
+  },
+  {
+    courseId: 8,
+    title: 'Finance & Administration Fundamentals',
+    category: 'Finance & Administration',
+    skills: [
+      'financial reporting', 'financial analysis', 'budgeting',
+      'financial planning', 'forecasting', 'variance analysis',
+      'cost accounting', 'managerial accounting', 'excel', 'excel modeling',
+      'advanced excel', 'pivot tables', 'vlookup', 'financial modeling',
+      'valuation', 'investment analysis', 'risk assessment', 'compliance',
+      'regulatory reporting', 'contract management', 'procurement',
+      'expense management', 'invoice processing', 'accounts payable',
+      'accounts receivable', 'general ledger', 'bookkeeping',
+      'quarterly reporting', 'annual reporting', 'tax preparation', 'audit support'
+    ],
+    addressGap: (missing) =>
+      `Missing finance or administration skills needed for ${missing}`
   }
 ];
 
