@@ -62,7 +62,7 @@ async function runCoreTests() {
   const dashRes = await request({
     hostname: 'localhost',
     port: 5000,
-    path: '/api/user/dashboard/u_learner1',
+    path: '/api/user/dashboard/b1febd00-ad1c-50f9-bce9-7cc0e4e4f9b9',
     method: 'GET'
   });
 
@@ -74,7 +74,7 @@ async function runCoreTests() {
   const certRes = await request({
     hostname: 'localhost',
     port: 5000,
-    path: '/api/certificate/u_learner1/1',
+    path: '/api/certificate/b1febd00-ad1c-50f9-bce9-7cc0e4e4f9b9/1',
     method: 'GET'
   });
 

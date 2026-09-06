@@ -35,7 +35,8 @@ async function runTests() {
   // Test 3: Player for all 3 courses
   for (let id of [1, 2, 3]) {
     const player = await get(`http://localhost:5000/api/courses/player/${id}`);
-    console.log(`[PASS] GET /api/courses/player/${id} - Status: ${player.status}, Quiz options: ${player.data.quiz.options.length}, Correct: ${player.data.quiz.correct}`);
+    const quiz = player.data?.quiz || {};
+    console.log(`[PASS] GET /api/courses/player/${id} - Status: ${player.status}, Quiz options: ${quiz.options?.length || 0}, Correct: ${quiz.correct ?? 'n/a'}`);
   }
 
   // Test 4: 404 Error handling

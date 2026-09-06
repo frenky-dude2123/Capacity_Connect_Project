@@ -6,6 +6,7 @@ const {
   getUserById,
   getUserByEmail,
   createUser,
+  supabase
 } = require('../lib/supabaseClient');
 
 // Separate sub-routers
@@ -17,46 +18,8 @@ const adminRouter = express.Router();
 // Master core router combining all four
 const coreRouter = express.Router();
 
-// In-memory mock users database
-const users = [
-  {
-    id: 'u_learner1',
-    name: 'Jane Doe',
-    email: 'jane.doe@enterprise.com',
-    password: 'password123',
-    role: 'trainee',
-    status: 'approved',
-    department: 'Cloud Engineering',
-    qualification: 'B.Tech Computer Science',
-    skills: 'Python, React, Node.js'
-  },
-  {
-    id: 'u_trainer1',
-    name: 'Elena Rostova',
-    email: 'elena.rostova@enterprise.com',
-    password: 'trainer123',
-    role: 'trainer',
-    status: 'approved',
-    department: 'Cybersecurity',
-    subjects: 'ISO 27001, Zero Trust, Security Architecture'
-  },
-  {
-    id: 'u_admin',
-    name: 'Alex Rivera',
-    email: 'admin@capacityconnect.io',
-    password: 'admin123',
-    role: 'admin',
-    status: 'approved',
-    department: 'Technical Operations'
-  }
-];
-
 // Course reference for certificates
-const courseTitles = {
-  '1': 'Cloud Infrastructure & High-Availability Scaling',
-  '2': 'Enterprise Data Governance & ISO 27001 Security',
-  '3': 'Distributed Systems Design & Microservices Engineering'
-};
+const courseTitles = {};
 
 // ==========================================
 // TOPIC 1: AUTHENTICATION (Login / Signup)
@@ -64,9 +27,6 @@ const courseTitles = {
 
 /**
  * POST /api/auth/login
- * Accepts: { email, password }
- * Returns: user (id, name, email, role) + mock auth token.
- * Queries Supabase first with bcrypt verification; falls back to in-memory mock data.
  */
 authRouter.post('/login', async (req, res) => {
   try {
@@ -79,100 +39,46 @@ authRouter.post('/login', async (req, res) => {
       });
     }
 
-    // Try Supabase first (with bcrypt verification)
-    if (isSupabaseAvailable) {
-      const supabaseUser = await getUserByEmail(email);
-      if (supabaseUser) {
-        const isValid = await verifyPassword(password, supabaseUser.password_hash);
-        if (isValid) {
-          if (supabaseUser.status === 'pending') {
-            return res.status(403).json({
-              error: 'Account pending',
-              message: 'Your account is awaiting admin approval.',
-              status: supabaseUser.status
-            });
-          }
-          if (supabaseUser.status === 'rejected') {
-            return res.status(403).json({
-              error: 'Account rejected',
-              message: 'Your account registration was not approved.',
-              status: supabaseUser.status
-            });
-          }
-          const token = `mock-jwt-token-${supabaseUser.id}-${Date.now()}`;
-          const redirectMap = {
-            trainee: '/trainee/dashboard',
-            trainer: '/trainer/dashboard',
-            admin: '/admin/dashboard'
-          };
-          return res.status(200).json({
-            message: 'Login successful',
-            token,
-            source: 'supabase',
-            redirect: redirectMap[supabaseUser.role] || '/trainee/dashboard',
-            user: {
-              id: supabaseUser.id,
-              name: supabaseUser.name,
-              email: supabaseUser.email,
-              role: supabaseUser.role,
-              status: supabaseUser.status,
-              department: supabaseUser.department,
-              qualification: supabaseUser.qualification || null,
-              skills: supabaseUser.skills || null,
-              subjects: supabaseUser.subjects || null
-            }
-          });
-        }
-        return res.status(401).json({
-          error: 'Invalid credentials',
-          message: 'Email or password does not match.'
-        });
-      }
+    if (!isSupabaseAvailable) {
+      return res.status(500).json({
+        error: 'Database not configured',
+        message: 'Supabase is not available'
+      });
     }
 
-    // Fallback: in-memory mock database (plaintext password check)
-    let user = users.find(u => u.email.toLowerCase() === email.toLowerCase());
-
-    if (!user) {
-      // Create user session dynamically for testing
-      const isDomainAdmin = email.toLowerCase().includes('admin');
-      user = {
-        id: `u_${Date.now()}`,
-        name: email.split('@')[0].replace('.', ' ').replace(/\b\w/g, c => c.toUpperCase()),
-        email: email,
-        password: 'password123',
-        role: isDomainAdmin ? 'admin' : 'trainee',
-        status: 'approved',
-        department: 'General Engineering'
-      };
-      users.push(user);
-    }
-
-    // Verify plaintext password for in-memory fallback
-    if (user.password && user.password !== password) {
+    const supabaseUser = await getUserByEmail(email);
+    if (!supabaseUser) {
       return res.status(401).json({
         error: 'Invalid credentials',
         message: 'Email or password does not match.'
       });
     }
 
-    if (user.status === 'pending') {
+    const isValid = await verifyPassword(password, supabaseUser.password_hash);
+    if (!isValid) {
+      return res.status(401).json({
+        error: 'Invalid credentials',
+        message: 'Email or password does not match.'
+      });
+    }
+
+    if (supabaseUser.status === 'pending') {
       return res.status(403).json({
         error: 'Account pending',
         message: 'Your account is awaiting admin approval.',
-        status: user.status
+        status: supabaseUser.status
       });
     }
 
-    if (user.status === 'rejected') {
+    if (supabaseUser.status === 'rejected') {
       return res.status(403).json({
         error: 'Account rejected',
         message: 'Your account registration was not approved.',
-        status: user.status
+        status: supabaseUser.status
       });
     }
 
-    const token = `mock-jwt-token-${user.id}-${Date.now()}`;
+    const token = `mock-jwt-token-${supabaseUser.id}-${Date.now()}`;
     const redirectMap = {
       trainee: '/trainee/dashboard',
       trainer: '/trainer/dashboard',
@@ -182,28 +88,28 @@ authRouter.post('/login', async (req, res) => {
     res.status(200).json({
       message: 'Login successful',
       token,
-      redirect: redirectMap[user.role] || '/trainee/dashboard',
+      source: 'supabase',
+      redirect: redirectMap[supabaseUser.role] || '/trainee/dashboard',
       user: {
-        id: user.id,
-        name: user.name,
-        email: user.email,
-        role: user.role,
-        status: user.status,
-        department: user.department,
-        qualification: user.qualification || null,
-        skills: user.skills || null,
-        subjects: user.subjects || null
+        id: supabaseUser.id,
+        name: supabaseUser.name,
+        email: supabaseUser.email,
+        role: supabaseUser.role,
+        status: supabaseUser.status,
+        department: supabaseUser.department,
+        qualification: supabaseUser.qualification || null,
+        skills: supabaseUser.skills || null,
+        subjects: supabaseUser.subjects || null
       }
     });
   } catch (err) {
+    console.error('[Auth] Login error:', err.message);
     res.status(500).json({ error: 'Login error', details: err.message });
   }
 });
 
 /**
  * POST /api/auth/signup
- * Accepts: { name, email, password, role }
- * Returns: new mock user (id, name, email, role) + mock auth token
  */
 authRouter.post('/signup', async (req, res) => {
   try {
@@ -216,83 +122,61 @@ authRouter.post('/signup', async (req, res) => {
       });
     }
 
+    if (!isSupabaseAvailable) {
+      return res.status(500).json({
+        error: 'Database not configured',
+        message: 'Supabase is not available'
+      });
+    }
+
     const normalizedRole = role === 'trainer' ? 'trainer' : 'trainee';
     const userEmail = email.trim().toLowerCase();
 
-    // Try Supabase first (with bcrypt hashing)
-    if (isSupabaseAvailable) {
-      // Check if email already exists
-      const existingUser = await getUserByEmail(email);
-      if (existingUser) {
-        return res.status(409).json({
-          error: 'Conflict',
-          message: 'A user with this email already exists.'
-        });
-      }
-
-      const passwordHash = await hashPassword(password);
-      const supabaseUser = await createUser({
-        name: name.trim(),
-        email: userEmail,
-        password_hash: passwordHash,
-        role: normalizedRole,
-        status: 'pending',
-        department: 'Enterprise Learning',
-        qualification: normalizedRole === 'trainee' ? qualification || null : null,
-        skills: normalizedRole === 'trainee' ? skills || null : null,
-        subjects: normalizedRole === 'trainer' ? subjects || null : null
+    const existingUser = await getUserByEmail(email);
+    if (existingUser) {
+      return res.status(409).json({
+        error: 'Conflict',
+        message: 'A user with this email already exists.'
       });
-
-      if (supabaseUser) {
-        const token = `mock-jwt-token-${supabaseUser.id}-${Date.now()}`;
-        return res.status(201).json({
-          message: 'User registered successfully. Awaiting admin approval.',
-          token,
-          source: 'supabase',
-          user: {
-            id: supabaseUser.id,
-            name: supabaseUser.name,
-            email: supabaseUser.email,
-            role: supabaseUser.role,
-            status: supabaseUser.status,
-            department: supabaseUser.department
-          }
-        });
-      }
     }
 
-    // Fallback: in-memory mock database
-    const newUser = {
-      id: `u_${Date.now()}`,
+    const passwordHash = await hashPassword(password);
+    const supabaseUser = await createUser({
       name: name.trim(),
       email: userEmail,
-      password,
+      password_hash: passwordHash,
       role: normalizedRole,
       status: 'pending',
       department: 'Enterprise Learning',
       qualification: normalizedRole === 'trainee' ? qualification || null : null,
       skills: normalizedRole === 'trainee' ? skills || null : null,
       subjects: normalizedRole === 'trainer' ? subjects || null : null
-    };
+    });
 
-    users.push(newUser);
+    if (!supabaseUser) {
+      return res.status(500).json({
+        error: 'Signup error',
+        message: 'Failed to create user in database'
+      });
+    }
 
-    const token = `mock-jwt-token-${newUser.id}-${Date.now()}`;
+    const token = `mock-jwt-token-${supabaseUser.id}-${Date.now()}`;
 
     res.status(201).json({
       message: 'User registered successfully. Awaiting admin approval.',
       token,
-      source: 'mock',
+      source: 'supabase',
       user: {
-        id: newUser.id,
-        name: newUser.name,
-        email: newUser.email,
-        role: newUser.role,
-        status: newUser.status,
-        department: newUser.department
+        id: supabaseUser.id,
+        name: supabaseUser.name,
+        email: supabaseUser.email,
+        role: supabaseUser.role,
+        status: supabaseUser.status,
+        department: supabaseUser.department
       }
     });
   } catch (err) {
+    console.error('[Auth] Signup error:', err.message);
     res.status(500).json({ error: 'Signup error', details: err.message });
   }
 });
@@ -321,32 +205,21 @@ function requireRole(...allowedRoles) {
 
 /**
  * GET /api/user/dashboard/:userId
- * Returns enrolled courses array, completion metrics, and recommended suggestions.
- * Attempts to fetch the user profile from Supabase; falls back to in-memory mock data.
- * Protected: trainee and trainer can access; admin can access all.
  */
 userRouter.get('/dashboard/:userId', async (req, res) => {
   try {
     const { userId } = req.params;
 
-    let user = users.find(u => u.id === userId);
-
-    // Try Supabase if user not found in-memory
-    if (!user && isSupabaseAvailable) {
-      const supabaseUser = await getUserById(userId);
-      if (supabaseUser) {
-        user = supabaseUser;
-      }
+    if (!isSupabaseAvailable) {
+      return res.status(500).json({ error: 'Database not configured', details: 'Supabase is not available' });
     }
 
+    const user = await getUserById(userId);
     if (!user) {
-      user = {
-        id: userId,
-        name: 'Jane Doe',
-        email: 'jane.doe@enterprise.com',
-        role: 'trainee',
-        status: 'approved'
-      };
+      return res.status(404).json({
+        error: 'User not found',
+        message: `No user found with ID: ${userId}`
+      });
     }
 
     if (user.status !== 'approved') {
@@ -356,64 +229,69 @@ userRouter.get('/dashboard/:userId', async (req, res) => {
       });
     }
 
-    const enrolledCourses = [
-      {
-        id: 1,
-        title: 'Cloud Infrastructure & High-Availability Scaling',
-        category: 'Cloud Architecture',
-        progressPercent: 68,
-        status: 'In Progress',
-        instructor: 'Dr. Aris Vance'
-      },
-      {
-        id: 2,
-        title: 'Enterprise Data Governance & ISO 27001 Security',
-        category: 'Security & Compliance',
-        progressPercent: 92,
-        status: 'Quiz Ready',
-        instructor: 'Elena Rostova'
-      },
-      {
-        id: 3,
-        title: 'Distributed Systems Design & Microservices Engineering',
-        category: 'Software Engineering',
-        progressPercent: 35,
-        status: 'In Progress',
-        instructor: 'Marcus Chen'
-      }
-    ];
+    const { data: enrollments, error: enrollError } = await supabase
+      .from('enrollments')
+      .select('*')
+      .eq('user_id', userId);
+
+    if (enrollError) {
+      console.error('[Dashboard] Enrollments error:', enrollError.message);
+    }
+
+    const courseIds = (enrollments || []).map(e => e.course_id);
+    const { data: coursesData, error: coursesError } = await supabase
+      .from('courses')
+      .select('id, title, category, instructor')
+      .in('id', courseIds.length ? courseIds : [0]);
+
+    if (coursesError) {
+      console.error('[Dashboard] Courses error:', coursesError.message);
+    }
+
+    const courseMap = new Map((coursesData || []).map(c => [c.id, c]));
+    const enrolledCourses = (enrollments || []).map(e => {
+      const course = courseMap.get(e.course_id);
+      return {
+        id: e.course_id,
+        title: course?.title || `Course ${e.course_id}`,
+        category: course?.category || '',
+        progressPercent: e.progress_percent || 0,
+        status: e.status || 'Not Started',
+        instructor: course?.instructor || ''
+      };
+    });
+
+    const totalEnrollments = enrolledCourses.length;
+    const completedCourses = enrolledCourses.filter(c => c.status === 'Completed').length;
+    const overallCompletionPercent = totalEnrollments ? Math.round((completedCourses / totalEnrollments) * 100) : 0;
 
     const metrics = {
-      overallCompletionPercent: 65,
-      capacityScore: 94,
-      activeCourses: 3,
-      trainingHours: 42.5,
-      completedCertifications: 2
+      overallCompletionPercent,
+      capacityScore: overallCompletionPercent > 0 ? overallCompletionPercent + 10 : 0,
+      activeCourses: totalEnrollments,
+      trainingHours: totalEnrollments * 14,
+      completedCertifications: completedCourses
     };
 
-    const recommendedCourses = [
-      {
-        id: 101,
-        title: 'Zero Trust Architecture & Identity Federation',
-        category: 'Cybersecurity',
+    const { data: allCourses, error: allCoursesError } = await supabase
+      .from('courses')
+      .select('id, title, category')
+      .limit(10);
+
+    if (allCoursesError) {
+      console.error('[Dashboard] All courses error:', allCoursesError.message);
+    }
+
+    const recommendedCourses = (allCourses || [])
+      .filter(c => !courseIds.includes(c.id))
+      .slice(0, 3)
+      .map(c => ({
+        id: c.id,
+        title: c.title,
+        category: c.category,
         estimatedHours: 8,
-        difficulty: 'Advanced'
-      },
-      {
-        id: 102,
-        title: 'Observability & Chaos Testing in Kubernetes',
-        category: 'DevOps',
-        estimatedHours: 12,
         difficulty: 'Intermediate'
-      },
-      {
-        id: 103,
-        title: 'Event-Driven Microservices with Apache Kafka',
-        category: 'Software Engineering',
-        estimatedHours: 10,
-        difficulty: 'Advanced'
-      }
-    ];
+      }));
 
     res.status(200).json({
       userId: user.id,
@@ -425,6 +303,7 @@ userRouter.get('/dashboard/:userId', async (req, res) => {
       recommendedCourses
     });
   } catch (err) {
+    console.error('[Dashboard] Error:', err.message);
     res.status(500).json({ error: 'Failed to fetch dashboard data', details: err.message });
   }
 });
@@ -435,35 +314,45 @@ userRouter.get('/dashboard/:userId', async (req, res) => {
 
 /**
  * GET /api/certificate/:userId/:courseId
- * Returns certificate metadata including studentName, courseTitle, completionDate,
- * certificateId, and issueAuthority for rendering/downloading.
  */
 certRouter.get('/:userId/:courseId', async (req, res) => {
   try {
     const { userId, courseId } = req.params;
 
-    let user = users.find(u => u.id === userId);
-
-    // Try Supabase if user not found in-memory
-    if (!user && isSupabaseAvailable) {
-      const supabaseUser = await getUserById(userId);
-      if (supabaseUser) {
-        user = supabaseUser;
-      }
+    if (!isSupabaseAvailable) {
+      return res.status(500).json({ error: 'Database not configured', details: 'Supabase is not available' });
     }
 
-    const studentName = user ? (user.name || 'Jane Doe') : 'Jane Doe';
+    const user = await getUserById(userId);
+    if (!user) {
+      return res.status(404).json({
+        error: 'User not found',
+        message: `No user found with ID: ${userId}`
+      });
+    }
 
-    const courseTitle = courseTitles[courseId] || `Advanced Enterprise Certification (Course #${courseId})`;
+    const { data: course, error: courseError } = await supabase
+      .from('courses')
+      .select('title')
+      .eq('id', courseId)
+      .single();
+
+    if (courseError || !course) {
+      return res.status(404).json({
+        error: 'Course not found',
+        message: `No course exists with ID: ${courseId}`
+      });
+    }
+
     const certificateId = `CERT-2026-CC-${Math.abs((userId.hashCode ? userId.hashCode() : 8942) + Number(courseId) * 17)}`;
 
     res.status(200).json({
       certificateId,
       userId,
-      studentName,
+      studentName: user.name,
       courseId: isNaN(courseId) ? courseId : Number(courseId),
-      courseTitle,
-      completionDate: 'September 4, 2026',
+      courseTitle: course.title,
+      completionDate: new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }),
       issueAuthority: 'Capacity Connect Enterprise Accreditation Board',
       grade: 'Passed with Distinction (96%)',
       verificationUrl: `https://verify.capacityconnect.io/cert/${certificateId}`,
@@ -475,6 +364,7 @@ certRouter.get('/:userId/:courseId', async (req, res) => {
       ]
     });
   } catch (err) {
+    console.error('[Certificate] Error:', err.message);
     res.status(500).json({ error: 'Failed to generate certificate', details: err.message });
   }
 });
@@ -485,76 +375,67 @@ certRouter.get('/:userId/:courseId', async (req, res) => {
 
 /**
  * GET /api/admin/stats
- * Returns top-level platform analytics (totalUsers, totalCourses, activeLearners, completionRatePercent)
- * and a list of registered users.
  * Protected: admin only.
  */
-adminRouter.get('/stats', requireRole('admin'), (req, res) => {
+adminRouter.get('/stats', requireRole('admin'), async (req, res) => {
   try {
-    const registeredUsers = [
-      {
-        id: 'u_1',
-        name: 'Jane Doe',
-        email: 'jane.doe@enterprise.com',
-        role: 'trainee',
-        department: 'Cloud Engineering',
-        progress: '78%',
-        status: 'Active'
-      },
-      {
-        id: 'u_2',
-        name: 'Alex Rivera',
-        email: 'alex.rivera@enterprise.com',
-        role: 'admin',
-        department: 'Technical Operations',
-        progress: '100%',
-        status: 'Active'
-      },
-      {
-        id: 'u_3',
-        name: 'Elena Rostova',
-        email: 'elena.r@enterprise.com',
-        role: 'trainer',
-        department: 'Cybersecurity',
-        progress: '95%',
-        status: 'Active'
-      },
-      {
-        id: 'u_4',
-        name: 'Marcus Chen',
-        email: 'marcus.c@enterprise.com',
-        role: 'trainee',
-        department: 'Backend Platform',
-        progress: '64%',
-        status: 'Active'
-      },
-      {
-        id: 'u_5',
-        name: 'Sarah Connor',
-        email: 'sarah.c@enterprise.com',
-        role: 'trainee',
-        department: 'DevOps & Reliability',
-        progress: '42%',
-        status: 'Behind Schedule'
-      }
-    ];
+    if (!isSupabaseAvailable) {
+      return res.status(500).json({ error: 'Database not configured', details: 'Supabase is not available' });
+    }
+
+    const { data: users, error: usersError } = await supabase
+      .from('users')
+      .select('id, name, email, role, department, created_at')
+      .order('created_at', { ascending: false });
+
+    if (usersError) {
+      console.error('[Admin] Users error:', usersError.message);
+    }
+
+    const { data: courses, error: coursesError } = await supabase
+      .from('courses')
+      .select('id');
+
+    if (coursesError) {
+      console.error('[Admin] Courses error:', coursesError.message);
+    }
+
+    const { data: enrollments, error: enrollError } = await supabase
+      .from('enrollments')
+      .select('status');
+
+    if (enrollError) {
+      console.error('[Admin] Enrollments error:', enrollError.message);
+    }
+
+    const totalUsers = users?.length || 0;
+    const totalCourses = courses?.length || 0;
+    const activeLearners = new Set((enrollments || []).map(e => e.user_id)).size;
+    const completedEnrollments = (enrollments || []).filter(e => e.status === 'Completed').length;
+    const completionRatePercent = activeLearners > 0 ? parseFloat(((completedEnrollments / activeLearners) * 100).toFixed(1)) : 0;
+
+    const registeredUsers = (users || []).slice(0, 5).map(u => ({
+      id: u.id,
+      name: u.name,
+      email: u.email,
+      role: u.role,
+      department: u.department || 'General',
+      progress: '0%',
+      status: 'Active'
+    }));
 
     res.status(200).json({
-      totalUsers: 1480,
-      totalCourses: 18,
-      activeLearners: 1124,
-      completionRatePercent: 92.4,
+      totalUsers,
+      totalCourses,
+      activeLearners,
+      completionRatePercent,
       capacityIndex: 88.4,
-      overdueComplianceCount: 14,
+      overdueComplianceCount: 0,
       registeredUsers,
-      departmentTelemetry: [
-        { department: 'Engineering', completionRate: 94.2, activeCount: 520 },
-        { department: 'Security', completionRate: 98.0, activeCount: 210 },
-        { department: 'Product', completionRate: 91.5, activeCount: 340 },
-        { department: 'Operations', completionRate: 76.8, activeCount: 410 }
-      ]
+      departmentTelemetry: []
     });
   } catch (err) {
+    console.error('[Admin] Stats error:', err.message);
     res.status(500).json({ error: 'Failed to fetch admin stats', details: err.message });
   }
 });

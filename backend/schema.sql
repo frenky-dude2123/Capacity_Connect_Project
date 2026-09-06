@@ -146,7 +146,7 @@ on conflict (email) do update set
 -- Email: elena.rostova@enterprise.com | Password: trainer123
 insert into public.users (id, name, email, password_hash, role, status, department, subjects)
 values (
-  'c2gfcd01-be2d-60gacf0f8-8dd1f5f5g0c0',
+  'c2afcd01-be2d-60f0-ac0f-8dd1f5f5a0c0',
   'Elena Rostova',
   'elena.rostova@enterprise.com',
   '$2b$10$WJcM2u.dK7yVmA6RfVN8qva068MOdkJl0WONaaBPARU7UKYaampDb',
