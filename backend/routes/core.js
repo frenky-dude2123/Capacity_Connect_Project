@@ -63,20 +63,20 @@ authRouter.post('/login', async (req, res) => {
     }
 
     if (supabaseUser.status === 'pending') {
-      return res.status(403).json({
-        error: 'Account pending',
-        message: 'Your account is awaiting admin approval.',
-        status: supabaseUser.status
-      });
-    }
+        return res.status(403).json({
+          error: 'Account pending',
+          message: 'Your account is awaiting admin approval.',
+          status: supabaseUser.status
+        });
+      }
 
-    if (supabaseUser.status === 'rejected') {
-      return res.status(403).json({
-        error: 'Account rejected',
-        message: 'Your account registration was not approved.',
-        status: supabaseUser.status
-      });
-    }
+      if (supabaseUser.status === 'rejected') {
+        return res.status(403).json({
+          error: 'Account rejected',
+          message: 'Your account registration was not approved.',
+          status: supabaseUser.status
+        });
+      }
 
     const token = `mock-jwt-token-${supabaseUser.id}-${Date.now()}`;
     const redirectMap = {
@@ -102,7 +102,9 @@ authRouter.post('/login', async (req, res) => {
         subjects: supabaseUser.subjects || null
       }
     });
-  } catch (err) {
+  }
+
+  catch (err) {
     console.error('[Auth] Login error:', err.message);
     res.status(500).json({ error: 'Login error', details: err.message });
   }
