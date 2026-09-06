@@ -13,9 +13,14 @@ create table if not exists public.users (
   name           text        not null,
   email          text        unique not null,
   password_hash  text        not null,          -- bcrypt hash
-  role           text        check (role in ('learner', 'admin', 'instructor'))
-                   not null default 'learner',
+  role           text        check (role in ('trainee', 'trainer', 'admin'))
+                   not null default 'trainee',
+  status         text        check (status in ('pending', 'approved', 'rejected'))
+                   not null default 'pending',
   department     text,
+  qualification  text,
+  skills         text,
+  subjects       text,
   created_at     timestamp   with time zone default timezone('utc'::text, now()),
   updated_at     timestamp   with time zone default timezone('utc'::text, now())
 );
@@ -97,37 +102,66 @@ $$;
 
 -- ADMIN USER (the one admin database credential)
 -- Email: admin@capacityconnect.io | Password: admin123
-insert into public.users (id, name, email, password_hash, role, department)
+insert into public.users (id, name, email, password_hash, role, status, department)
 values (
   'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11',
   'Alex Rivera',
   'admin@capacityconnect.io',
   '$2b$10$VFbL1tc.J6xUlzQ5HuM7pu957LNcjI9kdVM9nZaAOzQ6TJxZcmpCa',
   'admin',
+  'approved',
   'Technical Operations'
 )
 on conflict (email) do update set
   name = 'Alex Rivera',
   password_hash = '$2b$10$VFbL1tc.J6xUlzQ5HuM7pu957LNcjI9kdVM9nZaAOzQ6TJxZcmpCa',
   role = 'admin',
+  status = 'approved',
   department = 'Technical Operations';
 
--- LEARNER USER
+-- TRAINEE USER
 -- Email: jane.doe@enterprise.com | Password: password123
-insert into public.users (id, name, email, password_hash, role, department)
+insert into public.users (id, name, email, password_hash, role, status, department, qualification, skills)
 values (
   'b1febd00-ad1c-50f9-bce9-7cc0e4e4f9b9',
   'Jane Doe',
   'jane.doe@enterprise.com',
   '$2b$10$qy1wem6GFjIsult5F3fP0.9ECi9PG9UKyiMKf2CVaauYlFQBZVlBq',
-  'learner',
-  'Cloud Engineering'
+  'trainee',
+  'approved',
+  'Cloud Engineering',
+  'B.Tech Computer Science',
+  'Python, React, Node.js'
 )
 on conflict (email) do update set
   name = 'Jane Doe',
   password_hash = '$2b$10$qy1wem6GFjIsult5F3fP0.9ECi9PG9UKyiMKf2CVaauYlFQBZVlBq',
-  role = 'learner',
-  department = 'Cloud Engineering';
+  role = 'trainee',
+  status = 'approved',
+  department = 'Cloud Engineering',
+  qualification = 'B.Tech Computer Science',
+  skills = 'Python, React, Node.js';
+
+-- TRAINER USER
+-- Email: elena.rostova@enterprise.com | Password: trainer123
+insert into public.users (id, name, email, password_hash, role, status, department, subjects)
+values (
+  'c2gfcd01-be2d-60gacf0f8-8dd1f5f5g0c0',
+  'Elena Rostova',
+  'elena.rostova@enterprise.com',
+  '$2b$10$WJcM2u.dK7yVmA6RfVN8qva068MOdkJl0WONaaBPARU7UKYaampDb',
+  'trainer',
+  'approved',
+  'Cybersecurity',
+  'ISO 27001, Zero Trust, Security Architecture'
+)
+on conflict (email) do update set
+  name = 'Elena Rostova',
+  password_hash = '$2b$10$WJcM2u.dK7yVmA6RfVN8qva068MOdkJl0WONaaBPARU7UKYaampDb',
+  role = 'trainer',
+  status = 'approved',
+  department = 'Cybersecurity',
+  subjects = 'ISO 27001, Zero Trust, Security Architecture';
 
 -- =============================================================
 -- 7. Related tables (optional — uncomment to extend the schema)

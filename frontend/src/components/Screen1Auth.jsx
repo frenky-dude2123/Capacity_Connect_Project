@@ -2,18 +2,15 @@ import React, { useState } from 'react';
 
 const API_BASE_URL = 'http://localhost:5000/api/auth';
 
-/**
- * Screen 1: Authentication (Login / Signup) Stitch Component
- * Connects to:
- *  - POST http://localhost:5000/api/auth/login
- *  - POST http://localhost:5000/api/auth/signup
- */
 export default function Screen1Auth({ onAuthSuccess, onNavigateToScreen }) {
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState('jane.doe@enterprise.com');
   const [password, setPassword] = useState('password123');
   const [name, setName] = useState('Jane Doe');
-  const [role, setRole] = useState('learner');
+  const [signupRole, setSignupRole] = useState('trainee');
+  const [qualification, setQualification] = useState('');
+  const [skills, setSkills] = useState('');
+  const [subjects, setSubjects] = useState('');
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -29,7 +26,7 @@ export default function Screen1Auth({ onAuthSuccess, onNavigateToScreen }) {
       const endpoint = isLogin ? `${API_BASE_URL}/login` : `${API_BASE_URL}/signup`;
       const payload = isLogin
         ? { email, password }
-        : { name, email, password, role };
+        : { name, email, password, role: signupRole, qualification, skills, subjects };
 
       const response = await fetch(endpoint, {
         method: 'POST',
@@ -56,7 +53,7 @@ export default function Screen1Auth({ onAuthSuccess, onNavigateToScreen }) {
 
   const handleQuickLogin = (userEmail, userRole) => {
     setEmail(userEmail);
-    setPassword(userRole === 'admin' ? 'admin123' : 'password123');
+    setPassword(userRole === 'admin' ? 'admin123' : userRole === 'trainer' ? 'trainer123' : 'password123');
     setIsLogin(true);
   };
 
@@ -107,10 +104,17 @@ export default function Screen1Auth({ onAuthSuccess, onNavigateToScreen }) {
           <div className="flex flex-wrap gap-2">
             <button
               type="button"
-              onClick={() => handleQuickLogin('jane.doe@enterprise.com', 'learner')}
+              onClick={() => handleQuickLogin('jane.doe@enterprise.com', 'trainee')}
               className="px-2.5 py-1 text-xs font-semibold bg-white hover:bg-slate-100 border border-slate-200 rounded-lg text-slate-700 transition"
             >
-              👤 Jane Doe (Learner)
+              👤 Jane Doe (Trainee)
+            </button>
+            <button
+              type="button"
+              onClick={() => handleQuickLogin('elena.rostova@enterprise.com', 'trainer')}
+              className="px-2.5 py-1 text-xs font-semibold bg-white hover:bg-slate-100 border border-slate-200 rounded-lg text-slate-700 transition"
+            >
+              🎓 Elena Rostova (Trainer)
             </button>
             <button
               type="button"
@@ -162,16 +166,62 @@ export default function Screen1Auth({ onAuthSuccess, onNavigateToScreen }) {
           </div>
 
           {!isLogin && (
-            <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">Account Role</label>
-              <select
-                value={role}
-                onChange={(e) => setRole(e.target.value)}
-                className="w-full px-3.5 py-2 rounded-lg border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-900"
-              >
-                <option value="learner">Learner (Individual Contributor)</option>
-                <option value="admin">Administrator (Org Telemetry)</option>
-              </select>
+            <div className="space-y-3">
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 mb-1">Sign up as</label>
+                <div className="flex gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setSignupRole('trainee')}
+                    className={`flex-1 py-2 rounded-lg border-2 text-xs font-bold transition ${
+                      signupRole === 'trainee' ? 'border-blue-900 bg-blue-50 text-blue-900' : 'border-slate-200 text-slate-600'
+                    }`}
+                  >
+                    Trainee
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setSignupRole('trainer')}
+                    className={`flex-1 py-2 rounded-lg border-2 text-xs font-bold transition ${
+                      signupRole === 'trainer' ? 'border-blue-900 bg-blue-50 text-blue-900' : 'border-slate-200 text-slate-600'
+                    }`}
+                  >
+                    Trainer
+                  </button>
+                </div>
+                <p className="text-[10px] text-slate-400 mt-1">Admin accounts cannot be self-registered.</p>
+              </div>
+
+              {signupRole === 'trainee' && (
+                <div className="space-y-2">
+                  <input
+                    type="text"
+                    placeholder="Qualification (optional)"
+                    value={qualification}
+                    onChange={(e) => setQualification(e.target.value)}
+                    className="w-full px-3.5 py-2 rounded-lg border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-900"
+                  />
+                  <input
+                    type="text"
+                    placeholder="Skills (comma separated)"
+                    value={skills}
+                    onChange={(e) => setSkills(e.target.value)}
+                    className="w-full px-3.5 py-2 rounded-lg border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-900"
+                  />
+                </div>
+              )}
+
+              {signupRole === 'trainer' && (
+                <div className="space-y-2">
+                  <input
+                    type="text"
+                    placeholder="Subjects / Skills you can teach"
+                    value={subjects}
+                    onChange={(e) => setSubjects(e.target.value)}
+                    className="w-full px-3.5 py-2 rounded-lg border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-900"
+                  />
+                </div>
+              )}
             </div>
           )}
 
@@ -186,32 +236,44 @@ export default function Screen1Auth({ onAuthSuccess, onNavigateToScreen }) {
             disabled={loading}
             className="w-full py-2.5 rounded-xl bg-blue-900 hover:bg-blue-950 text-white text-sm font-bold shadow-md transition disabled:bg-slate-300"
           >
-            {loading ? 'Authenticating...' : isLogin ? 'Sign In' : 'Create Account'}
+            {loading ? 'Submitting...' : isLogin ? 'Sign In' : 'Create Account'}
           </button>
         </form>
 
         {/* Success Output */}
         {authData && (
           <div className="mt-6 pt-6 border-t border-slate-100 space-y-3">
-            <div className="p-4 bg-emerald-50 border border-emerald-200 rounded-xl text-xs text-emerald-900">
-              <p className="font-bold flex items-center gap-1.5 text-sm">
-                <span>✓</span>
-                <span>{authData.message || 'Authentication Successful!'}</span>
-              </p>
-              <div className="mt-2 space-y-1 font-mono text-[11px]">
-                <p><strong>User:</strong> {authData.user?.name} ({authData.user?.role})</p>
-                <p><strong>Email:</strong> {authData.user?.email}</p>
-                <p className="truncate"><strong>Token:</strong> {authData.token}</p>
+            {authData.status === 'pending' ? (
+              <div className="p-4 bg-amber-50 border border-amber-200 rounded-xl text-xs text-amber-900">
+                <p className="font-bold flex items-center gap-1.5 text-sm">
+                  <span>⏳</span>
+                  <span>{authData.message || 'Your account is awaiting admin approval.'}</span>
+                </p>
+                <p className="mt-2 text-[11px] text-slate-600">
+                  You will be able to log in once an admin approves your account.
+                </p>
               </div>
-            </div>
+            ) : (
+              <div className="p-4 bg-emerald-50 border border-emerald-200 rounded-xl text-xs text-emerald-900">
+                <p className="font-bold flex items-center gap-1.5 text-sm">
+                  <span>✓</span>
+                  <span>{authData.message || 'Authentication Successful!'}</span>
+                </p>
+                <div className="mt-2 space-y-1 font-mono text-[11px]">
+                  <p><strong>User:</strong> {authData.user?.name} ({authData.user?.role})</p>
+                  <p><strong>Email:</strong> {authData.user?.email}</p>
+                  <p className="truncate"><strong>Token:</strong> {authData.token}</p>
+                </div>
+              </div>
+            )}
 
             <div className="flex gap-2">
               <button
                 type="button"
-                onClick={() => onNavigateToScreen && onNavigateToScreen(2, authData.user?.id)}
+                onClick={() => onNavigateToScreen && onNavigateToScreen(2)}
                 className="flex-1 py-2 text-center rounded-lg bg-blue-900 text-white text-xs font-bold shadow-sm"
               >
-                Go to Learner Dashboard (Screen 2) →
+                Go to Dashboard →
               </button>
               {authData.user?.role === 'admin' && (
                 <button
@@ -219,7 +281,7 @@ export default function Screen1Auth({ onAuthSuccess, onNavigateToScreen }) {
                   onClick={() => onNavigateToScreen && onNavigateToScreen(7)}
                   className="flex-1 py-2 text-center rounded-lg bg-purple-900 text-white text-xs font-bold shadow-sm"
                 >
-                  Go to Admin Suite (Screen 7) →
+                  Admin Suite →
                 </button>
               )}
             </div>

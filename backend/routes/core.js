@@ -24,8 +24,21 @@ const users = [
     name: 'Jane Doe',
     email: 'jane.doe@enterprise.com',
     password: 'password123',
-    role: 'learner',
-    department: 'Cloud Engineering'
+    role: 'trainee',
+    status: 'approved',
+    department: 'Cloud Engineering',
+    qualification: 'B.Tech Computer Science',
+    skills: 'Python, React, Node.js'
+  },
+  {
+    id: 'u_trainer1',
+    name: 'Elena Rostova',
+    email: 'elena.rostova@enterprise.com',
+    password: 'trainer123',
+    role: 'trainer',
+    status: 'approved',
+    department: 'Cybersecurity',
+    subjects: 'ISO 27001, Zero Trust, Security Architecture'
   },
   {
     id: 'u_admin',
@@ -33,6 +46,7 @@ const users = [
     email: 'admin@capacityconnect.io',
     password: 'admin123',
     role: 'admin',
+    status: 'approved',
     department: 'Technical Operations'
   }
 ];
@@ -71,17 +85,41 @@ authRouter.post('/login', async (req, res) => {
       if (supabaseUser) {
         const isValid = await verifyPassword(password, supabaseUser.password_hash);
         if (isValid) {
+          if (supabaseUser.status === 'pending') {
+            return res.status(403).json({
+              error: 'Account pending',
+              message: 'Your account is awaiting admin approval.',
+              status: supabaseUser.status
+            });
+          }
+          if (supabaseUser.status === 'rejected') {
+            return res.status(403).json({
+              error: 'Account rejected',
+              message: 'Your account registration was not approved.',
+              status: supabaseUser.status
+            });
+          }
           const token = `mock-jwt-token-${supabaseUser.id}-${Date.now()}`;
+          const redirectMap = {
+            trainee: '/trainee/dashboard',
+            trainer: '/trainer/dashboard',
+            admin: '/admin/dashboard'
+          };
           return res.status(200).json({
             message: 'Login successful',
             token,
             source: 'supabase',
+            redirect: redirectMap[supabaseUser.role] || '/trainee/dashboard',
             user: {
               id: supabaseUser.id,
               name: supabaseUser.name,
               email: supabaseUser.email,
               role: supabaseUser.role,
-              department: supabaseUser.department
+              status: supabaseUser.status,
+              department: supabaseUser.department,
+              qualification: supabaseUser.qualification || null,
+              skills: supabaseUser.skills || null,
+              subjects: supabaseUser.subjects || null
             }
           });
         }
@@ -103,7 +141,8 @@ authRouter.post('/login', async (req, res) => {
         name: email.split('@')[0].replace('.', ' ').replace(/\b\w/g, c => c.toUpperCase()),
         email: email,
         password: 'password123',
-        role: isDomainAdmin ? 'admin' : 'learner',
+        role: isDomainAdmin ? 'admin' : 'trainee',
+        status: 'approved',
         department: 'General Engineering'
       };
       users.push(user);
@@ -117,16 +156,43 @@ authRouter.post('/login', async (req, res) => {
       });
     }
 
+    if (user.status === 'pending') {
+      return res.status(403).json({
+        error: 'Account pending',
+        message: 'Your account is awaiting admin approval.',
+        status: user.status
+      });
+    }
+
+    if (user.status === 'rejected') {
+      return res.status(403).json({
+        error: 'Account rejected',
+        message: 'Your account registration was not approved.',
+        status: user.status
+      });
+    }
+
     const token = `mock-jwt-token-${user.id}-${Date.now()}`;
+    const redirectMap = {
+      trainee: '/trainee/dashboard',
+      trainer: '/trainer/dashboard',
+      admin: '/admin/dashboard'
+    };
 
     res.status(200).json({
       message: 'Login successful',
       token,
+      redirect: redirectMap[user.role] || '/trainee/dashboard',
       user: {
         id: user.id,
         name: user.name,
         email: user.email,
-        role: user.role
+        role: user.role,
+        status: user.status,
+        department: user.department,
+        qualification: user.qualification || null,
+        skills: user.skills || null,
+        subjects: user.subjects || null
       }
     });
   } catch (err) {
@@ -141,7 +207,7 @@ authRouter.post('/login', async (req, res) => {
  */
 authRouter.post('/signup', async (req, res) => {
   try {
-    const { name, email, password, role } = req.body || {};
+    const { name, email, password, role, qualification, skills, subjects } = req.body || {};
 
     if (!name || !email || !password) {
       return res.status(400).json({
@@ -150,7 +216,7 @@ authRouter.post('/signup', async (req, res) => {
       });
     }
 
-    const assignedRole = role === 'admin' ? 'admin' : 'learner';
+    const normalizedRole = role === 'trainer' ? 'trainer' : 'trainee';
     const userEmail = email.trim().toLowerCase();
 
     // Try Supabase first (with bcrypt hashing)
@@ -169,14 +235,18 @@ authRouter.post('/signup', async (req, res) => {
         name: name.trim(),
         email: userEmail,
         password_hash: passwordHash,
-        role: assignedRole,
+        role: normalizedRole,
+        status: 'pending',
         department: 'Enterprise Learning',
+        qualification: normalizedRole === 'trainee' ? qualification || null : null,
+        skills: normalizedRole === 'trainee' ? skills || null : null,
+        subjects: normalizedRole === 'trainer' ? subjects || null : null
       });
 
       if (supabaseUser) {
         const token = `mock-jwt-token-${supabaseUser.id}-${Date.now()}`;
         return res.status(201).json({
-          message: 'User registered successfully',
+          message: 'User registered successfully. Awaiting admin approval.',
           token,
           source: 'supabase',
           user: {
@@ -184,6 +254,7 @@ authRouter.post('/signup', async (req, res) => {
             name: supabaseUser.name,
             email: supabaseUser.email,
             role: supabaseUser.role,
+            status: supabaseUser.status,
             department: supabaseUser.department
           }
         });
@@ -196,8 +267,12 @@ authRouter.post('/signup', async (req, res) => {
       name: name.trim(),
       email: userEmail,
       password,
-      role: assignedRole,
-      department: 'Enterprise Learning'
+      role: normalizedRole,
+      status: 'pending',
+      department: 'Enterprise Learning',
+      qualification: normalizedRole === 'trainee' ? qualification || null : null,
+      skills: normalizedRole === 'trainee' ? skills || null : null,
+      subjects: normalizedRole === 'trainer' ? subjects || null : null
     };
 
     users.push(newUser);
@@ -205,20 +280,40 @@ authRouter.post('/signup', async (req, res) => {
     const token = `mock-jwt-token-${newUser.id}-${Date.now()}`;
 
     res.status(201).json({
-      message: 'User registered successfully',
+      message: 'User registered successfully. Awaiting admin approval.',
       token,
       source: 'mock',
       user: {
         id: newUser.id,
         name: newUser.name,
         email: newUser.email,
-        role: newUser.role
+        role: newUser.role,
+        status: newUser.status,
+        department: newUser.department
       }
     });
   } catch (err) {
     res.status(500).json({ error: 'Signup error', details: err.message });
   }
 });
+
+// ==========================================
+// ROLE-BASED ACCESS MIDDLEWARE
+// ==========================================
+
+function requireRole(...allowedRoles) {
+  return (req, res, next) => {
+    const user = req.user || req.body || {};
+    const role = user.role;
+    if (!role || !allowedRoles.includes(role)) {
+      return res.status(403).json({
+        error: 'Forbidden',
+        message: `Access denied. Required role: ${allowedRoles.join(' or ')}.`
+      });
+    }
+    next();
+  };
+}
 
 // ==========================================
 // TOPIC 2: LEARNER DASHBOARD
@@ -228,6 +323,7 @@ authRouter.post('/signup', async (req, res) => {
  * GET /api/user/dashboard/:userId
  * Returns enrolled courses array, completion metrics, and recommended suggestions.
  * Attempts to fetch the user profile from Supabase; falls back to in-memory mock data.
+ * Protected: trainee and trainer can access; admin can access all.
  */
 userRouter.get('/dashboard/:userId', async (req, res) => {
   try {
@@ -248,8 +344,16 @@ userRouter.get('/dashboard/:userId', async (req, res) => {
         id: userId,
         name: 'Jane Doe',
         email: 'jane.doe@enterprise.com',
-        role: 'learner'
+        role: 'trainee',
+        status: 'approved'
       };
+    }
+
+    if (user.status !== 'approved') {
+      return res.status(403).json({
+        error: 'Account not approved',
+        message: 'Your account is awaiting admin approval.'
+      });
     }
 
     const enrolledCourses = [
@@ -314,6 +418,8 @@ userRouter.get('/dashboard/:userId', async (req, res) => {
     res.status(200).json({
       userId: user.id,
       userName: user.name,
+      role: user.role,
+      status: user.status,
       enrolledCourses,
       metrics,
       recommendedCourses
@@ -381,15 +487,16 @@ certRouter.get('/:userId/:courseId', async (req, res) => {
  * GET /api/admin/stats
  * Returns top-level platform analytics (totalUsers, totalCourses, activeLearners, completionRatePercent)
  * and a list of registered users.
+ * Protected: admin only.
  */
-adminRouter.get('/stats', (req, res) => {
+adminRouter.get('/stats', requireRole('admin'), (req, res) => {
   try {
     const registeredUsers = [
       {
         id: 'u_1',
         name: 'Jane Doe',
         email: 'jane.doe@enterprise.com',
-        role: 'learner',
+        role: 'trainee',
         department: 'Cloud Engineering',
         progress: '78%',
         status: 'Active'
@@ -407,7 +514,7 @@ adminRouter.get('/stats', (req, res) => {
         id: 'u_3',
         name: 'Elena Rostova',
         email: 'elena.r@enterprise.com',
-        role: 'instructor',
+        role: 'trainer',
         department: 'Cybersecurity',
         progress: '95%',
         status: 'Active'
@@ -416,7 +523,7 @@ adminRouter.get('/stats', (req, res) => {
         id: 'u_4',
         name: 'Marcus Chen',
         email: 'marcus.c@enterprise.com',
-        role: 'learner',
+        role: 'trainee',
         department: 'Backend Platform',
         progress: '64%',
         status: 'Active'
@@ -425,7 +532,7 @@ adminRouter.get('/stats', (req, res) => {
         id: 'u_5',
         name: 'Sarah Connor',
         email: 'sarah.c@enterprise.com',
-        role: 'learner',
+        role: 'trainee',
         department: 'DevOps & Reliability',
         progress: '42%',
         status: 'Behind Schedule'

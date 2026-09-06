@@ -322,7 +322,10 @@
       const [email, setEmail] = React.useState('jane.doe@enterprise.com');
       const [password, setPassword] = React.useState('password123');
       const [name, setName] = React.useState('Jane Doe');
-      const [role, setRole] = React.useState('learner');
+      const [signupRole, setSignupRole] = React.useState('trainee');
+      const [qualification, setQualification] = React.useState('');
+      const [skills, setSkills] = React.useState('');
+      const [subjects, setSubjects] = React.useState('');
       const [loading, setLoading] = React.useState(false);
       const [error, setError] = React.useState(null);
       const [authData, setAuthData] = React.useState(null);
@@ -334,7 +337,9 @@
         setAuthData(null);
         try {
           const endpoint = isLogin ? `${API_BASE}/auth/login` : `${API_BASE}/auth/signup`;
-          const payload = isLogin ? { email, password } : { name, email, password, role };
+          const payload = isLogin
+            ? { email, password }
+            : { name, email, password, role: signupRole, qualification, skills, subjects };
           const res = await fetch(endpoint, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -348,6 +353,14 @@
           setError(err.message);
         } finally {
           setLoading(false);
+        }
+      };
+
+      const getRoleRedirect = (role) => {
+        switch (role) {
+          case 'trainer': return '/trainer/dashboard';
+          case 'admin': return '/admin/dashboard';
+          default: return '/trainee/dashboard';
         }
       };
 
@@ -369,7 +382,8 @@
             </div>
 
             <div className="mb-4 p-3 bg-slate-50 dark:bg-slate-800 rounded-xl flex gap-2">
-              <button onClick={() => { setEmail('jane.doe@enterprise.com'); setPassword('password123'); setIsLogin(true); }} className="px-2.5 py-1 text-xs bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg text-slate-700 btn-micro">👤 Learner Demo</button>
+              <button onClick={() => { setEmail('jane.doe@enterprise.com'); setPassword('password123'); setIsLogin(true); }} className="px-2.5 py-1 text-xs bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg text-slate-700 btn-micro">👤 Trainee Demo</button>
+              <button onClick={() => { setEmail('elena.rostova@enterprise.com'); setPassword('trainer123'); setIsLogin(true); }} className="px-2.5 py-1 text-xs bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg text-slate-700 btn-micro">🎓 Trainer Demo</button>
               <button onClick={() => { setEmail('admin@capacityconnect.io'); setPassword('admin123'); setIsLogin(true); }} className="px-2.5 py-1 text-xs bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg text-purple-800">🛡️ Admin Demo</button>
             </div>
 
@@ -379,21 +393,61 @@
               )}
               <input type="email" required placeholder="Email" value={email} onChange={e => setEmail(e.target.value)} className="w-full px-3.5 py-2 rounded-lg border border-slate-200 dark:border-slate-700 text-sm" />
               <input type="password" required placeholder="Password" value={password} onChange={e => setPassword(e.target.value)} className="w-full px-3.5 py-2 rounded-lg border border-slate-200 dark:border-slate-700 text-sm" />
+
+              {!isLogin && (
+                <div className="space-y-3">
+                  <div>
+                    <label className="block text-xs font-semibold text-slate-700 mb-1">Sign up as</label>
+                    <div className="flex gap-2">
+                      <button type="button" onClick={() => setSignupRole('trainee')} className={`flex-1 py-2 rounded-lg border-2 text-xs font-bold transition ${signupRole === 'trainee' ? 'border-blue-900 bg-blue-50 text-blue-900' : 'border-slate-200 text-slate-600'}`}>Trainee</button>
+                      <button type="button" onClick={() => setSignupRole('trainer')} className={`flex-1 py-2 rounded-lg border-2 text-xs font-bold transition ${signupRole === 'trainer' ? 'border-blue-900 bg-blue-50 text-blue-900' : 'border-slate-200 text-slate-600'}`}>Trainer</button>
+                    </div>
+                    <p className="text-[10px] text-slate-400 mt-1">Admin accounts cannot be self-registered.</p>
+                  </div>
+
+                  {signupRole === 'trainee' && (
+                    <div className="space-y-2">
+                      <input type="text" placeholder="Qualification (optional)" value={qualification} onChange={e => setQualification(e.target.value)} className="w-full px-3.5 py-2 rounded-lg border border-slate-200 dark:border-slate-700 text-sm" />
+                      <input type="text" placeholder="Skills (comma separated)" value={skills} onChange={e => setSkills(e.target.value)} className="w-full px-3.5 py-2 rounded-lg border border-slate-200 dark:border-slate-700 text-sm" />
+                    </div>
+                  )}
+
+                  {signupRole === 'trainer' && (
+                    <div className="space-y-2">
+                      <input type="text" placeholder="Subjects / Skills you can teach" value={subjects} onChange={e => setSubjects(e.target.value)} className="w-full px-3.5 py-2 rounded-lg border border-slate-200 dark:border-slate-700 text-sm" />
+                    </div>
+                  )}
+                </div>
+              )}
+
               {error && <p className="text-xs text-red-600 font-semibold">{error}</p>}
+
               <button type="submit" disabled={loading} className="w-full py-2.5 bg-blue-900 text-white rounded-xl text-xs font-bold shadow-md btn-micro">
-                {loading ? 'Submitting...' : isLogin ? 'Sign In' : 'Sign Up'}
+                {loading ? 'Submitting...' : isLogin ? 'Sign In' : 'Create Account'}
               </button>
             </form>
 
             {authData && (
               <div className="mt-4 p-4 bg-emerald-50 dark:bg-emerald-900/30 border border-emerald-200 rounded-xl text-xs text-emerald-900 space-y-2">
-                <p className="font-bold">✓ Logged in as {authData.user?.name} ({authData.user?.role})</p>
-                <div className="flex gap-2 pt-2">
-                  <button onClick={() => onNavigate(2)} className="flex-1 py-1.5 bg-blue-900 text-white rounded font-bold btn-micro">Go to Dashboard (Screen 2)</button>
-                  {authData.user?.role === 'admin' && (
-                    <button onClick={() => onNavigate(7)} className="flex-1 py-1.5 bg-purple-900 text-white rounded font-bold btn-micro">Admin Suite (Screen 7)</button>
-                  )}
-                </div>
+                {authData.status === 'pending' ? (
+                  <div>
+                    <p className="font-bold text-amber-700">⏳ {authData.message || 'Your account is awaiting admin approval.'}</p>
+                    <p className="text-[11px] text-slate-600">You will be able to log in once an admin approves your account.</p>
+                  </div>
+                ) : (
+                  <>
+                    <p className="font-bold">✓ Logged in as {authData.user?.name} ({authData.user?.role})</p>
+                    <div className="flex gap-2 pt-2">
+                      <button onClick={() => onNavigate(2)} className="flex-1 py-1.5 bg-blue-900 text-white rounded font-bold btn-micro">Trainee Dashboard</button>
+                      {authData.user?.role === 'trainer' && (
+                        <button onClick={() => onNavigate(7)} className="flex-1 py-1.5 bg-purple-900 text-white rounded font-bold btn-micro">Trainer Suite</button>
+                      )}
+                      {authData.user?.role === 'admin' && (
+                        <button onClick={() => onNavigate(7)} className="flex-1 py-1.5 bg-purple-900 text-white rounded font-bold btn-micro">Admin Suite</button>
+                      )}
+                    </div>
+                  </>
+                )}
               </div>
             )}
           </div>
@@ -1357,7 +1411,7 @@
     function App() {
       const [screen, setScreen] = React.useState('2');
       const [courseId, setCourseId] = React.useState(1);
-      const [user, setUser] = React.useState({ id: 'u_learner1', name: 'Jane Doe', role: 'learner' });
+      const [user, setUser] = React.useState({ id: 'u_learner1', name: 'Jane Doe', role: 'trainee' });
       const [theme, setTheme] = React.useState(getInitialTheme);
 
       const toggleTheme = () => {
@@ -1367,6 +1421,29 @@
           applyTheme(next);
           return next;
         });
+      };
+
+      const roleAllowed = (allowedRoles) => allowedRoles.includes(user.role);
+
+      const navigate = (target) => {
+        const roleMap = {
+          trainee: '2',
+          trainer: '2',
+          admin: '7'
+        };
+        if (target === '2' || target === '3' || target === '4' || target === '5' || target === '6' || target === '8') {
+          if (!roleAllowed(['trainee', 'trainer', 'admin'])) {
+            setScreen('1');
+            return;
+          }
+        }
+        if (target === '7') {
+          if (!roleAllowed(['admin'])) {
+            setScreen('1');
+            return;
+          }
+        }
+        setScreen(target);
       };
 
       return (
@@ -1382,14 +1459,28 @@
               </div>
 
               <div className="flex flex-wrap gap-1 bg-slate-100 dark:bg-slate-800 p-1 rounded-xl text-xs font-semibold">
-                <button onClick={() => setScreen('1')} className={`px-2.5 py-1.5 rounded-lg ${screen === '1' ? 'bg-white dark:bg-slate-900 text-blue-950 shadow-sm' : 'text-slate-600 dark:text-slate-300'} btn-micro`}>1: Auth</button>
-                <button onClick={() => setScreen('2')} className={`px-3 py-1.5 rounded-lg ${screen === '2' ? 'bg-white dark:bg-slate-900 text-blue-950 shadow-sm' : 'text-slate-600 dark:text-slate-300'} btn-micro`}>2: Dashboard</button>
-                <button onClick={() => setScreen('3')} className={`px-3 py-1.5 rounded-lg ${screen === '3' ? 'bg-white dark:bg-slate-900 text-blue-950 shadow-sm' : 'text-slate-600 dark:text-slate-300'} btn-micro`}>3: Catalog</button>
-                <button onClick={() => setScreen('4')} className={`px-3 py-1.5 rounded-lg ${screen === '4' ? 'bg-white dark:bg-slate-900 text-blue-950 shadow-sm' : 'text-slate-600 dark:text-slate-300'} btn-micro`}>4: Detail</button>
-                <button onClick={() => setScreen('5')} className={`px-3 py-1.5 rounded-lg ${screen === '5' ? 'bg-white dark:bg-slate-900 text-blue-950 shadow-sm' : 'text-slate-600 dark:text-slate-300'} btn-micro`}>5: Player</button>
-                <button onClick={() => setScreen('6')} className={`px-3 py-1.5 rounded-lg ${screen === '6' ? 'bg-white dark:bg-slate-900 text-blue-950 shadow-sm' : 'text-slate-600 dark:text-slate-300'} btn-micro`}>6: Cert</button>
-                <button onClick={() => setScreen('7')} className={`px-3 py-1.5 rounded-lg ${screen === '7' ? 'bg-purple-900 text-white shadow-sm' : 'text-slate-600 dark:text-slate-300'} btn-micro`}>7: Admin</button>
-                <button onClick={() => setScreen('8')} className={`px-3 py-1.5 rounded-lg ${screen === '8' ? 'bg-indigo-900 text-white shadow-sm' : 'text-slate-600 dark:text-slate-300'} btn-micro`}>8: AI Skill Gap</button>
+                <button onClick={() => navigate('1')} className={`px-2.5 py-1.5 rounded-lg ${screen === '1' ? 'bg-white dark:bg-slate-900 text-blue-950 shadow-sm' : 'text-slate-600 dark:text-slate-300'} btn-micro`}>1: Auth</button>
+                {roleAllowed(['trainee', 'trainer', 'admin']) && (
+                  <button onClick={() => navigate('2')} className={`px-3 py-1.5 rounded-lg ${screen === '2' ? 'bg-white dark:bg-slate-900 text-blue-950 shadow-sm' : 'text-slate-600 dark:text-slate-300'} btn-micro`}>2: Dashboard</button>
+                )}
+                {roleAllowed(['trainee', 'trainer', 'admin']) && (
+                  <button onClick={() => navigate('3')} className={`px-3 py-1.5 rounded-lg ${screen === '3' ? 'bg-white dark:bg-slate-900 text-blue-950 shadow-sm' : 'text-slate-600 dark:text-slate-300'} btn-micro`}>3: Catalog</button>
+                )}
+                {roleAllowed(['trainee', 'trainer', 'admin']) && (
+                  <button onClick={() => navigate('4')} className={`px-3 py-1.5 rounded-lg ${screen === '4' ? 'bg-white dark:bg-slate-900 text-blue-950 shadow-sm' : 'text-slate-600 dark:text-slate-300'} btn-micro`}>4: Detail</button>
+                )}
+                {roleAllowed(['trainee', 'trainer', 'admin']) && (
+                  <button onClick={() => navigate('5')} className={`px-3 py-1.5 rounded-lg ${screen === '5' ? 'bg-white dark:bg-slate-900 text-blue-950 shadow-sm' : 'text-slate-600 dark:text-slate-300'} btn-micro`}>5: Player</button>
+                )}
+                {roleAllowed(['trainee', 'trainer', 'admin']) && (
+                  <button onClick={() => navigate('6')} className={`px-3 py-1.5 rounded-lg ${screen === '6' ? 'bg-white dark:bg-slate-900 text-blue-950 shadow-sm' : 'text-slate-600 dark:text-slate-300'} btn-micro`}>6: Cert</button>
+                )}
+                {roleAllowed(['admin']) && (
+                  <button onClick={() => navigate('7')} className={`px-3 py-1.5 rounded-lg ${screen === '7' ? 'bg-purple-900 text-white shadow-sm' : 'text-slate-600 dark:text-slate-300'} btn-micro`}>7: Admin</button>
+                )}
+                {roleAllowed(['trainee', 'trainer', 'admin']) && (
+                  <button onClick={() => navigate('8')} className={`px-3 py-1.5 rounded-lg ${screen === '8' ? 'bg-indigo-900 text-white shadow-sm' : 'text-slate-600 dark:text-slate-300'} btn-micro`}>8: AI Skill Gap</button>
+                )}
                 <button onClick={toggleTheme} className={`px-2.5 py-1.5 rounded-lg ${theme === 'dark' ? 'bg-slate-800 text-yellow-300 border border-slate-600' : 'bg-white text-blue-950 shadow-sm border border-slate-200'} btn-micro`}>
                   {theme === 'dark' ? '☀️ Light' : '🌙 Dark'}
                 </button>
@@ -1399,14 +1490,21 @@
 
           <main className="pb-16 bg-slate-100 dark:bg-slate-950 text-slate-900 dark:text-slate-100">
             <ToastContainer />
-            {screen === '1' && <Screen1Auth onAuthSuccess={(d) => { if (d.user) setUser(d.user); setScreen(d.user?.role === 'admin' ? '7' : '2'); }} onNavigate={setScreen} />}
-            {screen === '2' && <Screen2Dashboard userId={user.id} onOpenCourse={(id) => { setCourseId(id); setScreen('5'); }} onOpenCert={(id) => { setCourseId(id); setScreen('6'); }} onOpenCatalog={() => setScreen('3')} />}
-            {screen === '3' && <Page3Catalog onSelectCourse={(id) => { setCourseId(id); setScreen('4'); }} onLaunchPlayer={(id) => { setCourseId(id); setScreen('5'); }} />}
-            {screen === '4' && <Page4Detail courseId={courseId} onBack={() => setScreen('3')} onLaunchPlayer={(id) => { setCourseId(id); setScreen('5'); }} />}
-            {screen === '5' && <Page5Player courseId={courseId} onBack={() => setScreen('2')} />}
-            {screen === '6' && <Screen6Certificate userId={user.id} courseId={courseId} onBack={() => setScreen('2')} />}
-            {screen === '7' && <Screen7Admin onBack={() => setScreen('2')} />}
-            {screen === '8' && <Screen8SkillGap userId={user.id} onBack={() => setScreen('2')} onEnrollCourse={(id, title) => { setCourseId(id); alert('Enrolled in ' + title + '. Opening course...'); setScreen('5'); }} />}
+            {screen === '1' && <Screen1Auth onAuthSuccess={(d) => { if (d.user) setUser(d.user); const role = d.user?.role; const target = role === 'admin' ? '7' : role === 'trainer' ? '2' : '2'; setScreen(target); }} onNavigate={navigate} />}
+            {screen === '2' && roleAllowed(['trainee', 'trainer', 'admin']) && <Screen2Dashboard userId={user.id} onOpenCourse={(id) => { setCourseId(id); setScreen('5'); }} onOpenCert={(id) => { setCourseId(id); setScreen('6'); }} onOpenCatalog={() => setScreen('3')} />}
+            {screen === '3' && roleAllowed(['trainee', 'trainer', 'admin']) && <Page3Catalog onSelectCourse={(id) => { setCourseId(id); setScreen('4'); }} onLaunchPlayer={(id) => { setCourseId(id); setScreen('5'); }} />}
+            {screen === '4' && roleAllowed(['trainee', 'trainer', 'admin']) && <Page4Detail courseId={courseId} onBack={() => setScreen('3')} onLaunchPlayer={(id) => { setCourseId(id); setScreen('5'); }} />}
+            {screen === '5' && roleAllowed(['trainee', 'trainer', 'admin']) && <Page5Player courseId={courseId} onBack={() => navigate('2')} />}
+            {screen === '6' && roleAllowed(['trainee', 'trainer', 'admin']) && <Screen6Certificate userId={user.id} courseId={courseId} onBack={() => navigate('2')} />}
+            {screen === '7' && roleAllowed(['admin']) && <Screen7Admin onBack={() => navigate('2')} />}
+            {screen === '8' && roleAllowed(['trainee', 'trainer', 'admin']) && <Screen8SkillGap userId={user.id} onBack={() => navigate('2')} onEnrollCourse={(id, title) => { setCourseId(id); alert('Enrolled in ' + title + '. Opening course...'); setScreen('5'); }} />}
+            {(screen === '7' && !roleAllowed(['admin'])) && (
+              <div className="max-w-xl mx-auto px-4 py-20 text-center">
+                <p className="text-2xl font-extrabold text-slate-900 dark:text-slate-100 mb-2">Not Authorized</p>
+                <p className="text-sm text-slate-600 dark:text-slate-300">You do not have permission to view this page.</p>
+                <button onClick={() => navigate('2')} className="mt-4 px-4 py-2 bg-blue-900 text-white rounded-lg text-xs font-bold btn-micro">Back to Dashboard</button>
+              </div>
+            )}
           </main>
         </div>
       );
