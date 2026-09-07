@@ -83,8 +83,6 @@
     /* Glassmorphism cards */
     .glass-card {
       background: var(--glass-bg);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
       border: 1px solid var(--glass-border);
       border-radius: 1rem;
     }
@@ -880,6 +878,7 @@
                 ))}
               </div>
             )}
+          </div>
           </section>
 
           {/* Footer */}
@@ -1084,29 +1083,30 @@
                </button>
              </form>
 
-             {authData && (
-               <div className="mt-4 p-4 bg-electric-blue/10 border border-electric-blue/20 rounded-xl text-xs text-electric-blue space-y-2">
-                 {authData.status === 'pending' ? (
-                   <div>
-                     <p className="font-bold text-amber">⏳ {authData.message || 'Your account is awaiting admin approval.'}</p>
-                     <p className="text-[11px] text-slate-400">You will be able to log in once an admin approves your account.</p>
-                   </div>
-                 ) : (
-                   <>
-                    <p className="font-bold text-white">✓ Logged in as {authData.user?.name} ({authData.user?.role})</p>
-                    <div className="flex gap-2 pt-2">
-                      {authData.user?.role === 'trainee' && <button onClick={() => onNavigate('2')} className="flex-1 py-1.5 bg-electric-blue text-space-black rounded font-black btn-micro">Trainee Dashboard</button>}
-                      {authData.user?.role === 'trainer' && <button onClick={() => onNavigate('9')} className="flex-1 py-1.5 bg-isro-orange text-white rounded font-black btn-micro">Trainer Dashboard</button>}
-                      {authData.user?.role === 'admin' && <button onClick={() => onNavigate('7')} className="flex-1 py-1.5 bg-crimson text-white rounded font-black btn-micro">Admin Dashboard</button>}
+              {authData && (
+                <div className="mt-4 p-4 bg-electric-blue/10 border border-electric-blue/20 rounded-xl text-xs text-electric-blue space-y-2">
+                  {authData.status === 'pending' ? (
+                    <div>
+                      <p className="font-bold text-amber">⏳ {authData.message || 'Your account is awaiting admin approval.'}</p>
+                      <p className="text-[11px] text-slate-400">You will be able to log in once an admin approves your account.</p>
                     </div>
-                  </>
-                )}
-              </div>
-            )}
-          </div>
-        </div>
-      );
-    }
+                  ) : (
+                    <>
+                     <p className="font-bold text-white">✓ Logged in as {authData.user?.name} ({authData.user?.role})</p>
+                     <div className="flex gap-2 pt-2">
+                       {authData.user?.role === 'trainee' && <button onClick={() => onNavigate('2')} className="flex-1 py-1.5 bg-electric-blue text-space-black rounded font-black btn-micro">Trainee Dashboard</button>}
+                       {authData.user?.role === 'trainer' && <button onClick={() => onNavigate('9')} className="flex-1 py-1.5 bg-isro-orange text-white rounded font-black btn-micro">Trainer Dashboard</button>}
+                       {authData.user?.role === 'admin' && <button onClick={() => onNavigate('7')} className="flex-1 py-1.5 bg-crimson text-white rounded font-black btn-micro">Admin Dashboard</button>}
+                     </div>
+                   </>
+                 )}
+               </div>
+             )}
+             </div>
+           </div>
+         </div>
+       );
+     }
 
     // ==========================================
     // SCREEN 2: TRAINEE DASHBOARD (card-based, emerald theme)
@@ -2610,6 +2610,7 @@
     // ROOT APP with STRICT ROLE ISOLATION
     // ==========================================
     function App() {
+      console.log('App component rendering, screen:', screen, 'user:', user);
       const [screen, setScreen] = React.useState('0');
       const [courseId, setCourseId] = React.useState(1);
       const [user, setUser] = React.useState(null);
@@ -2837,9 +2838,12 @@
     }
 
     ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+    console.log('React app mounted');
   </script>
 </body>
 </html>
+
+
 
 
 
