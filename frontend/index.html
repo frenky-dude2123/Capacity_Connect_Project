@@ -1197,7 +1197,7 @@ return (
     // ==========================================
     // PUBLIC HOMEPAGE (no auth required)
     // ==========================================
-    function PublicHomepage({ onNavigateToAuth }) {
+function PublicHomepage({ onNavigateToAuth }) {
       const [notifications, setNotifications] = React.useState([]);
       const [loading, setLoading] = React.useState(true);
       const [error, setError] = React.useState(null);
@@ -1262,13 +1262,13 @@ return (
                 </p>
                 <div className="mt-10 flex flex-col sm:flex-row gap-4">
                   <button
-                    onClick={() => onNavigateToAuth('1')}
+                    onClick={() => onNavigateToAuth('1', false)}
                     className="px-8 py-4 bg-gradient-to-r from-purple-500 to-fuchsia-600 hover:from-purple-400 hover:to-fuchsia-500 text-white rounded-xl text-sm font-bold shadow-lg shadow-purple-500/30 btn-micro border border-purple-400/30"
                   >
                     🚀 Launch Mission — Sign In
                   </button>
                   <button
-                    onClick={() => onNavigateToAuth('1')}
+                    onClick={() => onNavigateToAuth('1', true)}
                     className="px-8 py-4 bg-transparent hover:bg-purple-500/10 text-white border-2 border-purple-400/50 rounded-xl text-sm font-bold shadow-sm btn-micro"
                   >
                     Join Mission — Create Account
@@ -1446,8 +1446,8 @@ return (
     // ==========================================
     // SCREEN 1: AUTHENTICATION
     // ==========================================
-    function Screen1Auth({ onAuthSuccess, onNavigate }) {
-      const [isLogin, setIsLogin] = React.useState(true);
+function Screen1Auth({ onAuthSuccess, onNavigate, initialSignup }) {
+      const [isLogin, setIsLogin] = React.useState(!initialSignup);
       const [email, setEmail] = React.useState('jane.doe@enterprise.com');
       const [password, setPassword] = React.useState('password123');
       const [name, setName] = React.useState('Jane Doe');
@@ -3156,11 +3156,12 @@ return (
     // ==========================================
     function App() {
       console.log('App component rendering, screen:', screen, 'user:', user);
-      const [screen, setScreen] = React.useState('0');
+const [screen, setScreen] = React.useState('0');
       const [courseId, setCourseId] = React.useState(1);
       const [user, setUser] = React.useState(null);
       const [theme, setTheme] = React.useState(getInitialTheme);
       const [activeAdminTab, setActiveAdminTab] = React.useState('pending');
+      const [signupMode, setSignupMode] = React.useState(false);
 
       const toggleTheme = () => {
         setTheme(prev => {
@@ -3178,14 +3179,15 @@ return (
        * is valid for the current user's role. If not, redirect to the
        * user's own default dashboard.
        */
-      const navigate = (target) => {
-        if (!user && target !== '0') { setScreen('1'); return; }
+const navigate = (target, isSignup = false) => {
+        if (!user && target !== '0') { setScreen('1'); setSignupMode(isSignup); return; }
         const allowed = SCREEN_ROLES[target];
         if (!allowed || !allowed.includes(user.role)) {
           setScreen(getDefaultScreen(user.role));
           return;
         }
         setScreen(target);
+        setSignupMode(isSignup);
       };
 
       // Enforce strict role isolation on every render:
@@ -3244,9 +3246,9 @@ return (
 
           <main className="pb-16 min-h-[calc(100vh-88px)]">
             <ToastContainer />
-            {screen === '0' && <PublicHomepage onNavigateToAuth={(target) => setScreen(target)} />}
+{screen === '0' && <PublicHomepage onNavigateToAuth={(target, isSignup) => { setScreen(target); setSignupMode(isSignup); }} />}
 
-            {screen === '1' && <Screen1Auth onAuthSuccess={(d) => { if (d.user) setUser(d.user); setScreen(getDefaultScreen(d.user?.role)); }} onNavigate={navigate} />}
+            {screen === '1' && <Screen1Auth onAuthSuccess={(d) => { if (d.user) setUser(d.user); setScreen(getDefaultScreen(d.user?.role)); }} onNavigate={navigate} initialSignup={signupMode} />}
 
             {/* Strict role isolation: each screen is only rendered if the user's role matches */}
             {user && screen === '2' && roleAllowed(['trainee']) && (
