@@ -495,11 +495,105 @@ tailwind.config = {
       background-repeat: repeat-x;
     }
 
-    /* Scrollbar */
+/* Scrollbar */
     ::-webkit-scrollbar { width: 6px; }
     ::-webkit-scrollbar-track { background: transparent; }
     ::-webkit-scrollbar-thumb { background: #475569; border-radius: 3px; }
     ::-webkit-scrollbar-thumb:hover { background: #64748b; }
+
+    /* ===== LOGIN PAGE — FLOATING ORBS ===== */
+    .login-orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(60px);
+      opacity: 0.7;
+      animation: float-orb 12s ease-in-out infinite;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .login-orb.orb-1 {
+      width: 380px; height: 380px;
+      background: radial-gradient(circle at 30% 30%, #00d4ff, #0066ff 70%, transparent);
+      top: -100px; left: -80px;
+      animation-delay: 0s;
+    }
+    .login-orb.orb-2 {
+      width: 320px; height: 320px;
+      background: radial-gradient(circle at 70% 30%, #ff006e, #8338ec 70%, transparent);
+      bottom: -120px; right: -60px;
+      animation-delay: -4s;
+    }
+    .login-orb.orb-3 {
+      width: 240px; height: 240px;
+      background: radial-gradient(circle at 50% 50%, #ffbe0b, #fb5607 70%, transparent);
+      top: 40%; right: 20%;
+      animation-delay: -8s;
+    }
+    .login-orb.orb-4 {
+      width: 200px; height: 200px;
+      background: radial-gradient(circle at 50% 50%, #06ffa5, #00d4ff 70%, transparent);
+      bottom: 20%; left: 30%;
+      animation-delay: -6s;
+    }
+    @keyframes float-orb {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      33% { transform: translate(40px, -30px) scale(1.15); }
+      66% { transform: translate(-30px, 25px) scale(0.9); }
+    }
+
+    /* ===== LOGIN GLASS CARD ===== */
+    .login-glass-card {
+      background: rgba(10, 14, 39, 0.55);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 28px;
+      box-shadow:
+        0 25px 80px rgba(0, 0, 0, 0.5),
+        inset 0 1px 0 rgba(255, 255, 255, 0.15),
+        inset 0 0 60px rgba(0, 212, 255, 0.05);
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ===== LOGIN INPUT FIELDS ===== */
+    .login-input {
+      background: rgba(5, 7, 10, 0.5);
+      border: 1px solid rgba(0, 212, 255, 0.2);
+      border-radius: 50px;
+      color: #f1f5f9;
+      transition: all 300ms ease;
+    }
+    .login-input::placeholder { color: #64748b; }
+    .login-input:focus {
+      outline: none;
+      border-color: #00d4ff;
+      box-shadow: 0 0 0 4px rgba(0, 212, 255, 0.15), 0 0 30px rgba(0, 212, 255, 0.2);
+      background: rgba(5, 7, 10, 0.7);
+    }
+
+    /* ===== LOGIN PRIMARY BUTTON ===== */
+    .login-btn-primary {
+      background: linear-gradient(135deg, #00d4ff 0%, #0066ff 50%, #8338ec 100%);
+      background-size: 200% 200%;
+      border: none;
+      border-radius: 50px;
+      color: #fff;
+      font-weight: 700;
+      box-shadow: 0 8px 32px rgba(0, 212, 255, 0.35), 0 2px 8px rgba(0, 0, 0, 0.3);
+      transition: all 300ms ease;
+      animation: gradient-shift 4s ease infinite;
+    }
+    .login-btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 40px rgba(0, 212, 255, 0.5), 0 4px 12px rgba(0, 0, 0, 0.4);
+    }
+    .login-btn-primary:active { transform: translateY(0); }
+    @keyframes gradient-shift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
 
     /* Mission badge / certificate style */
     .mission-badge {
@@ -1483,80 +1577,113 @@ function Screen1Auth({ onAuthSuccess, onNavigate, initialSignup }) {
       };
 
 return (
-        <div className="min-h-screen bg-auth-space flex items-center justify-center p-4">
-          <div className="w-full max-w-xl">
-            <div className="text-center mb-6">
-              <span className="px-3 py-1 rounded-full text-xs font-bold bg-purple-500/20 text-purple-300 border border-purple-400/30">
-                🛰️ Mission Control Access
-              </span>
-              <h1 className="text-2xl sm:text-3xl font-extrabold text-white mt-2 drop-shadow-[0_0_20px_rgba(168,85,247,0.3)]">
-                {isLogin ? 'Sign In to Capacity Connect' : 'Join the Mission'}
-              </h1>
+        <div className="min-h-screen bg-black flex items-center justify-center p-4 overflow-hidden relative">
+          {/* Starfield backdrop */}
+          <div className="absolute inset-0 bg-starfield opacity-50 pointer-events-none z-0"></div>
+          {/* Floating glowing orbs */}
+          <div className="login-orb orb-1"></div>
+          <div className="login-orb orb-2"></div>
+          <div className="login-orb orb-3"></div>
+          <div className="login-orb orb-4"></div>
+
+          <div className="login-glass-card w-full max-w-4xl p-8 sm:p-12 flex flex-col md:flex-row items-stretch gap-8 md:gap-0 relative">
+            {/* Left branding panel */}
+            <div className="md:w-1/2 flex flex-col justify-center pr-0 md:pr-10">
+              <div className="flex items-center gap-3 mb-5">
+                <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-cyan-400 to-blue-600 flex items-center justify-center text-2xl shadow-lg shadow-cyan-500/30">🛰️</div>
+                <span className="text-2xl font-extrabold text-white tracking-tight">Capacity Connect</span>
+              </div>
+              <h2 className="text-3xl sm:text-4xl font-extrabold text-white leading-tight mb-3">
+                Welcome <span className="bg-gradient-to-r from-cyan-400 via-blue-400 to-fuchsia-500 bg-clip-text text-transparent">Back</span>
+              </h2>
+              <p className="text-sm text-slate-400 leading-relaxed">
+                Access your personalized learning dashboard, track capacity readiness, and continue your mission pathways.
+              </p>
+              <div className="mt-6 flex items-center gap-2 text-xs text-slate-500">
+                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                Ministry of Earth Sciences & IMD — Secure Portal
+              </div>
             </div>
 
-            <div className="glass-card p-6 sm:p-8">
-              <div className="flex bg-purple-900/30 p-1 rounded-xl mb-6 text-xs font-bold">
-                  <button onClick={() => setIsLogin(true)} className={"flex-1 py-2 rounded-lg " + (isLogin ? 'bg-gradient-to-r from-purple-500 to-fuchsia-600 text-white shadow-sm' : 'text-slate-400')}>Sign In</button>
-                  <button onClick={() => setIsLogin(false)} className={"flex-1 py-2 rounded-lg " + (!isLogin ? 'bg-gradient-to-r from-purple-500 to-fuchsia-600 text-white shadow-sm' : 'text-slate-400')}>Sign Up</button>
+            {/* Right form panel */}
+            <div className="md:w-1/2 flex flex-col justify-center md:pl-10 md:border-l border-white/10">
+              <div className="flex bg-white/5 p-1 rounded-xl mb-6 text-xs font-bold w-full">
+                  <button onClick={() => setIsLogin(true)} className={"flex-1 py-2.5 rounded-lg transition-all " + (isLogin ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-lg shadow-cyan-500/30' : 'text-slate-400 hover:text-white')}>Sign In</button>
+                  <button onClick={() => setIsLogin(false)} className={"flex-1 py-2.5 rounded-lg transition-all " + (!isLogin ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-lg shadow-cyan-500/30' : 'text-slate-400 hover:text-white')}>Sign Up</button>
               </div>
 
-            <div className="mb-4 p-3 bg-home-bg/40 rounded-xl flex gap-2">
-                <button onClick={() => { setEmail('jane.doe@enterprise.com'); setPassword('password123'); setIsLogin(true); }} className="px-2.5 py-1 text-xs bg-space-blue/50 border border-teal-400/30 rounded-lg text-teal-300 hover:bg-teal-500/10 btn-micro">🎓 Trainee Demo</button>
-                <button onClick={() => { setEmail('elena.rostova@enterprise.com'); setPassword('trainer123'); setIsLogin(true); }} className="px-2.5 py-1 text-xs bg-space-blue/50 border border-amber-400/30 rounded-lg text-amber-300 hover:bg-amber-500/10 btn-micro">👩‍🏫 Trainer Demo</button>
-                <button onClick={() => { setEmail('admin@capacityconnect.io'); setPassword('admin123'); setIsLogin(true); }} className="px-2.5 py-1 text-xs bg-space-blue/50 border border-red-400/30 rounded-lg text-red-300 hover:bg-red-500/10 btn-micro">🛡️ Admin Demo</button>
-            </div>
+<div className="mb-5 p-3 bg-white/5 rounded-xl flex gap-2 border border-white/10">
+                 <button onClick={() => { setEmail('jane.doe@enterprise.com'); setPassword('password123'); setIsLogin(true); }} className="flex-1 py-1.5 text-xs bg-cyan-500/10 border border-cyan-400/30 rounded-lg text-cyan-300 hover:bg-cyan-500/20 btn-micro transition-all">🎓 Trainee Demo</button>
+                 <button onClick={() => { setEmail('elena.rostova@enterprise.com'); setPassword('trainer123'); setIsLogin(true); }} className="flex-1 py-1.5 text-xs bg-amber-500/10 border border-amber-400/30 rounded-lg text-amber-300 hover:bg-amber-500/20 btn-micro transition-all">👩‍🏫 Trainer Demo</button>
+                 <button onClick={() => { setEmail('admin@capacityconnect.io'); setPassword('admin123'); setIsLogin(true); }} className="flex-1 py-1.5 text-xs bg-red-500/10 border border-red-400/30 rounded-lg text-red-300 hover:bg-red-500/20 btn-micro transition-all">🛡️ Admin Demo</button>
+             </div>
 
-            <form onSubmit={handleSubmit} className="space-y-4">
-               {!isLogin && <input type="text" required placeholder="Full Name" value={name} onChange={e => setName(e.target.value)} className="w-full px-3.5 py-2 rounded-lg border border-electric-blue/20 bg-space-black/50 text-sm text-white placeholder-slate-500" />}
-               <input type="email" required placeholder="Email" value={email} onChange={e => setEmail(e.target.value)} className="w-full px-3.5 py-2 rounded-lg border border-electric-blue/20 bg-space-black/50 text-sm text-white placeholder-slate-500" />
-               <input type="password" required placeholder="Password" value={password} onChange={e => setPassword(e.target.value)} className="w-full px-3.5 py-2 rounded-lg border border-electric-blue/20 bg-space-black/50 text-sm text-white placeholder-slate-500" />
+             <form onSubmit={handleSubmit} className="space-y-4">
+                {!isLogin && (
+                  <input type="text" required placeholder="Full Name" value={name} onChange={e => setName(e.target.value)} className="login-input w-full px-5 py-3 text-sm" />
+                )}
+                <input type="email" required placeholder="Email Address" value={email} onChange={e => setEmail(e.target.value)} className="login-input w-full px-5 py-3 text-sm" />
+                <input type="password" required placeholder="Password" value={password} onChange={e => setPassword(e.target.value)} className="login-input w-full px-5 py-3 text-sm" />
 
-              {!isLogin && (
+                {isLogin && (
+                  <div className="flex justify-end">
+                    <button type="button" onClick={() => showToast('Password reset link sent to your email.', 'info')} className="text-xs text-cyan-400 hover:text-cyan-300 font-semibold transition-colors">Forgot Password?</button>
+                  </div>
+                )}
+
+{!isLogin && (
                 <div className="space-y-3">
                   <div>
-                    <label className="block text-xs font-semibold text-slate-300 mb-1">Sign up as</label>
+                    <label className="block text-xs font-semibold text-slate-300 mb-2">Sign up as</label>
                     <div className="flex gap-2">
-                      <button type="button" onClick={() => setSignupRole('trainee')} className={"flex-1 py-2 rounded-lg border-2 text-xs font-black transition " + (signupRole === 'trainee' ? 'border-teal-900 bg-teal-50 dark:bg-teal-900/30 text-teal-800 dark:text-teal-200' : 'border-electric-blue/10 dark:border-slate-600 text-slate-300 dark:text-slate-400')}>Trainee</button>
-                      <button type="button" onClick={() => setSignupRole('trainer')} className={"flex-1 py-2 rounded-lg border-2 text-xs font-black transition " + (signupRole === 'trainer' ? 'border-indigo-900 bg-indigo-50 dark:bg-indigo-900/30 text-indigo-800 dark:text-indigo-200' : 'border-electric-blue/10 dark:border-slate-600 text-slate-300 dark:text-slate-400')}>Trainer</button>
+                      <button type="button" onClick={() => setSignupRole('trainee')} className={"flex-1 py-2.5 rounded-xl border-2 text-xs font-black transition " + (signupRole === 'trainee' ? 'border-cyan-400 bg-cyan-500/10 text-cyan-300' : 'border-white/10 text-slate-400 hover:border-white/20')}>Trainee</button>
+                      <button type="button" onClick={() => setSignupRole('trainer')} className={"flex-1 py-2.5 rounded-xl border-2 text-xs font-black transition " + (signupRole === 'trainer' ? 'border-cyan-400 bg-cyan-500/10 text-cyan-300' : 'border-white/10 text-slate-400 hover:border-white/20')}>Trainer</button>
                     </div>
-                    <p className="text-[10px] text-slate-400 dark:text-slate-400 mt-1">Admin accounts cannot be self-registered.</p>
+                    <p className="text-[10px] text-slate-500 mt-1">Admin accounts cannot be self-registered.</p>
                   </div>
                    {signupRole === 'trainee' && (
                      <div className="space-y-2">
-                       <input type="text" placeholder="Qualification (optional)" value={qualification} onChange={e => setQualification(e.target.value)} className="w-full px-3.5 py-2 rounded-lg border border-electric-blue/20 bg-space-black/50 text-sm text-white placeholder-slate-500" />
-                       <input type="text" placeholder="Skills (comma separated)" value={skills} onChange={e => setSkills(e.target.value)} className="w-full px-3.5 py-2 rounded-lg border border-electric-blue/20 bg-space-black/50 text-sm text-white placeholder-slate-500" />
+                       <input type="text" placeholder="Qualification (optional)" value={qualification} onChange={e => setQualification(e.target.value)} className="login-input w-full px-5 py-3 text-sm" />
+                       <input type="text" placeholder="Skills (comma separated)" value={skills} onChange={e => setSkills(e.target.value)} className="login-input w-full px-5 py-3 text-sm" />
                      </div>
                    )}
                    {signupRole === 'trainer' && (
                      <div className="space-y-2">
-                       <input type="text" placeholder="Subjects / Skills you can teach" value={subjects} onChange={e => setSubjects(e.target.value)} className="w-full px-3.5 py-2 rounded-lg border border-electric-blue/20 bg-space-black/50 text-sm text-white placeholder-slate-500" />
+                       <input type="text" placeholder="Subjects / Skills you can teach" value={subjects} onChange={e => setSubjects(e.target.value)} className="login-input w-full px-5 py-3 text-sm" />
                      </div>
                    )}
                  </div>
                )}
 
-               {error && <p className="text-xs text-red-400 font-semibold">{error}</p>}
+               {error && <p className="text-xs text-red-400 font-semibold text-center">{error}</p>}
 
-               <button type="submit" disabled={loading} className="w-full py-2.5 bg-isro-orange hover:bg-isro-orange-hover text-white rounded-xl text-xs font-black shadow-md btn-micro border border-orange-400/30">
+               <button type="submit" disabled={loading} className="login-btn-primary w-full py-3.5 text-sm font-bold mt-2">
                  {loading ? 'Submitting...' : isLogin ? 'Sign In' : 'Create Account'}
                </button>
              </form>
 
-              {authData && (
-                <div className="mt-4 p-4 bg-electric-blue/10 border border-electric-blue/20 rounded-xl text-xs text-electric-blue space-y-2">
-                  {authData.status === 'pending' ? (
-                    <div>
-                      <p className="font-bold text-amber">⏳ {authData.message || 'Your account is awaiting admin approval.'}</p>
-                      <p className="text-[11px] text-slate-400">You will be able to log in once an admin approves your account.</p>
+             <div className="mt-5 text-center text-xs text-slate-400">
+               {isLogin ? "Don't have an account? " : "Already have an account? "}
+               <button onClick={() => setIsLogin(!isLogin)} className="text-cyan-400 hover:text-cyan-300 font-bold transition-colors">
+                 {isLogin ? 'Create Account' : 'Sign In'}
+               </button>
+             </div>
+
+             {authData && (
+               <div className="mt-4 p-4 bg-cyan-500/10 border border-cyan-400/20 rounded-xl text-xs text-cyan-300 space-y-2">
+                 {authData.status === 'pending' ? (
+                   <div>
+                     <p className="font-bold text-amber-300">⏳ {authData.message || 'Your account is awaiting admin approval.'}</p>
+                     <p className="text-[11px] text-slate-400">You will be able to log in once an admin approves your account.</p>
+                   </div>
+                 ) : (
+                   <>
+                    <p className="font-bold text-white">✓ Logged in as {authData.user?.name} ({authData.user?.role})</p>
+                    <div className="flex gap-2 pt-2">
+                      {authData.user?.role === 'trainee' && <button onClick={() => onNavigate('2')} className="flex-1 py-1.5 bg-gradient-to-r from-cyan-500 to-blue-600 text-white rounded-lg font-black btn-micro shadow-lg shadow-cyan-500/30">Trainee Dashboard</button>}
+                      {authData.user?.role === 'trainer' && <button onClick={() => onNavigate('9')} className="flex-1 py-1.5 bg-gradient-to-r from-amber-500 to-orange-600 text-white rounded-lg font-black btn-micro shadow-lg shadow-amber-500/30">Trainer Dashboard</button>}
+                      {authData.user?.role === 'admin' && <button onClick={() => onNavigate('7')} className="flex-1 py-1.5 bg-gradient-to-r from-red-500 to-rose-600 text-white rounded-lg font-black btn-micro shadow-lg shadow-red-500/30">Admin Dashboard</button>}
                     </div>
-                  ) : (
-                    <>
-                     <p className="font-bold text-white">✓ Logged in as {authData.user?.name} ({authData.user?.role})</p>
-                     <div className="flex gap-2 pt-2">
-                       {authData.user?.role === 'trainee' && <button onClick={() => onNavigate('2')} className="flex-1 py-1.5 bg-electric-blue text-space-black rounded font-black btn-micro">Trainee Dashboard</button>}
-                       {authData.user?.role === 'trainer' && <button onClick={() => onNavigate('9')} className="flex-1 py-1.5 bg-gradient-to-r from-red-500 to-rose-600 text-white shadow-lg shadow-red-500/30 rounded font-black btn-micro">Trainer Dashboard</button>}
-                       {authData.user?.role === 'admin' && <button onClick={() => onNavigate('7')} className="flex-1 py-1.5 bg-crimson text-white rounded font-black btn-micro">Admin Dashboard</button>}
-                     </div>
                    </>
                  )}
                </div>
