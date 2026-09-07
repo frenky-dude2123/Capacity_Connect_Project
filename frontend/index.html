@@ -4,30 +4,62 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Capacity Connect - Stitch Platform Suite</title>
+  <!-- Google Fonts: Orbit (space mission) + Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Orbit:wght@500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <!-- Material Symbols Icons -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script>
-    tailwind.config = {
+tailwind.config = {
       darkMode: 'class',
       theme: {
         extend: {
           colors: {
-            trainee: {
-              50: '#f0fdfa', 100: '#ccfbf1', 200: '#99f6e4', 300: '#5eeccb',
+            // ===== MULTI-COLOR SPACE/EARTH PALETTE =====
+            // Homepage — Purple/Nebula
+            nebula: {
+              50: '#faf5ff', 100: '#f3e8ff', 200: '#e9d5ff', 300: '#d8b4fe',
+              400: '#c084fc', 500: '#a855f7', 600: '#9333ea', 700: '#7c3aed',
+              800: '#6d28d9', 900: '#4c1d95',
+            },
+            // Trainee — Teal/Ocean
+            ocean: {
+              50: '#f0fdff', 100: '#ccfbf1', 200: '#99f6e4', 300: '#5eeccb',
               400: '#2dd4bf', 500: '#14b8a6', 600: '#0d9488', 700: '#0f766e',
               800: '#115e59', 900: '#134d4b',
             },
-            trainer: {
-              50: '#eeeadf', 100: '#e1d7cf', 200: '#c4b0a0', 300: '#a78a70',
-              400: '#8b6540', 500: '#6f3d10', 600: '#5a300d', 700: '#4a250b',
-              800: '#3a1b08', 900: '#2a1005',
+            // Trainer — Amber/Sunset
+            sunset: {
+              50: '#fffbeb', 100: '#fef3c7', 200: '#fde68a', 300: '#fcd34d',
+              400: '#fbbf24', 500: '#f59e0b', 600: '#d97706', 700: '#b45309',
+              800: '#92400e', 900: '#78350f',
             },
-            admin: {
+            // Admin — Crimson/Deep Red
+            crimson: {
               50: '#fff5f5', 100: '#ffe4e6', 200: '#fecdd8', 300: '#fda4af',
-              400: '#fb7171', 500: '#f85050', 600: '#ea3a4a', 700: '#ba1b2c',
-              800: '#941c2f', 900: '#6f1520',
+              400: '#fb7171', 500: '#ef4444', 600: '#dc2626', 700: '#b91c1c',
+              800: '#991b1b', 900: '#7f1d1d',
             },
+            // Earth/Nature — Green
+            earth: {
+              50: '#f0fdf4', 100: '#dcfce7', 200: '#bbf7d0', 300: '#86efac',
+              400: '#4ade80', 500: '#22c55e', 600: '#16a34a', 700: '#15803d',
+              800: '#166534', 900: '#14532d',
+            },
+            // Gold/Yellow — Stars/Sun
+            gold: {
+              50: '#fffff0', 100: '#fef9c3', 200: '#fde047', 300: '#facc15',
+              400: '#eab308', 500: '#ca8a04', 600: '#a16207', 700: '#854d0e',
+              800: '#713f12', 900: '#5f3a0d',
+            },
+          },
+          fontFamily: {
+            'space': ['"Orbit"', '"Segoe UI"', 'system-ui', 'sans-serif'],
+            'orbit': ['"Orbit"', 'system-ui', 'sans-serif'],
           },
         }
       }
@@ -38,43 +70,96 @@
     .btn-micro:hover { transform: scale(1.05); box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -4px rgba(0,0,0,0.1); }
     .btn-micro:active { transform: scale(0.95); }
 
-    /* ===== SPACE / NASA / ISRO THEME ===== */
+/* ===== MULTI-COLOR SPACE / EARTH THEME ===== */
     :root {
       --space-black: #05070a;
       --space-navy: #0a0e27;
       --space-deep: #0d1b2a;
       --space-blue: #1b2838;
-      --electric-blue: #00d4ff;
-      --electric-blue-dim: rgba(0, 212, 255, 0.15);
-      --cyan: #00f5ff;
-      --cyan-dim: rgba(0, 245, 255, 0.12);
-      --isro-orange: #ff6b35;
-      --isro-orange-hover: #e55a2b;
-      --amber: #ffb300;
-      --amber-dim: rgba(255, 179, 0, 0.15);
-      --crimson: #dc2626;
-      --crimson-dim: rgba(220, 38, 38, 0.15);
+
+      /* Homepage — Purple/Nebula */
+      --home-bg: #0f0a1f;
+      --home-bg2: #1a0b2e;
+      --home-accent: #c084fc;
+      --home-accent2: #a855f7;
+      --home-glow: rgba(168, 85, 247, 0.25);
+
+      /* Trainee — Teal/Ocean */
+      --trainee-bg: #0a1f1f;
+      --trainee-bg2: #0d2a2a;
+      --trainee-accent: #2dd4bf;
+      --trainee-accent2: #14b8a6;
+      --trainee-glow: rgba(45, 212, 191, 0.25);
+
+      /* Trainer — Amber/Sunset */
+      --trainer-bg: #1a0f05;
+      --trainer-bg2: #2a1508;
+      --trainer-accent: #f59e0b;
+      --trainer-accent2: #ff6b35;
+      --trainer-glow: rgba(245, 158, 11, 0.25);
+
+      /* Admin — Crimson/Deep Red */
+      --admin-bg: #1a0505;
+      --admin-bg2: #2a0808;
+      --admin-accent: #ef4444;
+      --admin-accent2: #dc2626;
+      --admin-glow: rgba(239, 68, 68, 0.25);
+
+      /* Earth/Nature — Green */
+      --earth-accent: #22c55e;
+      --earth-accent2: #16a34a;
+      --earth-glow: rgba(34, 197, 94, 0.25);
+
+      /* Gold/Yellow — Stars/Sun */
+      --gold-accent: #fbbf24;
+      --gold-accent2: #f59e0b;
+      --gold-glow: rgba(251, 191, 36, 0.25);
+
+      /* Shared */
       --white: #ffffff;
       --star-white: #f8fafc;
       --text-primary: #e2e8f0;
       --text-secondary: #94a3b8;
       --border-subtle: rgba(148, 163, 184, 0.15);
       --glass-bg: rgba(13, 27, 42, 0.7);
-      --glass-border: rgba(0, 212, 255, 0.2);
+      --glass-border: rgba(0, 212, 255, 0.15);
     }
 
-    /* Base backgrounds */
-    body { background-color: var(--space-navy) !important; }
+/* Base backgrounds */
+    body { background-color: var(--space-navy) !important; font-family: 'Inter', system-ui, sans-serif; }
     .theme-wrapper { background-color: var(--space-navy) !important; }
     .dark body { background-color: var(--space-black) !important; }
     .dark .theme-wrapper { background-color: var(--space-black) !important; }
 
-    /* Typography */
+    /* Space mission headings */
+    h1, h2, h3, .font-space { font-family: 'Orbit', 'Segoe UI', system-ui, sans-serif; }
+
+/* Typography */
     .text-space-title {
-      font-family: 'Segoe UI', system-ui, sans-serif;
+      font-family: '"Orbit", "Segoe UI", system-ui, sans-serif';
       font-weight: 800;
       letter-spacing: -0.02em;
-      background: linear-gradient(135deg, #ffffff 0%, #00d4ff 50%, #00f5ff 100%);
+    }
+    .text-home-title {
+      background: linear-gradient(135deg, #ffffff 0%, #c084fc 40%, #e879f9 70%, #f0abfc 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .text-trainee-title {
+      background: linear-gradient(135deg, #ffffff 0%, #2dd4bf 40%, #5eeccb 70%, #ccfbf1 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .text-trainer-title {
+      background: linear-gradient(135deg, #fffbeb 0%, #fbbf24 40%, #f59e0b 70%, #ff6b35 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .text-admin-title {
+      background: linear-gradient(135deg, #ffffff 0%, #f87171 40%, #ef4444 70%, #fca5a5 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
@@ -88,9 +173,9 @@
     }
 
     /* Role accent colors */
-    .accent-trainee { --accent: var(--electric-blue); --accent-dim: var(--electric-blue-dim); --accent-hover: #00b8e6; }
-    .accent-trainer { --accent: var(--isro-orange); --accent-dim: var(--amber-dim); --accent-hover: var(--isro-orange-hover); }
-    .accent-admin { --accent: var(--crimson); --accent-dim: var(--crimson-dim); --accent-hover: #b91c1c; }
+    .accent-trainee { --accent: var(--trainee-accent); --accent-dim: var(--trainee-glow); --accent-hover: #0d9488; }
+    .accent-trainer { --accent: var(--trainer-accent); --accent-dim: var(--trainer-glow); --accent-hover: #d97706; }
+    .accent-admin { --accent: var(--admin-accent); --accent-dim: var(--admin-glow); --accent-hover: #b91c1c; }
 
     .btn-accent {
       background: linear-gradient(135deg, var(--accent) 0%, color-mix(in srgb, var(--accent) 85%, black) 100%);
@@ -103,55 +188,105 @@
       box-shadow: 0 0 30px var(--accent-dim), 0 6px 16px rgba(0,0,0,0.4);
     }
 
-    /* Space backgrounds */
+/* Space backgrounds */
     .bg-space-gradient {
       background: linear-gradient(180deg, var(--space-black) 0%, var(--space-navy) 40%, var(--space-deep) 100%);
     }
-    .bg-hero-earth {
+    /* Homepage — Purple/Nebula hero */
+    .bg-home-hero {
       background-image:
-        linear-gradient(180deg, rgba(5,7,10,0.3) 0%, rgba(10,14,39,0.85) 60%, var(--space-navy) 100%),
-        url('https://images-assets.nasa.gov/image/GSFC_20171208_Archive_e18453/GSFC_20171208_Archive_e18453~small.jpg');
+        linear-gradient(180deg, rgba(5,7,10,0.2) 0%, rgba(15,10,31,0.85) 50%, var(--home-bg) 100%),
+        url('https://images.nasa.gov/images/GSFC_20171208_Archive_e18453/GSFC_20171208_Archive_e18453~small.jpg');
       background-size: cover;
       background-position: center 30%;
     }
+    .bg-home-section {
+      background: linear-gradient(135deg, var(--home-bg) 0%, var(--home-bg2) 100%);
+    }
+    /* Auth — Purple/Nebula space */
     .bg-auth-space {
       background-image:
-        linear-gradient(135deg, rgba(5,7,10,0.88) 0%, rgba(13,27,42,0.92) 100%),
-        url('https://images-assets.nasa.gov/image/GSFC_20171208_Archive_e18453/GSFC_20171208_Archive_e18453~small.jpg');
+        linear-gradient(135deg, rgba(5,7,10,0.88) 0%, rgba(15,10,31,0.92) 100%),
+        url('https://images.nasa.gov/images/GSFC_20171208_Archive_e18453/GSFC_20171208_Archive_e18453~small.jpg');
       background-size: cover;
       background-position: center;
     }
+    /* Trainee — Teal/Ocean */
+    .bg-trainee-hero {
+      background-image:
+        linear-gradient(180deg, rgba(5,7,10,0.2) 0%, rgba(10,31,31,0.85) 50%, var(--trainee-bg) 100%),
+        url('https://images.nasa.gov/images/GSFC_20171208_Archive_e18453/GSFC_20171208_Archive_e18453~small.jpg');
+      background-size: cover;
+      background-position: center 30%;
+    }
+    .bg-trainee-section {
+      background: linear-gradient(135deg, var(--trainee-bg) 0%, var(--trainee-bg2) 100%);
+    }
+    /* Trainer — Amber/Sunset */
+    .bg-trainer-hero {
+      background-image:
+        linear-gradient(180deg, rgba(5,7,10,0.2) 0%, rgba(26,15,5,0.85) 50%, var(--trainer-bg) 100%),
+        url('https://images.nasa.gov/images/GSFC_20171208_Archive_e18453/GSFC_20171208_Archive_e18453~small.jpg');
+      background-size: cover;
+      background-position: center 30%;
+    }
+    .bg-trainer-section {
+      background: linear-gradient(135deg, var(--trainer-bg) 0%, var(--trainer-bg2) 100%);
+    }
+    /* Admin — Crimson/Deep Red */
+    .bg-admin-hero {
+      background-image:
+        linear-gradient(180deg, rgba(5,7,10,0.2) 0%, rgba(26,5,5,0.85) 50%, var(--admin-bg) 100%),
+        url('https://images.nasa.gov/images/GSFC_20171208_Archive_e18453/GSFC_20171208_Archive_e18453~small.jpg');
+      background-size: cover;
+      background-position: center 30%;
+    }
+    .bg-admin-section {
+      background: linear-gradient(135deg, var(--admin-bg) 0%, var(--admin-bg2) 100%);
+    }
+    /* Earth — Green */
+    .bg-earth-section {
+      background: linear-gradient(135deg, #0a1f0a 0%, #0d2a0d 100%);
+    }
+
     .bg-starfield {
       background-image:
         radial-gradient(1px 1px at 20px 30px, rgba(255,255,255,0.8), transparent),
         radial-gradient(1px 1px at 100px 50px, rgba(255,255,255,0.5), transparent),
         radial-gradient(1px 1px at 200px 150px, rgba(255,255,255,0.6), transparent),
         radial-gradient(1px 1px at 300px 250px, rgba(255,255,255,0.4), transparent),
-        radial-gradient(2px 2px at 400px 100px, rgba(0,212,255,0.8), transparent),
+        radial-gradient(2px 2px at 400px 100px, rgba(168,85,247,0.8), transparent),
         radial-gradient(1px 1px at 500px 300px, rgba(255,255,255,0.5), transparent),
         radial-gradient(1px 1px at 50px 400px, rgba(255,255,255,0.3), transparent),
-        radial-gradient(2px 2px at 150px 500px, rgba(0,245,255,0.6), transparent);
+        radial-gradient(2px 2px at 150px 500px, rgba(45,212,191,0.6), transparent);
       background-size: 550px 550px;
     }
 
-    /* Sidebar themes — space variants */
-    .theme-trainee .sidebar-bg { background: linear-gradient(180deg, #0a1628 0%, #0d1b2a 100%); border-right: 1px solid rgba(0,212,255,0.15); }
+/* Sidebar themes — multi-color space variants */
+    /* Trainee — Teal/Ocean */
+    .theme-trainee .sidebar-bg { background: linear-gradient(180deg, #0a1f1f 0%, #0d2a2a 100%); border-right: 1px solid rgba(45,212,191,0.2); }
     .theme-trainee .sidebar-item { color: #94a3b8; }
-    .theme-trainee .sidebar-item-active { background: rgba(0,212,255,0.1); color: #00d4ff; border-left: 3px solid #00d4ff; }
-    .theme-trainee .sidebar-item:hover { background: rgba(0,212,255,0.06); color: #e2e8f0; }
-    .theme-trainee .portal-bg { background: var(--space-navy); }
+    .theme-trainee .sidebar-item-active { background: rgba(45,212,191,0.12); color: #2dd4bf; border-left: 3px solid #2dd4bf; }
+    .theme-trainee .sidebar-item:hover { background: rgba(45,212,191,0.06); color: #e2e8f0; }
+    .theme-trainee .portal-bg { background: linear-gradient(135deg, var(--trainee-bg) 0%, var(--trainee-bg2) 100%); }
 
-    .theme-trainer .sidebar-bg { background: linear-gradient(180deg, #1a1005 0%, #2a1a0a 100%); border-right: 1px solid rgba(255,107,53,0.15); }
+    /* Trainer — Amber/Sunset */
+    .theme-trainer .sidebar-bg { background: linear-gradient(180deg, #1a0f05 0%, #2a1508 100%); border-right: 1px solid rgba(245,158,11,0.2); }
     .theme-trainer .sidebar-item { color: #94a3b8; }
-    .theme-trainer .sidebar-item-active { background: rgba(255,107,53,0.1); color: #ff6b35; border-left: 3px solid #ff6b35; }
-    .theme-trainer .sidebar-item:hover { background: rgba(255,107,53,0.06); color: #e2e8f0; }
-    .theme-trainer .portal-bg { background: var(--space-navy); }
+    .theme-trainer .sidebar-item-active { background: rgba(245,158,11,0.12); color: #f59e0b; border-left: 3px solid #f59e0b; }
+    .theme-trainer .sidebar-item:hover { background: rgba(245,158,11,0.06); color: #e2e8f0; }
+    .theme-trainer .portal-bg { background: linear-gradient(135deg, var(--trainer-bg) 0%, var(--trainer-bg2) 100%); }
 
-    .theme-admin .sidebar-bg { background: linear-gradient(180deg, #1a0505 0%, #2a0a0a 100%); border-right: 1px solid rgba(220,38,38,0.15); }
+    /* Admin — Crimson/Deep Red */
+    .theme-admin .sidebar-bg { background: linear-gradient(180deg, #1a0505 0%, #2a0808 100%); border-right: 1px solid rgba(239,68,68,0.2); }
     .theme-admin .sidebar-item { color: #94a3b8; }
-    .theme-admin .sidebar-item-active { background: rgba(220,38,38,0.1); color: #dc2626; border-left: 3px solid #dc2626; }
-    .theme-admin .sidebar-item:hover { background: rgba(220,38,38,0.06); color: #e2e8f0; }
-    .theme-admin .portal-bg { background: var(--space-navy); }
+    .theme-admin .sidebar-item-active { background: rgba(239,68,68,0.12); color: #ef4444; border-left: 3px solid #ef4444; }
+    .theme-admin .sidebar-item:hover { background: rgba(239,68,68,0.06); color: #e2e8f0; }
+    .theme-admin .portal-bg { background: linear-gradient(135deg, var(--admin-bg) 0%, var(--admin-bg2) 100%); }
+
+    /* Homepage — Purple/Nebula */
+    .theme-home .sidebar-bg { background: linear-gradient(180deg, #0f0a1f 0%, #1a0b2e 100%); border-right: 1px solid rgba(168,85,247,0.2); }
+    .theme-home .portal-bg { background: linear-gradient(135deg, var(--home-bg) 0%, var(--home-bg2) 100%); }
 
     /* Dark mode overrides — space theme */
     .dark body { background-color: var(--space-black) !important; }
@@ -192,6 +327,87 @@
     .dark input::placeholder,
     .dark textarea::placeholder { color: #64748b !important; }
 
+/* ===== DECORATIVE SPACE / EARTH VISUAL ELEMENTS ===== */
+    /* Nebula glow — Homepage */
+    .nebula-glow {
+      background: radial-gradient(ellipse at 30% 20%, rgba(168,85,247,0.25) 0%, transparent 60%),
+                  radial-gradient(ellipse at 70% 80%, rgba(236,72,153,0.15) 0%, transparent 55%);
+    }
+    /* Ocean glow — Trainee */
+    .ocean-glow {
+      background: radial-gradient(ellipse at 30% 20%, rgba(45,212,191,0.25) 0%, transparent 60%),
+                  radial-gradient(ellipse at 70% 80%, rgba(6,182,212,0.15) 0%, transparent 55%);
+    }
+    /* Sunset glow — Trainer */
+    .sunset-glow {
+      background: radial-gradient(ellipse at 30% 20%, rgba(245,158,11,0.25) 0%, transparent 60%),
+                  radial-gradient(ellipse at 70% 80%, rgba(239,68,68,0.15) 0%, transparent 55%);
+    }
+    /* Crimson glow — Admin */
+    .crimson-glow {
+      background: radial-gradient(ellipse at 30% 20%, rgba(239,68,68,0.25) 0%, transparent 60%),
+                  radial-gradient(ellipse at 70% 80%, rgba(185,28,28,0.15) 0%, transparent 55%);
+    }
+    /* Earth glow — shared nature */
+    .earth-glow {
+      background: radial-gradient(ellipse at 50% 50%, rgba(34,197,94,0.2) 0%, transparent 70%);
+    }
+    /* Star glow — Gold */
+    .star-glow {
+      background: radial-gradient(ellipse at 50% 50%, rgba(251,191,36,0.2) 0%, transparent 70%);
+    }
+
+    /* Orbit ring decoration */
+    .orbit-ring {
+      position: relative;
+    }
+    .orbit-ring::before {
+      content: '';
+      position: absolute;
+      top: 50%; left: 50%;
+      width: 200%; height: 200%;
+      transform: translate(-50%, -50%);
+      border: 1px solid rgba(255,255,255,0.04);
+      border-radius: 50%;
+    }
+    .orbit-ring::after {
+      content: '';
+      position: absolute;
+      top: 50%; left: 50%;
+      width: 140%; height: 140%;
+      transform: translate(-50%, -50%);
+      border: 1px solid rgba(255,255,255,0.03);
+      border-radius: 50%;
+      animation: orbit-rotate 30s linear infinite;
+    }
+    @keyframes orbit-rotate {
+      from { transform: translate(-50%, -50%) rotate(0deg); }
+      to { transform: translate(-50%, -50%) rotate(360deg); }
+    }
+
+    /* Planet accent dot */
+    .planet-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      box-shadow: 0 0 12px currentColor;
+    }
+
+    /* Gold stat highlight */
+    .stat-gold {
+      background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* Section divider — wave */
+    .wave-divider {
+      height: 40px;
+      background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120' preserveAspectRatio='none'%3E%3Cpath d='M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z' opacity='.5'/%3E%3Cpath d='M0,0V15.81C13,36.92,27.64,56.86,47.69,72.05,99.41,111.27,165,111,224.58,91.58c31.15-10.15,60.09-26.07,89.67-39.8,40.92-19,84.73-46,130.83-49.67,36.26-2.85,70.9,9.42,98.6,31.56,31.77,25.39,62.32,62,103.63,73,40.44,10.79,81.35-6.69,119.13-24.28s75.16-39,116.92-30.03c59.5,11.64,114.49,63.57,120,114.08V0Z' opacity='.7'/%3E%3C/svg%3E");
+      background-size: 120px 40px;
+      background-repeat: repeat-x;
+    }
+
     /* Scrollbar */
     ::-webkit-scrollbar { width: 6px; }
     ::-webkit-scrollbar-track { background: transparent; }
@@ -205,97 +421,74 @@
       box-shadow: 0 0 40px rgba(0,212,255,0.1), inset 0 0 40px rgba(0,212,255,0.05);
     }
 
-    /* Space utility overrides */
+/* Space utility overrides */
     .dark .dark\:bg-slate-950 { background-color: var(--space-black) !important; }
     .dark .bg-space-navy { background-color: var(--space-navy) !important; }
     .dark .bg-space-blue { background-color: var(--space-blue) !important; }
 
     /* Chart overrides for space theme */
     .dark canvas { filter: invert(0.85) hue-rotate(180deg) !important; }
-    .theme-trainee {
-      --color-primary: 184, 120, 90;       /* terracotta #B8785A */
-      --color-primary-hover: 154, 99, 77;  /* #9A634D */
-      --color-primary-light: 255, 218, 185;/* peach #FFDAB9 */
-      --color-primary-bg: 255, 239, 224;   /* cream #FFEFE0 */
-      --color-primary-border: 255, 206, 173; /* #FFCEAD */
-    }
-    .theme-trainee .sidebar-bg { background-color: #FFEFE0; }
-    .theme-trainee .sidebar-item { color: #B8785A; }
-    .theme-trainee .sidebar-item-active { background-color: rgba(255, 218, 185, 0.35); color: #B8785A; }
-    .theme-trainee .sidebar-item:hover { background-color: rgba(255, 218, 185, 0.2); }
-    .theme-trainee .portal-bg { background-color: #FFEFE0; }
 
-    /* ===== TRAINER THEME — pale lavender-blue dominant, mauve/plum accents ===== */
-    .theme-trainer {
-      --color-primary: 107, 85, 96;        /* dusty plum #6B5560 */
-      --color-primary-hover: 86, 68, 77;   /* #564450 */
-      --color-primary-light: 208, 216, 237;/* pale lavender-blue #D0D8ED */
-      --color-primary-bg: 227, 235, 250;  /* #E3EBFA */
-      --color-primary-border: 201, 210, 232; /* pale lavender-blue #C9D2E8 */
-    }
-    .theme-trainer .sidebar-bg { background-color: #D0D8ED; }
-    .theme-trainer .sidebar-item { color: #6B5560; }
-    .theme-trainer .sidebar-item-active { background-color: rgba(107, 85, 96, 0.15); color: #6B5560; }
-    .theme-trainer .sidebar-item:hover { background-color: rgba(107, 85, 96, 0.07); }
-    .theme-trainer .portal-bg { background-color: #E8EEF7; }
+    /* ===== MULTI-COLOR DARK MODE ===== */
+    /* Body and main background — deep space */
+    .dark body { background-color: var(--space-black) !important; }
+    .dark .theme-wrapper { background-color: var(--space-black) !important; }
+    .dark .dark\:bg-slate-950 { background-color: var(--space-black) !important; }
 
-    /* ===== ADMIN THEME — deep mauve/plum dominant, terracotta accents ===== */
-    .theme-admin {
-      --color-primary: 192, 136, 101;       /* terracotta #C08865 */
-      --color-primary-hover: 154, 108, 77;  /* #9A6C4D */
-      --color-primary-light: 255, 224, 214; /* terracotta tint */
-      --color-primary-bg: 255, 240, 230;    /* #FFF0E6 */
-      --color-primary-border: 255, 218, 185; /* peach #FFDAB9 */
-    }
-    .theme-admin .sidebar-bg { background-color: #6B5560; }
-    .theme-admin .sidebar-item { color: #FFEFE0; }
-    .theme-admin .sidebar-item-active { background-color: rgba(184, 120, 90, 0.25); color: #FFEFE0; }
-    .theme-admin .sidebar-item:hover { background-color: rgba(255, 255, 255, 0.08); }
-    .theme-admin .portal-bg { background-color: #FFF5F0; }
+    /* Glass cards in dark mode */
+    .dark .bg-white,
+    .dark .dark\:bg-slate-900 { background-color: rgba(13, 27, 42, 0.85) !important; backdrop-filter: blur(12px); }
+    .dark .dark\:bg-space-blue/30,
+    .dark .bg-space-blue/30 { background-color: rgba(27, 40, 56, 0.8) !important; }
+    .dark .dark\:bg-space-blue/40,
+    .dark .bg-space-blue/40 { background-color: rgba(30, 41, 59, 0.8) !important; }
+    .dark .bg-space-blue/30 { background-color: rgba(30, 41, 59, 0.6) !important; }
 
-    /* ===== DARK MODE: PLUM/MAUVE PALETTE ===== */
-    /* Deep plum/mauve backgrounds, pale lavender-blue text, warm terracotta accents */
+    /* Text colors in dark mode */
+    .dark .dark\:text-slate-100,
+    .dark .dark\:text-slate-200,
+    .dark .dark\:text-slate-300,
+    .dark .text-slate-100,
+    .dark .text-slate-200,
+    .dark .text-slate-300 { color: #f1f5f9 !important; }
+    .dark .dark\:text-slate-400,
+    .dark .text-slate-400 { color: #cbd5e1 !important; }
+    .dark .dark\:border-electric-blue/10,
+    .dark .border-electric-blue/10,
+    .dark .dark\:border-electric-blue/10,
+    .dark .border-electric-blue/10 { border-color: rgba(148,163,184,0.15) !important; }
 
-    /* Body and main background — deep plum, not black */
-    .dark body { background-color: #1e152e !important; }
-    .dark .theme-wrapper { background-color: #1e152e !important; }
-    .dark .dark\:bg-slate-950 { background-color: #1e152e !important; }
+    /* Multi-color text accents in dark mode */
+    .dark .text-home-accent { color: #c084fc !important; }
+    .dark .text-trainee-accent { color: #2dd4bf !important; }
+    .dark .text-trainer-accent { color: #f59e0b !important; }
+    .dark .text-admin-accent { color: #ef4444 !important; }
+    .dark .text-earth-accent { color: #22c55e !important; }
+    .dark .text-gold-accent { color: #fbbf24 !important; }
 
-    /* ===== CUSTOM COLOR PALETTE: Dusty Mauve/Plum + Terracotta/Rust + Peach + Cream + Pale Lavender-Blue ===== */
-    :root {
-      --dusty-mauve: #9D8C8C;
-      --dusty-mauve-light: #C4B5B5;
-      --dusty-mauve-dark: #6B5B5B;
-      --terracotta: #C67B5C;
-      --terracotta-light: #E8A88C;
-      --terracotta-dark: #A65D42;
-      --soft-peach: #FDF2EC;
-      --soft-peach-dark: #3D2E28;
-      --cream: #FFF8F0;
-      --cream-dark: #2A221C;
-     /* ===== INPUT FIELDS: fix text/background merging ===== */
+    /* Multi-color backgrounds in dark mode */
+    .dark .bg-home-accent/10 { background-color: rgba(168,85,247,0.15) !important; }
+    .dark .bg-trainee-accent/10 { background-color: rgba(45,212,191,0.15) !important; }
+    .dark .bg-trainer-accent/10 { background-color: rgba(245,158,11,0.15) !important; }
+    .dark .bg-admin-accent/10 { background-color: rgba(239,68,68,0.15) !important; }
+    .dark .bg-earth-accent/10 { background-color: rgba(34,197,94,0.15) !important; }
+    .dark .bg-gold-accent/10 { background-color: rgba(251,191,36,0.15) !important; }
+
+    /* Inputs in dark mode */
     .dark input[type="email"],
     .dark input[type="password"],
     .dark input[type="text"],
     .dark input[type="name"],
     .dark input[type="qualification"],
     .dark textarea {
-      color: #e0d6ff !important;
-      background-color: #3a2a54 !important;
-      border-color: #5a4a7a !important;
+      color: #f1f5f9 !important;
+      background-color: rgba(15, 23, 42, 0.8) !important;
+      border-color: rgba(148,163,184,0.2) !important;
     }
     .dark input::placeholder,
-    .dark textarea::placeholder {
-      color: #b8adff !important;
-    }
+    .dark textarea::placeholder { color: #64748b !important; }
 
-    /* Progress bar backgrounds */
-    .dark .bg-space-blue/30 { background-color: #322549 !important; }
-
-    /* Demo buttons text fix — was text-slate-300 (invisible on dark bg) */
-    .dark .btn-micro { color: inherit !important; }
-
-     /* Toast notifications */
+    /* Toast notifications */
     .dark .dark\:bg-emerald-900 { background-color: #143d30 !important; }
     .dark .dark\:bg-red-900 { background-color: #451a1a !important; }
     .dark .dark\:bg-amber-900 { background-color: #42210b !important; }
@@ -336,7 +529,41 @@
     .dark .bg-teal-900 { background-color: #143d30 !important; }
     .dark .bg-purple-800 { background-color: #3a2a54 !important; }
 
-    /* Chart canvas text in dark mode */
+    /* Additional text colors lacking dark variants */
+    .dark .text-blue-900,
+    .dark .dark\:text-blue-900 { color: #d8d0ff !important; }
+    .dark .text-blue-950 { color: #e0d6ff !important; }
+    .dark .text-crimson,
+    .dark .dark\:text-crimson { color: #fca5a5 !important; }
+    .dark .text-emerald-900 { color: #a7f3d0 !important; }
+    .dark .text-emerald-800 { color: #6ee7b7 !important; }
+    .dark .text-electric-blue { color: #34d399 !important; }
+    .dark .text-purple-800,
+    .dark .dark\:text-purple-800 { color: #c4b5ff !important; }
+    .dark .text-amber-700 { color: #fcd34d !important; }
+    .dark .text-indigo-900 { color: #a78bfa !important; }
+    .dark .text-teal-900 { color: #99f6e4 !important; }
+    .dark .text-teal-800 { color: #5eeccb !important; }
+    .dark .text-white { color: #f8fafc !important; }
+
+    /* Additional background colors lacking dark variants */
+    .dark .bg-blue-900,
+    .dark .dark\:bg-blue-900 { background-color: #1e2a5a !important; }
+    .dark .bg-blue-950 { background-color: #171f3b !important; }
+    .dark .bg-electric-blue/10 { background-color: #202d20 !important; }
+    .dark .bg-emerald-100 { background-color: #143d30 !important; }
+    .dark .bg-crimson/10,
+    .dark .dark\:bg-crimson/10 { background-color: #451a1a !important; }
+    .dark .bg-amber-100 { background-color: #42210b !important; }
+    .dark .bg-space-blue/20 { background-color: #2a1b3d !important; }
+    .dark .bg-indigo-100 { background-color: #2e1e5e !important; }
+    .dark .bg-indigo-900 { background-color: #2e1e5e !important; }
+    .dark .bg-indigo-50 { background-color: #322549 !important; }
+    .dark .bg-teal-50 { background-color: #202d20 !important; }
+    .dark .bg-teal-900 { background-color: #143d30 !important; }
+    .dark .bg-purple-800 { background-color: #3a2a54 !important; }
+
+/* Chart canvas text in dark mode */
     .dark canvas { filter: invert(1) hue-rotate(180deg) !important; }
 
     /* Fix placeholder text in dark mode for all inputs */
@@ -347,6 +574,69 @@
     ::-webkit-scrollbar-track { background: transparent; }
     ::-webkit-scrollbar-thumb { background: #475569; border-radius: 3px; }
     ::-webkit-scrollbar-thumb:hover { background: #64748b; }
+
+    /* ===== COLOR REMAP: old blue → new multi-color palette ===== */
+    /* These remaps keep existing class names working while changing the actual colors */
+    .bg-electric-blue { background-color: #2dd4bf !important; }
+    .bg-electric-blue\/10 { background-color: rgba(45, 212, 191, 0.1) !important; }
+    .bg-electric-blue\/20 { background-color: rgba(45, 212, 191, 0.2) !important; }
+    .bg-electric-blue\/30 { background-color: rgba(45, 212, 191, 0.3) !important; }
+    .bg-electric-blue-dark { background-color: #0d9488 !important; }
+    .bg-electric-blue-light { background-color: rgba(45, 212, 191, 0.15) !important; }
+    .text-electric-blue { color: #2dd4bf !important; }
+    .text-electric-blue-dark { color: #0d9488 !important; }
+    .border-electric-blue\/10 { border-color: rgba(45, 212, 191, 0.15) !important; }
+    .border-electric-blue\/20 { border-color: rgba(45, 212, 191, 0.25) !important; }
+    .border-electric-blue\/30 { border-color: rgba(45, 212, 191, 0.35) !important; }
+
+    .bg-isro-orange { background-color: #f59e0b !important; }
+    .bg-isro-orange\/10 { background-color: rgba(245, 158, 11, 0.1) !important; }
+    .bg-isro-orange\/20 { background-color: rgba(245, 158, 11, 0.2) !important; }
+    .bg-isro-orange\/30 { background-color: rgba(245, 158, 11, 0.3) !important; }
+    .bg-isro-orange-hover { background-color: #d97706 !important; }
+    .bg-isro-orange-dark { background-color: #b45309 !important; }
+    .text-isro-orange { color: #f59e0b !important; }
+
+    .bg-crimson { background-color: #ef4444 !important; }
+    .bg-crimson\/10 { background-color: rgba(239, 68, 68, 0.1) !important; }
+    .bg-crimson\/20 { background-color: rgba(239, 68, 68, 0.2) !important; }
+    .bg-crimson-dark { background-color: #dc2626 !important; }
+    .text-crimson { color: #ef4444 !important; }
+    .text-crimson-dark { color: #dc2626 !important; }
+
+    /* Homepage — Purple/Nebula overrides */
+    .theme-home .bg-electric-blue { background-color: #a855f7 !important; }
+    .theme-home .bg-electric-blue\/10 { background-color: rgba(168, 85, 247, 0.1) !important; }
+    .theme-home .bg-electric-blue\/20 { background-color: rgba(168, 85, 247, 0.2) !important; }
+    .theme-home .text-electric-blue { color: #c084fc !important; }
+    .theme-home .border-electric-blue\/10 { border-color: rgba(168, 85, 247, 0.15) !important; }
+    .theme-home .border-electric-blue\/20 { border-color: rgba(168, 85, 247, 0.25) !important; }
+    .theme-home .border-electric-blue\/30 { border-color: rgba(168, 85, 247, 0.35) !important; }
+
+    /* Trainee — Teal/Ocean overrides */
+    .theme-trainee .bg-electric-blue { background-color: #2dd4bf !important; }
+    .theme-trainee .bg-electric-blue\/10 { background-color: rgba(45, 212, 191, 0.1) !important; }
+    .theme-trainee .bg-electric-blue\/20 { background-color: rgba(45, 212, 191, 0.2) !important; }
+    .theme-trainee .text-electric-blue { color: #2dd4bf !important; }
+    .theme-trainee .border-electric-blue\/10 { border-color: rgba(45, 212, 191, 0.15) !important; }
+    .theme-trainee .border-electric-blue\/20 { border-color: rgba(45, 212, 191, 0.25) !important; }
+    .theme-trainee .border-electric-blue\/30 { border-color: rgba(45, 212, 191, 0.35) !important; }
+
+    /* Trainer — Amber/Sunset overrides */
+    .theme-trainer .bg-isro-orange { background-color: #f59e0b !important; }
+    .theme-trainer .bg-isro-orange\/10 { background-color: rgba(245, 158, 11, 0.1) !important; }
+    .theme-trainer .bg-isro-orange\/20 { background-color: rgba(245, 158, 11, 0.2) !important; }
+    .theme-trainer .text-isro-orange { color: #f59e0b !important; }
+    .theme-trainer .border-isro-orange\/20 { border-color: rgba(245, 158, 11, 0.25) !important; }
+    .theme-trainer .border-isro-orange\/30 { border-color: rgba(245, 158, 11, 0.35) !important; }
+
+    /* Admin — Crimson/Deep Red overrides */
+    .theme-admin .bg-crimson { background-color: #ef4444 !important; }
+    .theme-admin .bg-crimson\/10 { background-color: rgba(239, 68, 68, 0.1) !important; }
+    .theme-admin .bg-crimson\/20 { background-color: rgba(239, 68, 68, 0.2) !important; }
+    .theme-admin .text-crimson { color: #ef4444 !important; }
+    .theme-admin .border-crimson\/20 { border-color: rgba(239, 68, 68, 0.25) !important; }
+    .theme-admin .border-crimson\/30 { border-color: rgba(239, 68, 68, 0.35) !important; }
   </style>
   <!-- React & ReactDOM -->
   <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
@@ -356,7 +646,7 @@
   <!-- Chart.js for Admin Analytics -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
 </head>
-  <body class="bg-space-gradient bg-starfield min-h-screen text-slate-200 font-sans">
+<body class="bg-space-gradient bg-starfield min-h-screen text-slate-200 font-inter">
   <div id="root"></div>
 
   <script type="text/babel">
@@ -761,12 +1051,12 @@
         fetchNotifications();
       }, []);
 
-      const getTypeColor = (type) => {
+const getTypeColor = (type) => {
         switch (type) {
-          case 'announcement': return 'bg-electric-blue/10 border-isro-orange text-isro-orange';
-          case 'achievement': return 'bg-electric-blue-light border-electric-blue text-electric-blue';
-          case 'course': return 'bg-electric-blue/10 border-electric-blue/10 text-slate-800';
-          default: return 'bg-space-blue/30 border-electric-blue/10 text-white';
+          case 'announcement': return 'bg-purple-500/10 border-purple-400/30 text-purple-300';
+          case 'achievement': return 'bg-fuchsia-500/10 border-fuchsia-400/30 text-fuchsia-300';
+          case 'course': return 'bg-purple-500/10 border-purple-500/20 text-purple-200';
+          default: return 'bg-home-bg/50 border-purple-500/20 text-white';
         }
       };
 
@@ -785,18 +1075,18 @@
         return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
       };
 
-      return (
+return (
         <div className="min-h-screen bg-space-gradient">
-          {/* Hero Section */}
-          <section className="relative bg-hero-earth border-b border-space-blue/30">
-            <div className="absolute inset-0 bg-space-gradient/80"></div>
+          {/* Hero Section — Purple/Nebula */}
+          <section className="relative bg-home-hero border-b border-purple-500/20">
+            <div className="absolute inset-0 bg-gradient-to-b from-transparent via-purple-900/20 to-space-black/80"></div>
             <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-32">
               <div className="max-w-3xl">
-                <span className="px-3 py-1 rounded-full text-xs font-bold bg-electric-blue/20 text-electric-blue border border-electric-blue/30">
+                <span className="px-3 py-1 rounded-full text-xs font-bold bg-purple-500/20 text-purple-300 border border-purple-400/30">
                   🛰️ Ministry of Earth Sciences & IMD
                 </span>
-                <h1 className="text-5xl sm:text-6xl lg:text-7xl font-extrabold text-white mt-6 tracking-tight drop-shadow-[0_0_30px_rgba(0,212,255,0.3)]">
-                  Capacity <span className="text-electric-blue">Connect</span>
+                <h1 className="text-5xl sm:text-6xl lg:text-7xl font-extrabold text-white mt-6 tracking-tight drop-shadow-[0_0_30px_rgba(168,85,247,0.4)]">
+                  Capacity <span className="bg-gradient-to-r from-purple-300 via-fuchsia-400 to-pink-400 bg-clip-text text-transparent">Connect</span>
                 </h1>
                 <p className="mt-6 text-lg sm:text-xl text-slate-300 leading-relaxed max-w-2xl">
                   A digital capacity building and learning management platform for Earth sciences, meteorology, and organizational training. Advance your mission knowledge with structured learning pathways and accredited certifications.
@@ -804,13 +1094,13 @@
                 <div className="mt-10 flex flex-col sm:flex-row gap-4">
                   <button
                     onClick={() => onNavigateToAuth('1')}
-                    className="px-8 py-4 bg-isro-orange hover:bg-isro-orange-hover text-white rounded-xl text-sm font-bold shadow-lg btn-micro border border-orange-400/30"
+                    className="px-8 py-4 bg-gradient-to-r from-purple-500 to-fuchsia-600 hover:from-purple-400 hover:to-fuchsia-500 text-white rounded-xl text-sm font-bold shadow-lg shadow-purple-500/30 btn-micro border border-purple-400/30"
                   >
                     🚀 Launch Mission — Sign In
                   </button>
                   <button
                     onClick={() => onNavigateToAuth('1')}
-                    className="px-8 py-4 bg-transparent hover:bg-white/5 text-white border-2 border-electric-blue rounded-xl text-sm font-bold shadow-sm btn-micro"
+                    className="px-8 py-4 bg-transparent hover:bg-purple-500/10 text-white border-2 border-purple-400/50 rounded-xl text-sm font-bold shadow-sm btn-micro"
                   >
                     Join Mission — Create Account
                   </button>
@@ -820,7 +1110,7 @@
           </section>
 
           {/* Notifications Feed */}
-          <section className="relative bg-space-gradient py-12 sm:py-16">
+          <section className="relative bg-home-section py-12 sm:py-16">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               <div className="flex items-center justify-between mb-8">
                 <div>
@@ -835,20 +1125,20 @@
 
             {loading && (
               <div className="py-16 text-center">
-                <div className="w-8 h-8 border-4 border-isro-orange border-t-transparent rounded-full animate-spin mx-auto mb-3"></div>
+                <div className="w-8 h-8 border-4 border-purple-500 border-t-transparent rounded-full animate-spin mx-auto mb-3"></div>
                 <p className="text-sm text-slate-300">Loading updates...</p>
               </div>
             )}
 
             {error && !loading && (
-              <div className="p-6 bg-crimson/10 dark:bg-red-900/20 border border-crimson/20 dark:border-red-800 rounded-2xl text-center">
-                <p className="text-sm font-semibold text-red-700 dark:text-red-300">Unable to load updates</p>
-                <button onClick={() => window.location.reload()} className="mt-3 px-4 py-2 bg-crimson text-white rounded-lg text-xs font-bold">Retry</button>
+              <div className="p-6 bg-red-900/20 border border-red-800/50 rounded-2xl text-center">
+                <p className="text-sm font-semibold text-red-300">Unable to load updates</p>
+                <button onClick={() => window.location.reload()} className="mt-3 px-4 py-2 bg-red-600 text-white rounded-lg text-xs font-bold">Retry</button>
               </div>
             )}
 
             {!loading && !error && notifications.length === 0 && (
-              <div className="p-8 glass-card rounded-2xl border border-electric-blue/10 text-center">
+              <div className="p-8 glass-card rounded-2xl border border-purple-500/20 text-center">
                 <p className="text-sm text-slate-400">No updates at the moment. Check back soon!</p>
               </div>
             )}
@@ -878,14 +1168,14 @@
                 ))}
               </div>
             )}
-          </div>
+            </div>
           </section>
 
           {/* Footer */}
-          <footer className="border-t border-space-blue/30 bg-space-black">
+          <footer className="border-t border-purple-500/20 bg-space-black">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col sm:flex-row items-center justify-between gap-4">
               <div className="flex items-center gap-2">
-                <span className="w-8 h-8 rounded-xl bg-electric-blue text-space-black flex items-center justify-center font-black text-xs">CC</span>
+                <span className="w-8 h-8 rounded-xl bg-gradient-to-r from-purple-500 to-fuchsia-600 text-white flex items-center justify-center font-black text-xs">CC</span>
                 <span className="text-sm font-bold text-white">Capacity Connect</span>
               </div>
               <p className="text-xs text-slate-400">
@@ -1023,28 +1313,28 @@
         }
       };
 
-      return (
+return (
         <div className="min-h-screen bg-auth-space flex items-center justify-center p-4">
           <div className="w-full max-w-xl">
             <div className="text-center mb-6">
-              <span className="px-3 py-1 rounded-full text-xs font-bold bg-electric-blue/20 text-electric-blue border border-electric-blue/30">
+              <span className="px-3 py-1 rounded-full text-xs font-bold bg-purple-500/20 text-purple-300 border border-purple-400/30">
                 🛰️ Mission Control Access
               </span>
-              <h1 className="text-2xl sm:text-3xl font-extrabold text-white mt-2 drop-shadow-[0_0_20px_rgba(0,212,255,0.2)]">
+              <h1 className="text-2xl sm:text-3xl font-extrabold text-white mt-2 drop-shadow-[0_0_20px_rgba(168,85,247,0.3)]">
                 {isLogin ? 'Sign In to Capacity Connect' : 'Join the Mission'}
               </h1>
             </div>
 
             <div className="glass-card p-6 sm:p-8">
-              <div className="flex bg-space-blue/50 p-1 rounded-xl mb-6 text-xs font-bold">
-                  <button onClick={() => setIsLogin(true)} className={"flex-1 py-2 rounded-lg " + (isLogin ? 'bg-electric-blue text-space-black shadow-sm' : 'text-slate-400')}>Sign In</button>
-                  <button onClick={() => setIsLogin(false)} className={"flex-1 py-2 rounded-lg " + (!isLogin ? 'bg-electric-blue text-space-black shadow-sm' : 'text-slate-400')}>Sign Up</button>
+              <div className="flex bg-purple-900/30 p-1 rounded-xl mb-6 text-xs font-bold">
+                  <button onClick={() => setIsLogin(true)} className={"flex-1 py-2 rounded-lg " + (isLogin ? 'bg-gradient-to-r from-purple-500 to-fuchsia-600 text-white shadow-sm' : 'text-slate-400')}>Sign In</button>
+                  <button onClick={() => setIsLogin(false)} className={"flex-1 py-2 rounded-lg " + (!isLogin ? 'bg-gradient-to-r from-purple-500 to-fuchsia-600 text-white shadow-sm' : 'text-slate-400')}>Sign Up</button>
               </div>
 
-            <div className="mb-4 p-3 bg-space-blue/30 rounded-xl flex gap-2">
-                <button onClick={() => { setEmail('jane.doe@enterprise.com'); setPassword('password123'); setIsLogin(true); }} className="px-2.5 py-1 text-xs bg-space-blue/50 border border-electric-blue/20 rounded-lg text-electric-blue hover:bg-electric-blue/10 btn-micro">🎓 Trainee Demo</button>
-                <button onClick={() => { setEmail('elena.rostova@enterprise.com'); setPassword('trainer123'); setIsLogin(true); }} className="px-2.5 py-1 text-xs bg-space-blue/50 border border-isro-orange/20 rounded-lg text-isro-orange hover:bg-isro-orange/10 btn-micro">👩‍🏫 Trainer Demo</button>
-                <button onClick={() => { setEmail('admin@capacityconnect.io'); setPassword('admin123'); setIsLogin(true); }} className="px-2.5 py-1 text-xs bg-space-blue/50 border border-crimson/20 rounded-lg text-crimson hover:bg-crimson/10 btn-micro">🛡️ Admin Demo</button>
+            <div className="mb-4 p-3 bg-home-bg/40 rounded-xl flex gap-2">
+                <button onClick={() => { setEmail('jane.doe@enterprise.com'); setPassword('password123'); setIsLogin(true); }} className="px-2.5 py-1 text-xs bg-space-blue/50 border border-teal-400/30 rounded-lg text-teal-300 hover:bg-teal-500/10 btn-micro">🎓 Trainee Demo</button>
+                <button onClick={() => { setEmail('elena.rostova@enterprise.com'); setPassword('trainer123'); setIsLogin(true); }} className="px-2.5 py-1 text-xs bg-space-blue/50 border border-amber-400/30 rounded-lg text-amber-300 hover:bg-amber-500/10 btn-micro">👩‍🏫 Trainer Demo</button>
+                <button onClick={() => { setEmail('admin@capacityconnect.io'); setPassword('admin123'); setIsLogin(true); }} className="px-2.5 py-1 text-xs bg-space-blue/50 border border-red-400/30 rounded-lg text-red-300 hover:bg-red-500/10 btn-micro">🛡️ Admin Demo</button>
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-4">
@@ -1134,62 +1424,62 @@
         } catch (err) { setAiError(err.message); } finally { setAiLoading(false); }
       };
 
-      if (loading) return <div className="py-20 text-center text-sm text-slate-400">Loading Learner Dashboard...</div>;
+if (loading) return <div className="py-20 text-center text-sm text-slate-400">Loading Learner Dashboard...</div>;
 
       const continueWatching = getContinueWatching();
       const currentCourse = dash?.enrolledCourses?.find(c => c.id === continueWatching?.courseId);
 
       return (
-        <div className="max-w-7xl mx-auto px-4 py-8 space-y-8">
-          <div className="flex justify-between items-center pb-6 border-b border-electric-blue/10">
+        <div className="max-w-7xl mx-auto px-4 py-8 space-y-8 bg-trainee-section min-h-screen">
+          <div className="flex justify-between items-center pb-6 border-b border-teal-500/20">
             <div>
-              <span className="px-2.5 py-0.5 rounded-full text-xs font-black bg-electric-blue/20 text-electric-blue border border-electric-blue/30">Trainee Portal • Dashboard</span>
+              <span className="px-2.5 py-0.5 rounded-full text-xs font-black bg-teal-500/20 text-teal-300 border border-teal-400/30">Trainee Portal • Dashboard</span>
               <h1 className="text-2xl sm:text-3xl font-extrabold text-white mt-1">Learner Dashboard: {dash?.userName}</h1>
             </div>
-            <button onClick={onOpenCatalog} className="px-4 py-2 btn-accent rounded-xl text-xs font-black shadow-sm">Explore Catalog →</button>
+            <button onClick={onOpenCatalog} className="px-4 py-2 bg-gradient-to-r from-teal-500 to-cyan-600 hover:from-teal-400 hover:to-cyan-500 text-white rounded-xl text-xs font-black shadow-lg shadow-teal-500/20">Explore Catalog →</button>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <div className="glass-card p-6">
+            <div className="glass-card p-6 border-teal-500/20">
               <span className="text-xs text-slate-400 font-black uppercase">Capacity Readiness</span>
-              <p className="text-3xl font-extrabold text-electric-blue mt-2">{dash?.metrics?.capacityScore}%</p>
+              <p className="text-3xl font-extrabold text-teal-400 mt-2">{dash?.metrics?.capacityScore}%</p>
             </div>
-            <div className="glass-card p-6">
+            <div className="glass-card p-6 border-teal-500/20">
               <span className="text-xs text-slate-400 font-black uppercase">Active Courses</span>
               <p className="text-3xl font-extrabold text-white mt-2">{dash?.metrics?.activeCourses}</p>
             </div>
-            <div className="glass-card p-6">
+            <div className="glass-card p-6 border-teal-500/20">
               <span className="text-xs text-slate-400 font-black uppercase">Training Hours</span>
               <p className="text-3xl font-extrabold text-white mt-2">{dash?.metrics?.trainingHours}h</p>
             </div>
-            <div className="glass-card p-6">
+            <div className="glass-card p-6 border-teal-500/20">
               <span className="text-xs text-slate-400 font-black uppercase">Certificates</span>
-              <p className="text-3xl font-extrabold text-isro-orange mt-2">{dash?.metrics?.completedCertifications}</p>
+              <p className="text-3xl font-extrabold text-amber-400 mt-2">{dash?.metrics?.completedCertifications}</p>
             </div>
           </div>
 
            <div className="space-y-4">
              {continueWatching && currentCourse && (
-               <div className="glass-card p-6">
+               <div className="glass-card p-6 border-teal-500/20">
                  <div className="flex items-center justify-between gap-4">
                    <div className="flex-1">
                      <h2 className="text-lg font-black text-white">Continue Learning</h2>
                      <p className="text-sm text-slate-300 mt-1">Resume Lecture {continueWatching.lectureId}: {currentCourse.title}</p>
                      <div className="mt-3 w-full bg-space-blue/50 rounded-full h-2 overflow-hidden">
-                       <div className="bg-electric-blue h-2 rounded-full" style={{ width: getProgressPercent(continueWatching.completedLectures.length, currentCourse.syllabus?.length || 1) + '%' }}></div>
+                       <div className="bg-gradient-to-r from-teal-500 to-cyan-500 h-2 rounded-full" style={{ width: getProgressPercent(continueWatching.completedLectures.length, currentCourse.syllabus?.length || 1) + '%' }}></div>
                      </div>
                    </div>
-                    <button onClick={() => { setCourseId(continueWatching.courseId); setScreen('5'); }} className="px-5 py-2.5 btn-accent rounded-xl text-xs font-black shadow">Resume ▶</button>
+                    <button onClick={() => { setCourseId(continueWatching.courseId); setScreen('5'); }} className="px-5 py-2.5 bg-gradient-to-r from-teal-500 to-cyan-600 text-white rounded-xl text-xs font-black shadow-lg shadow-teal-500/30">Resume ▶</button>
                  </div>
                </div>
              )}
              <h2 className="text-lg font-black text-white">My Enrolled Pathways</h2>
              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
                {dash?.enrolledCourses?.map(c => (
-                 <div key={c.id} className="glass-card p-4 sm:p-6 flex flex-col justify-between">
+                 <div key={c.id} className="glass-card p-4 sm:p-6 flex flex-col justify-between border-teal-500/20">
                    <div>
-                      <span className="text-[10px] font-black bg-electric-blue/20 text-electric-blue px-2 py-0.5 rounded border border-electric-blue/20">{c.category}</span>
-                     <h3 className="text-base font-black text-white mt-2">{c.title}</h3>
+                      <span className="text-[10px] font-black bg-teal-500/20 text-teal-300 px-2 py-0.5 rounded border border-teal-400/20">{c.category}</span>
+                      <h3 className="text-base font-black text-white mt-2">{c.title}</h3>
                      <div className="mt-3">
                        <div className="flex justify-between text-xs text-slate-300 font-black mb-1">
                          <span>Progress</span><span>{c.progressPercent}%</span>
@@ -1821,45 +2111,45 @@
       };
 
       const formatDate = (d) => { if (!d) return '—'; try { return new Date(d).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }); } catch { return '—'; } };
-      const roleBadge = (r) => `<span className="px-2 py-0.5 rounded text-[10px] font-black uppercase ${r === 'admin' ? 'bg-electric-blue-dark text-white' : r === 'trainer' ? 'bg-electric-blue text-white' : 'bg-isro-orange text-white'}">${r}</span>`;
+      const roleBadge = (r) => `<span className="px-2 py-0.5 rounded text-[10px] font-black uppercase ${r === 'admin' ? 'bg-red-500/20 text-red-300' : r === 'trainer' ? 'bg-amber-500/20 text-amber-300' : 'bg-teal-500/20 text-teal-300'}">${r}</span>`;
       const statusBadge = (s) => `<span className="px-2 py-0.5 rounded text-[10px] font-black ${s === 'pending' ? 'bg-amber-100 text-amber-800' : s === 'approved' ? 'bg-emerald-100 text-emerald-800' : 'bg-red-100 text-red-800'}">${s}</span>`;
       const userDetail = (u) => { const parts = []; if (u.department) parts.push(`Dept: ${u.department}`); if (u.qualification) parts.push(u.qualification); if (u.skills) parts.push(`Skills: ${u.skills}`); if (u.subjects) parts.push(`Subjects: ${u.subjects}`); return parts.length ? parts.join(' • ') : '—'; };
 
-      return (
-        <div className="max-w-7xl mx-auto px-4 py-8 space-y-8">
-           <div className="flex justify-between items-center pb-6 border-b border-crimson/10">
+return (
+        <div className="max-w-7xl mx-auto px-4 py-8 space-y-8 bg-admin-section min-h-screen">
+           <div className="flex justify-between items-center pb-6 border-b border-red-500/20">
              <div>
-               <span className="px-2.5 py-0.5 rounded-full text-xs font-black bg-crimson/20 text-crimson border border-crimson/30">Admin Portal • Dashboard</span>
+               <span className="px-2.5 py-0.5 rounded-full text-xs font-black bg-red-500/20 text-red-300 border border-red-400/30">Admin Portal • Dashboard</span>
                <h1 className="text-2xl sm:text-3xl font-extrabold text-white mt-1">Capacity Telemetry</h1>
              </div>
              <div className="flex gap-2">
-               <button onClick={() => setActiveTab('pending')} className={"px-4 py-2 rounded-xl text-xs font-black transition " + (activeTab === 'pending' ? 'bg-amber-600 text-white' : 'bg-space-blue/50 text-slate-300')}>Pending Approvals</button>
+               <button onClick={() => setActiveTab('pending')} className={"px-4 py-2 rounded-xl text-xs font-black transition " + (activeTab === 'pending' ? 'bg-gradient-to-r from-red-500 to-rose-600 text-white shadow-lg shadow-red-500/20' : 'bg-space-blue/50 text-slate-300')}>Pending Approvals</button>
                <button onClick={() => setActiveTab('all')} className={"px-4 py-2 rounded-xl text-xs font-black transition " + (activeTab === 'all' ? 'bg-slate-900 text-white' : 'bg-space-blue/50 text-slate-300')}>All Users</button>
                <button onClick={() => setActiveTab('directory')} className={"px-4 py-2 rounded-xl text-xs font-black transition " + (activeTab === 'directory' ? 'bg-slate-900 text-white' : 'bg-space-blue/50 text-slate-300')}>User Directory</button>
-               <button onClick={() => setActiveTab('feedback')} className={"px-4 py-2 rounded-xl text-xs font-black transition " + (activeTab === 'feedback' ? 'bg-isro-orange text-white' : 'bg-space-blue/50 text-slate-300')}>Feedback</button>
+               <button onClick={() => setActiveTab('feedback')} className={"px-4 py-2 rounded-xl text-xs font-black transition " + (activeTab === 'feedback' ? 'bg-gradient-to-r from-amber-500 to-orange-600 text-white' : 'bg-space-blue/50 text-slate-300')}>Feedback</button>
                <button onClick={onBack} className="px-4 py-2 bg-slate-900 text-white rounded-xl text-xs font-black btn-micro">← Back to Learner View</button>
              </div>
-          </div>
+           </div>
 
-          {stats && !loading.stats && (
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-              <div className="glass-card p-6 rounded-2xl border border-electric-blue/10 shadow-sm"><span className="text-xs text-slate-400 dark:text-slate-400 font-black uppercase">Total Workforce</span><p className="text-3xl font-extrabold text-isro-orange mt-2">{stats?.totalUsers}</p></div>
-              <div className="glass-card p-6 rounded-2xl border border-electric-blue/10 shadow-sm"><span className="text-xs text-slate-400 dark:text-slate-400 font-black uppercase">Active Learners</span><p className="text-3xl font-extrabold text-electric-blue mt-2">{stats?.activeLearners}</p></div>
-              <div className="glass-card p-6 rounded-2xl border border-electric-blue/10 shadow-sm"><span className="text-xs text-slate-400 dark:text-slate-400 font-black uppercase">Completion Rate</span><p className="text-3xl font-extrabold text-electric-blue mt-2">{stats?.completionRatePercent}%</p></div>
-              <div className="glass-card p-6 rounded-2xl border border-electric-blue/10 shadow-sm"><span className="text-xs text-slate-400 dark:text-slate-400 font-black uppercase">Total Curriculums</span><p className="text-3xl font-extrabold text-white mt-2">{stats?.totalCourses}</p></div>
-            </div>
-          )}
+           {stats && !loading.stats && (
+             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+               <div className="glass-card p-6 rounded-2xl border border-red-500/20 shadow-sm"><span className="text-xs text-slate-400 dark:text-slate-400 font-black uppercase">Total Workforce</span><p className="text-3xl font-extrabold text-red-400 mt-2">{stats?.totalUsers}</p></div>
+               <div className="glass-card p-6 rounded-2xl border border-red-500/20 shadow-sm"><span className="text-xs text-slate-400 dark:text-slate-400 font-black uppercase">Active Learners</span><p className="text-3xl font-extrabold text-rose-400 mt-2">{stats?.activeLearners}</p></div>
+               <div className="glass-card p-6 rounded-2xl border border-red-500/20 shadow-sm"><span className="text-xs text-slate-400 dark:text-slate-400 font-black uppercase">Completion Rate</span><p className="text-3xl font-extrabold text-rose-300 mt-2">{stats?.completionRatePercent}%</p></div>
+               <div className="glass-card p-6 rounded-2xl border border-red-500/20 shadow-sm"><span className="text-xs text-slate-400 dark:text-slate-400 font-black uppercase">Total Curriculums</span><p className="text-3xl font-extrabold text-white mt-2">{stats?.totalCourses}</p></div>
+             </div>
+           )}
 
-          {activeTab === 'pending' && (
-            <div className="glass-card rounded-2xl border border-electric-blue/10 p-6 shadow-sm">
-              <h2 className="text-base font-black text-white mb-4">Pending Approvals ({pendingUsers.length})</h2>
-              {loading.pending ? (<div className="py-10 text-center text-sm text-slate-400">Loading...</div>) : pendingUsers.length === 0 ? (<div className="py-10 text-center text-sm text-slate-400">No pending requests.</div>) : (
-                <div className="overflow-x-auto">
-                  <table className="w-full text-left text-xs">
-                    <thead><tr className="border-b border-electric-blue/10 text-slate-400 uppercase"><th className="py-2.5 px-3">Employee</th><th className="py-2.5 px-3">Role</th><th className="py-2.5 px-3">Details</th><th className="py-2.5 px-3">Signup</th><th className="py-2.5 px-3">Actions</th></tr></thead>
-                    <tbody className="divide-y divide-slate-100">
-                      {pendingUsers.map(u => { const isProcessing = processingIds.has(u.id); return (
-                        <tr key={u.id} className="hover:bg-space-blue/20">
+           {activeTab === 'pending' && (
+             <div className="glass-card rounded-2xl border border-red-500/20 p-6 shadow-sm">
+               <h2 className="text-base font-black text-white mb-4">Pending Approvals ({pendingUsers.length})</h2>
+               {loading.pending ? (<div className="py-10 text-center text-sm text-slate-400">Loading...</div>) : pendingUsers.length === 0 ? (<div className="py-10 text-center text-sm text-slate-400">No pending requests.</div>) : (
+                 <div className="overflow-x-auto">
+                   <table className="w-full text-left text-xs">
+                     <thead><tr className="border-b border-red-500/20 text-slate-400 uppercase"><th className="py-2.5 px-3">Employee</th><th className="py-2.5 px-3">Role</th><th className="py-2.5 px-3">Details</th><th className="py-2.5 px-3">Signup</th><th className="py-2.5 px-3">Actions</th></tr></thead>
+                     <tbody className="divide-y divide-slate-100">
+                       {pendingUsers.map(u => { const isProcessing = processingIds.has(u.id); return (
+                         <tr key={u.id} className="hover:bg-space-blue/20">
                           <td className="py-3 px-3 font-bold text-white">{u.name}</td>
                           <td className="py-3 px-3" dangerouslySetInnerHTML={{ __html: roleBadge(u.role) }} />
                           <td className="py-3 px-3 text-slate-300">{userDetail(u)}</td>
@@ -2200,106 +2490,106 @@
         return '📝';
       };
 
-      return (
-        <div className="max-w-7xl mx-auto px-4 py-8 space-y-8">
-           <div className="flex justify-between items-center pb-6 border-b border-isro-orange/10">
+return (
+        <div className="max-w-7xl mx-auto px-4 py-8 space-y-8 bg-trainer-section min-h-screen">
+           <div className="flex justify-between items-center pb-6 border-b border-amber-500/20">
              <div>
-               <span className="px-2.5 py-0.5 rounded-full text-xs font-black bg-isro-orange/20 text-isro-orange border border-isro-orange/30">Trainer Portal • Dashboard</span>
+               <span className="px-2.5 py-0.5 rounded-full text-xs font-black bg-amber-500/20 text-amber-300 border border-amber-400/30">Trainer Portal • Dashboard</span>
                <h1 className="text-2xl sm:text-3xl font-extrabold text-white mt-1">Trainer Dashboard: {user?.name}</h1>
              </div>
-            <div className="flex gap-2">
-              <button onClick={() => setActiveTab('roster')} className={"px-4 py-2 rounded-xl text-xs font-black transition " + (activeTab === 'roster' ? 'bg-electric-blue-dark text-white' : 'bg-space-blue/50 text-slate-300')}>Student Roster</button>
-              <button onClick={() => setActiveTab('upload')} className={"px-4 py-2 rounded-xl text-xs font-black transition " + (activeTab === 'upload' ? 'bg-electric-blue-dark text-white' : 'bg-space-blue/50 text-slate-300')}>Upload Content</button>
-              <button onClick={() => setActiveTab('my-materials')} className={"px-4 py-2 rounded-xl text-xs font-black transition " + (activeTab === 'my-materials' ? 'bg-electric-blue-dark text-white' : 'bg-space-blue/50 text-slate-300')}>My Materials</button>
-              <button onClick={() => setActiveTab('questions')} className={"px-4 py-2 rounded-xl text-xs font-black transition " + (activeTab === 'questions' ? 'bg-electric-blue-dark text-white' : 'bg-space-blue/50 text-slate-300')}>Quiz Questions</button>
-              <button onClick={() => setActiveTab('courses')} className={"px-4 py-2 rounded-xl text-xs font-black transition " + (activeTab === 'courses' ? 'bg-electric-blue-dark text-white' : 'bg-space-blue/50 text-slate-300')}>My Courses</button>
-            </div>
-          </div>
+             <div className="flex gap-2">
+               <button onClick={() => setActiveTab('roster')} className={"px-4 py-2 rounded-xl text-xs font-black transition " + (activeTab === 'roster' ? 'bg-gradient-to-r from-amber-500 to-orange-600 text-white shadow-lg shadow-amber-500/20' : 'bg-space-blue/50 text-slate-300')}>Student Roster</button>
+               <button onClick={() => setActiveTab('upload')} className={"px-4 py-2 rounded-xl text-xs font-black transition " + (activeTab === 'upload' ? 'bg-gradient-to-r from-amber-500 to-orange-600 text-white shadow-lg shadow-amber-500/20' : 'bg-space-blue/50 text-slate-300')}>Upload Content</button>
+               <button onClick={() => setActiveTab('my-materials')} className={"px-4 py-2 rounded-xl text-xs font-black transition " + (activeTab === 'my-materials' ? 'bg-gradient-to-r from-amber-500 to-orange-600 text-white shadow-lg shadow-amber-500/20' : 'bg-space-blue/50 text-slate-300')}>My Materials</button>
+               <button onClick={() => setActiveTab('questions')} className={"px-4 py-2 rounded-xl text-xs font-black transition " + (activeTab === 'questions' ? 'bg-gradient-to-r from-amber-500 to-orange-600 text-white shadow-lg shadow-amber-500/20' : 'bg-space-blue/50 text-slate-300')}>Quiz Questions</button>
+               <button onClick={() => setActiveTab('courses')} className={"px-4 py-2 rounded-xl text-xs font-black transition " + (activeTab === 'courses' ? 'bg-gradient-to-r from-amber-500 to-orange-600 text-white shadow-lg shadow-amber-500/20' : 'bg-space-blue/50 text-slate-300')}>My Courses</button>
+             </div>
+           </div>
 
-          {activeTab === 'roster' && (
-            <div className="glass-card rounded-2xl border border-electric-blue/10 shadow-sm p-6">
-              <h2 className="text-base font-black text-white mb-4">Student Roster</h2>
-              {loading.roster ? (<div className="py-10 text-center text-sm text-slate-400">Loading roster...</div>) : students.length === 0 ? (<div className="py-10 text-center text-sm text-slate-400">No students assigned.</div>) : (
-                <div className="overflow-x-auto">
-                  <table className="w-full text-left text-xs">
-                    <thead><tr className="border-b border-electric-blue/10 text-slate-400 dark:text-slate-400 uppercase"><th className="py-2.5 px-3">Student</th><th className="py-2.5 px-3">Email</th><th className="py-2.5 px-3">Department</th><th className="py-2.5 px-3">Enrolled</th><th className="py-2.5 px-3">Progress</th></tr></thead>
-                    <tbody className="divide-y divide-slate-100">
-                      {students.map(s => (
-                        <tr key={s.id} className="hover:bg-space-blue/20">
-                          <td className="py-3 px-3 font-black text-white">{s.name}</td>
-                          <td className="py-3 px-3 text-slate-300">{s.email}</td>
-                          <td className="py-3 px-3 text-slate-300">{s.department || '—'}</td>
-                          <td className="py-3 px-3 text-slate-400">{formatDate(s.created_at)}</td>
-                           <td className="py-3 px-3 font-black text-electric-blue">{s.progress || '0%'}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              )}
-            </div>
-          )}
+           {activeTab === 'roster' && (
+             <div className="glass-card rounded-2xl border border-amber-500/20 shadow-sm p-6">
+               <h2 className="text-base font-black text-white mb-4">Student Roster</h2>
+               {loading.roster ? (<div className="py-10 text-center text-sm text-slate-400">Loading roster...</div>) : students.length === 0 ? (<div className="py-10 text-center text-sm text-slate-400">No students assigned.</div>) : (
+                 <div className="overflow-x-auto">
+                   <table className="w-full text-left text-xs">
+                     <thead><tr className="border-b border-amber-500/20 text-slate-400 dark:text-slate-400 uppercase"><th className="py-2.5 px-3">Student</th><th className="py-2.5 px-3">Email</th><th className="py-2.5 px-3">Department</th><th className="py-2.5 px-3">Enrolled</th><th className="py-2.5 px-3">Progress</th></tr></thead>
+                     <tbody className="divide-y divide-slate-100">
+                       {students.map(s => (
+                         <tr key={s.id} className="hover:bg-space-blue/20">
+                           <td className="py-3 px-3 font-black text-white">{s.name}</td>
+                           <td className="py-3 px-3 text-slate-300">{s.email}</td>
+                           <td className="py-3 px-3 text-slate-300">{s.department || '—'}</td>
+                           <td className="py-3 px-3 text-slate-400">{formatDate(s.created_at)}</td>
+                            <td className="py-3 px-3 font-black text-amber-400">{s.progress || '0%'}</td>
+                         </tr>
+                       ))}
+                     </tbody>
+                   </table>
+                 </div>
+               )}
+             </div>
+           )}
 
-          {activeTab === 'upload' && (
-            <div className="glass-card rounded-2xl border border-electric-blue/10 shadow-sm p-6">
-              <h2 className="text-base font-black text-white mb-4">Upload Learning Content</h2>
-              <form onSubmit={handleUploadSubmit} className="space-y-4">
-                <div>
-                  <label className="block text-xs font-black text-slate-300 mb-1">Course</label>
-                  <select
-                    value={uploadForm.course_id}
-                    onChange={(e) => setUploadForm({ ...uploadForm, course_id: e.target.value })}
-                    className="w-full px-3.5 py-2 rounded-lg border border-electric-blue/10 bg-white dark:bg-space-blue/30 text-sm text-white"
-                    required
-                    disabled={loading.courses}
-                  >
-                    <option value="">Select a course...</option>
-                    {courses.map(c => <option key={c.id} value={c.id}>{c.title}</option>)}
-                  </select>
-                </div>
+           {activeTab === 'upload' && (
+             <div className="glass-card rounded-2xl border border-amber-500/20 shadow-sm p-6">
+               <h2 className="text-base font-black text-white mb-4">Upload Learning Content</h2>
+               <form onSubmit={handleUploadSubmit} className="space-y-4">
+                 <div>
+                   <label className="block text-xs font-black text-slate-300 mb-1">Course</label>
+                   <select
+                     value={uploadForm.course_id}
+                     onChange={(e) => setUploadForm({ ...uploadForm, course_id: e.target.value })}
+                     className="w-full px-3.5 py-2 rounded-lg border border-amber-500/20 bg-white dark:bg-space-blue/30 text-sm text-white"
+                     required
+                     disabled={loading.courses}
+                   >
+                     <option value="">Select a course...</option>
+                     {courses.map(c => <option key={c.id} value={c.id}>{c.title}</option>)}
+                   </select>
+                 </div>
 
-                <div>
-                  <label className="block text-xs font-black text-slate-300 mb-1">Content Type</label>
-                  <div className="flex gap-3">
-                    {['video', 'notes', 'document'].map(t => (
-                      <label key={t} className="flex items-center gap-2 text-xs">
-                        <input
-                          type="radio"
-                          name="type"
-                          value={t}
-                          checked={uploadForm.type === t}
-                          onChange={(e) => setUploadForm({ ...uploadForm, type: e.target.value })}
-                           className="w-4 h-4 text-isro-orange"
-                        />
-                        <span className={uploadForm.type === t ? 'text-isro-orange font-black' : 'text-slate-300 dark:text-slate-400'}>
-                          {t === 'video' ? 'Video URL' : t === 'notes' ? 'Notes Text' : 'Document Link'}
-                        </span>
-                      </label>
-                    ))}
-                  </div>
-                </div>
+                 <div>
+                   <label className="block text-xs font-black text-slate-300 mb-1">Content Type</label>
+                   <div className="flex gap-3">
+                     {['video', 'notes', 'document'].map(t => (
+                       <label key={t} className="flex items-center gap-2 text-xs">
+                         <input
+                           type="radio"
+                           name="type"
+                           value={t}
+                           checked={uploadForm.type === t}
+                           onChange={(e) => setUploadForm({ ...uploadForm, type: e.target.value })}
+                            className="w-4 h-4 text-amber-500"
+                         />
+                         <span className={uploadForm.type === t ? 'text-amber-400 font-black' : 'text-slate-300 dark:text-slate-400'}>
+                           {t === 'video' ? 'Video URL' : t === 'notes' ? 'Notes Text' : 'Document Link'}
+                         </span>
+                       </label>
+                     ))}
+                   </div>
+                 </div>
 
-                <div>
-                  <label className="block text-xs font-black text-slate-300 mb-1">Title</label>
-                  <input
-                    type="text"
-                    placeholder="Enter content title..."
-                    value={uploadForm.title}
-                    onChange={(e) => setUploadForm({ ...uploadForm, title: e.target.value })}
-                    className="w-full px-3.5 py-2 rounded-lg border border-electric-blue/10 bg-white dark:bg-space-blue/30 text-sm text-white"
-                    required
-                  />
-                </div>
+                 <div>
+                   <label className="block text-xs font-black text-slate-300 mb-1">Title</label>
+                   <input
+                     type="text"
+                     placeholder="Enter content title..."
+                     value={uploadForm.title}
+                     onChange={(e) => setUploadForm({ ...uploadForm, title: e.target.value })}
+                     className="w-full px-3.5 py-2 rounded-lg border border-amber-500/20 bg-white dark:bg-space-blue/30 text-sm text-white"
+                     required
+                   />
+                 </div>
 
-                <div>
-                  <label className="block text-xs font-black text-slate-300 mb-1">Description (optional)</label>
-                  <textarea
-                    value={uploadForm.description}
-                    onChange={(e) => setUploadForm({ ...uploadForm, description: e.target.value })}
-                    placeholder="Brief description..."
-                    className="w-full h-20 px-3.5 py-2 rounded-lg border border-electric-blue/10 bg-white dark:bg-space-blue/30 text-sm text-white resize-y"
-                  />
-                </div>
+                 <div>
+                   <label className="block text-xs font-black text-slate-300 mb-1">Description (optional)</label>
+                   <textarea
+                     value={uploadForm.description}
+                     onChange={(e) => setUploadForm({ ...uploadForm, description: e.target.value })}
+                     placeholder="Brief description..."
+                     className="w-full h-20 px-3.5 py-2 rounded-lg border border-amber-500/20 bg-white dark:bg-space-blue/30 text-sm text-white resize-y"
+                   />
+                 </div>
 
                 {uploadForm.type === 'video' && (
                   <div>
@@ -2662,16 +2952,16 @@
 
       const themeClass = user ? ROLE_THEMES[user.role] : '';
 
-      return (
+return (
         <div className={"theme-wrapper " + (themeClass) + (theme === 'dark' ? 'dark' : '')}>
           {!user && (
-            <header className="glass-card border-b border-electric-blue/10 sticky top-0 z-50">
+            <header className="glass-card border-b border-purple-500/20 sticky top-0 z-50">
               <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                   <span className="w-8 h-8 rounded-xl bg-electric-blue text-white flex items-center justify-center font-black text-xs">CC</span>
+                   <span className="w-8 h-8 rounded-xl bg-gradient-to-r from-purple-500 to-fuchsia-600 text-white flex items-center justify-center font-black text-xs">CC</span>
                    <div><span className="font-black text-sm text-white">Capacity Connect</span><span className="text-[10px] text-slate-400 dark:text-slate-400 block">Not signed in</span></div>
                 </div>
-                <button onClick={toggleTheme} className={"px-2.5 py-1.5 rounded-lg " + (theme === 'dark' ? 'bg-space-blue/30 text-yellow-300 border border-slate-600' : 'bg-white text-blue-950 shadow-sm border border-electric-blue/10') + "btn-micro"}>
+                <button onClick={toggleTheme} className={"px-2.5 py-1.5 rounded-lg " + (theme === 'dark' ? 'bg-space-blue/30 text-yellow-300 border border-slate-600' : 'bg-white text-purple-900 shadow-sm border border-purple-200') + "btn-micro"}>
                   {theme === 'dark' ? '☀️ Light' : '🌙 Dark'}
                 </button>
               </div>
@@ -2679,17 +2969,17 @@
           )}
 
           {user && (
-            <header className="glass-card border-b border-electric-blue/10 sticky top-0 z-50">
+            <header className="glass-card border-b border-purple-500/20 sticky top-0 z-50">
               <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                   <span className="w-8 h-8 rounded-xl bg-electric-blue text-white flex items-center justify-center font-black text-xs">CC</span>
+                   <span className="w-8 h-8 rounded-xl bg-gradient-to-r from-purple-500 to-fuchsia-600 text-white flex items-center justify-center font-black text-xs">CC</span>
                    <div>
                      <span className="font-black text-sm text-white">Capacity Connect</span>
                     <span className="text-[10px] text-slate-400 dark:text-slate-400 block">{user.name} ({user.role})</span>
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
-                  <button onClick={toggleTheme} className={"px-2.5 py-1.5 rounded-lg " + (theme === 'dark' ? 'bg-space-blue/30 text-yellow-300 border border-slate-600' : 'bg-white text-blue-950 shadow-sm border border-electric-blue/10') + "btn-micro"}>
+                  <button onClick={toggleTheme} className={"px-2.5 py-1.5 rounded-lg " + (theme === 'dark' ? 'bg-space-blue/30 text-yellow-300 border border-slate-600' : 'bg-white text-purple-900 shadow-sm border border-purple-200') + "btn-micro"}>
                     {theme === 'dark' ? '☀️ Light' : '🌙 Dark'}
                   </button>
                 </div>
