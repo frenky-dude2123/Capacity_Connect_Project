@@ -198,6 +198,71 @@ authRouter.post('/signup', async (req, res) => {
 // ==========================================
 
 /**
+ * GET /api/user/quiz-results/:userId
+ * Returns the user's recent quiz scores mapped to topics/courses
+ * so the AI recommendation engine can derive real weak areas.
+ */
+userRouter.get('/quiz-results/:userId', authMiddleware, requireRole('trainee', 'trainer'), async (req, res) => {
+  try {
+    const { userId } = req.params;
+    if (!isSupabaseAvailable) {
+      return res.status(200).json({ weakAreas: [], source: 'fallback' });
+    }
+
+    // Try the quiz_attempts table if it exists
+    let weakAreas = [];
+    try {
+      const { data: attempts, error: attemptsError } = await supabase
+        .from('quiz_attempts')
+        .select('topic, score, course_id, created_at')
+        .eq('user_id', userId)
+        .order('created_at', { ascending: false })
+        .limit(20);
+
+      if (!attemptsError && attempts && attempts.length) {
+        // Group by topic and compute average score
+        const topicMap = {};
+        attempts.forEach(a => {
+          const key = a.topic || 'General';
+          if (!topicMap[key]) topicMap[key] = { total: 0, count: 0, courseId: a.course_id };
+          topicMap[key].total += (a.score || 0);
+          topicMap[key].count += 1;
+        });
+        weakAreas = Object.entries(topicMap).map(([topic, v]) => ({
+          topic,
+          score: Math.round(v.total / v.count),
+          courseId: v.courseId
+        })).filter(w => w.score < 75).sort((a, b) => a.score - b.score);
+      }
+    } catch {}
+
+    // Fallback: derive from enrolled course progress
+    if (!weakAreas.length) {
+      const { data: enrollments } = await supabase
+        .from('enrollments')
+        .select('course_id, progress_percent')
+        .eq('user_id', userId);
+      if (enrollments && enrollments.length) {
+        const { data: courses } = await supabase
+          .from('courses')
+          .select('id, title')
+          .in('id', enrollments.map(e => e.course_id));
+        const courseMap = new Map((courses || []).map(c => [c.id, c.title]));
+        weakAreas = enrollments
+          .filter(e => (e.progress_percent || 0) < 70)
+          .map(e => ({ topic: courseMap.get(e.course_id) || 'General', score: e.progress_percent || 0, courseId: e.course_id }))
+          .sort((a, b) => a.score - b.score);
+      }
+    }
+
+    res.status(200).json({ weakAreas, source: weakAreas.length ? 'computed' : 'fallback' });
+  } catch (err) {
+    console.error('[QuizResults]', err.message);
+    res.status(200).json({ weakAreas: [], source: 'fallback' });
+  }
+});
+
+/**
  * GET /api/user/dashboard/:userId
  * Protected: authenticated users only (trainee, trainer, admin).
  */
