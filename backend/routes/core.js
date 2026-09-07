@@ -304,6 +304,48 @@ userRouter.get('/dashboard/:userId', authMiddleware, requireRole('trainee', 'tra
 });
 
 // ==========================================
+// EDITABLE USER PROFILE
+// ==========================================
+userRouter.put('/profile', authMiddleware, async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    if (!isSupabaseAvailable) {
+      return res.status(500).json({ error: 'Database not configured', details: 'Supabase is not available' });
+    }
+
+    const existingColumns = ['qualification', 'skills', 'subjects'];
+    const updatePayload = {};
+    existingColumns.forEach(col => {
+      if (req.body?.[col] !== undefined) {
+        updatePayload[col] = req.body[col] || null;
+      }
+    });
+
+    if (Object.keys(updatePayload).length === 0) {
+      return res.status(400).json({ error: 'Validation failed', message: 'No fields to update.' });
+    }
+
+    const { data, error } = await supabase
+      .from('users')
+      .update(updatePayload)
+      .eq('id', userId)
+      .select('id, name, email, role, department, qualification, skills, subjects')
+      .single();
+
+    if (error) {
+      console.error('[Profile] Update error:', error.message);
+      return res.status(500).json({ error: 'Failed to update profile', details: error.message });
+    }
+
+    res.status(200).json({ message: 'Profile updated successfully', user: data });
+  } catch (err) {
+    console.error('[Profile] Error:', err.message);
+    res.status(500).json({ error: 'Profile update error', details: err.message });
+  }
+});
+
+// ==========================================
 // TOPIC 6: CERTIFICATE
 // ==========================================
 
@@ -398,7 +440,7 @@ adminRouter.get('/stats', requireRole('admin'), async (req, res) => {
 
     const { data: enrollments, error: enrollError } = await supabase
       .from('enrollments')
-      .select('status');
+      .select('status, created_at');
 
     if (enrollError) {
       console.error('[Admin] Enrollments error:', enrollError.message);
@@ -409,6 +451,20 @@ adminRouter.get('/stats', requireRole('admin'), async (req, res) => {
     const activeLearners = new Set((enrollments || []).map(e => e.user_id)).size;
     const completedEnrollments = (enrollments || []).filter(e => e.status === 'Completed').length;
     const completionRatePercent = activeLearners > 0 ? parseFloat(((completedEnrollments / activeLearners) * 100).toFixed(1)) : 0;
+
+    const now = new Date();
+    const monthlyEnrollments = [];
+    for (let i = 5; i >= 0; i--) {
+      const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+      const monthName = d.toLocaleString('default', { month: 'short' });
+      const start = new Date(d.getFullYear(), d.getMonth(), 1);
+      const end = new Date(d.getFullYear(), d.getMonth() + 1, 0, 23, 59, 59);
+      const count = (enrollments || []).filter(e => {
+        const created = new Date(e.created_at);
+        return created >= start && created <= end;
+      }).length;
+      monthlyEnrollments.push({ month: monthName, enrollments: count });
+    }
 
     const registeredUsers = (users || []).slice(0, 5).map(u => ({
       id: u.id,
@@ -428,7 +484,8 @@ adminRouter.get('/stats', requireRole('admin'), async (req, res) => {
       capacityIndex: 88.4,
       overdueComplianceCount: 0,
       registeredUsers,
-      departmentTelemetry: []
+      departmentTelemetry: [],
+      monthlyEnrollments
     });
   } catch (err) {
     console.error('[Admin] Stats error:', err.message);
@@ -673,12 +730,205 @@ trainerRouter.get('/quiz-questions', authMiddleware, requireRole('trainer'), asy
   }
 });
 
+// ==========================================
+// PUBLIC NOTIFICATIONS (no auth required)
+// ==========================================
+const publicRouter = express.Router();
+
+publicRouter.get('/notifications', async (req, res) => {
+  try {
+    if (!isSupabaseAvailable) {
+      return res.status(500).json({ error: 'Database not configured', details: 'Supabase is not available' });
+    }
+
+    const { data: notifications, error } = await supabase
+      .from('notifications')
+      .select('*')
+      .order('created_at', { ascending: false })
+      .limit(20);
+
+    if (error) {
+      console.error('[Public] Notifications error:', error.message);
+      return res.status(500).json({ error: 'Failed to fetch notifications', details: error.message });
+    }
+
+    const enriched = (notifications || []).map(n => {
+      const title = (n.title || '').toLowerCase();
+      const message = (n.message || '').toLowerCase();
+      let type = 'announcement';
+      if (title.includes('course') || title.includes('new') || message.includes('course') || message.includes('pathway') || message.includes('learning')) {
+        type = 'course';
+      } else if (title.includes('achieve') || title.includes('enrolled') || title.includes('milestone') || title.includes('certificate')) {
+        type = 'achievement';
+      }
+      return { ...n, type };
+    });
+
+    res.status(200).json(enriched);
+  } catch (err) {
+    console.error('[Public] Notifications error:', err.message);
+    res.status(500).json({ error: 'Failed to fetch notifications', details: err.message });
+  }
+});
+
 // Wire onto core router
 coreRouter.use('/auth', authRouter);
 coreRouter.use('/user', userRouter);
 coreRouter.use('/certificate', certRouter);
 coreRouter.use('/admin', authMiddleware, adminRouter);
 coreRouter.use('/trainer', trainerRouter);
+coreRouter.use('/public', publicRouter);
+
+// ==========================================
+// FEEDBACK (trainee submits, admin views all)
+// ==========================================
+const feedbackRouter = express.Router();
+
+feedbackRouter.post('/', authMiddleware, requireRole('trainee'), async (req, res) => {
+  try {
+    const { course_id, rating, comment } = req.body || {};
+    const userId = req.user.id;
+
+    if (!course_id || !rating || rating < 1 || rating > 5) {
+      return res.status(400).json({ error: 'Validation failed', message: 'course_id and rating (1-5) are required.' });
+    }
+
+    if (!isSupabaseAvailable) {
+      return res.status(500).json({ error: 'Database not configured', details: 'Supabase is not available' });
+    }
+
+    const { data: existing, error: existingError } = await supabase
+      .from('feedback')
+      .select('id')
+      .eq('user_id', userId)
+      .eq('course_id', course_id)
+      .single();
+
+    if (existing && !existingError) {
+      const { data, error } = await supabase
+        .from('feedback')
+        .update({ rating, comment: comment || null })
+        .eq('id', existing.id)
+        .select()
+        .single();
+
+      if (error) {
+        console.error('[Feedback] Update error:', error.message);
+        return res.status(500).json({ error: 'Failed to update feedback', details: error.message });
+      }
+
+      return res.status(200).json({ message: 'Feedback updated successfully', feedback: data });
+    }
+
+    const { data, error } = await supabase
+      .from('feedback')
+      .insert({
+        user_id: userId,
+        course_id: Number(course_id),
+        rating: Number(rating),
+        comment: comment || null
+      })
+      .select()
+      .single();
+
+    if (error) {
+      console.error('[Feedback] Insert error:', error.message);
+      return res.status(500).json({ error: 'Failed to submit feedback', details: error.message });
+    }
+
+    res.status(201).json({ message: 'Feedback submitted successfully', feedback: data });
+  } catch (err) {
+    console.error('[Feedback] Error:', err.message);
+    res.status(500).json({ error: 'Feedback error', details: err.message });
+  }
+});
+
+feedbackRouter.get('/course/:courseId', authMiddleware, requireRole('trainee', 'trainer', 'admin'), async (req, res) => {
+  try {
+    const { courseId } = req.params;
+
+    if (!isSupabaseAvailable) {
+      return res.status(500).json({ error: 'Database not configured', details: 'Supabase is not available' });
+    }
+
+    const { data: feedbacks, error } = await supabase
+      .from('feedback')
+      .select('id, user_id, course_id, rating, comment, created_at, updated_at')
+      .eq('course_id', Number(courseId))
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      console.error('[Feedback] Course fetch error:', error.message);
+      return res.status(500).json({ error: 'Failed to fetch feedback', details: error.message });
+    }
+
+    const total = (feedbacks || []).length;
+    const avgRating = total > 0 ? Math.round((feedbacks.reduce((sum, f) => sum + f.rating, 0) / total) * 10) / 10 : 0;
+
+    res.status(200).json({
+      courseId: Number(courseId),
+      total,
+      avgRating,
+      feedbacks: (feedbacks || []).map(f => ({
+        ...f,
+        isOwn: req.user ? f.user_id === req.user.id : false
+      }))
+    });
+  } catch (err) {
+    console.error('[Feedback] Course fetch error:', err.message);
+    res.status(500).json({ error: 'Failed to fetch feedback', details: err.message });
+  }
+});
+
+feedbackRouter.get('/admin/summary', authMiddleware, requireRole('admin'), async (req, res) => {
+  try {
+    if (!isSupabaseAvailable) {
+      return res.status(500).json({ error: 'Database not configured', details: 'Supabase is not available' });
+    }
+
+    const { data: feedbacks, error } = await supabase
+      .from('feedback')
+      .select('id, user_id, course_id, rating, comment, created_at, updated_at, users(name, email)')
+      .order('created_at', { ascending: false })
+      .limit(100);
+
+    if (error) {
+      console.error('[Feedback] Admin summary error:', error.message);
+      return res.status(500).json({ error: 'Failed to fetch feedback summary', details: error.message });
+    }
+
+    const courseMap = new Map();
+    (feedbacks || []).forEach(f => {
+      const cid = f.course_id;
+      if (!courseMap.has(cid)) {
+        courseMap.set(cid, {
+          course_id: cid,
+          total: 0,
+          sumRating: 0,
+          feedbacks: []
+        });
+      }
+      const entry = courseMap.get(cid);
+      entry.total += 1;
+      entry.sumRating += f.rating;
+      entry.feedbacks.push(f);
+    });
+
+    const summary = Array.from(courseMap.entries()).map(([course_id, data]) => ({
+      course_id,
+      total: data.total,
+      avgRating: Math.round((data.sumRating / data.total) * 10) / 10,
+      feedbacks: data.feedbacks
+    }));
+
+    res.status(200).json({ summary });
+  } catch (err) {
+    console.error('[Feedback] Admin summary error:', err.message);
+    res.status(500).json({ error: 'Failed to fetch feedback summary', details: err.message });
+  }
+});
+
+coreRouter.use('/feedback', feedbackRouter);
 
 module.exports = coreRouter;
 module.exports.authRouter = authRouter;

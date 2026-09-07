@@ -232,8 +232,101 @@ create policy "Service role can manage all materials" on public.materials
 -- create index on public.quiz_results(user_id);
 
 -- =============================================================
--- 8. Post-Creation Instructions
+-- 9. Notifications table — public announcements, achievements, and new content
 -- =============================================================
+
+create table if not exists public.notifications (
+  id          uuid        primary key default gen_random_uuid(),
+  type        text        check (type in ('announcement', 'achievement', 'course'))
+                     not null default 'announcement',
+  title       text        not null,
+  message     text        not null,
+  metadata    jsonb,
+  is_active   boolean     not null default true,
+  created_at  timestamp   with time zone default timezone('utc'::text, now())
+);
+
+create index if not exists notifications_type_idx on public.notifications (type);
+create index if not exists notifications_created_at_idx on public.notifications (created_at desc);
+
+alter table public.notifications enable row level security;
+
+drop policy if exists "Public can view active notifications" on public.notifications;
+create policy "Public can view active notifications" on public.notifications
+  for select using (is_active = true);
+
+drop policy if exists "Service role can manage notifications" on public.notifications;
+create policy "Service role can manage notifications" on public.notifications
+  for all using (auth.role() = 'service_role');
+
+-- Seed notifications
+insert into public.notifications (type, title, message, metadata)
+values
+  ('announcement', 'Welcome to Capacity Connect', 'The Ministry of Education & Skills Development is rolling out a new digital capacity building platform for all civil servants.', '{"icon": "📢"}')
+on conflict do nothing;
+
+insert into public.notifications (type, title, message, metadata)
+values
+  ('course', 'New Course: ISO 27001 Lead Auditor', 'A comprehensive 6-week pathway on information security management systems is now available in the catalog.', '{"icon": "🎓", "courseId": 4}')
+on conflict do nothing;
+
+insert into public.notifications (type, title, message, metadata)
+values
+  ('achievement', '1,000 Learners Enrolled', 'Our community has crossed 1,000 registered learners across all departments and agencies.', '{"icon": "🏆"}')
+on conflict do nothing;
+
+insert into public.notifications (type, title, message, metadata)
+values
+  ('announcement', 'Platform Maintenance Scheduled', 'Capacity Connect will undergo scheduled maintenance on Sunday 2:00 AM - 4:00 AM UTC. Expect brief downtime.', '{"icon": "🔧"}')
+on conflict do nothing;
+
+insert into public.notifications (type, title, message, metadata)
+values
+  ('course', 'Zero Trust Architecture Fundamentals', 'New modules on Zero Trust security models have been added to the Cybersecurity pathway.', '{"icon": "🛡️", "courseId": 2}')
+on conflict do nothing;
+
+-- =============================================================
+-- 10. Feedback table — trainee course feedback
+-- =============================================================
+
+create table if not exists public.feedback (
+  id          uuid        primary key default gen_random_uuid(),
+  user_id     uuid        references public.users(id) on delete cascade,
+  course_id   bigint      not null,
+  rating      integer     check (rating between 1 and 5) not null,
+  comment     text,
+  created_at  timestamp   with time zone default timezone('utc'::text, now()),
+  updated_at  timestamp   with time zone default timezone('utc'::text, now()),
+  unique(user_id, course_id)
+);
+
+create index if not exists feedback_user_course_idx on public.feedback (user_id, course_id);
+create index if not exists feedback_course_idx on public.feedback (course_id);
+create index if not exists feedback_created_at_idx on public.feedback (created_at desc);
+
+alter table public.feedback enable row level security;
+
+drop policy if exists "Trainees can insert own feedback" on public.feedback;
+create policy "Trainees can insert own feedback" on public.feedback
+  for insert with check (auth.uid() = user_id);
+
+drop policy if exists "Trainees can view own feedback" on public.feedback;
+create policy "Trainees can view own feedback" on public.feedback
+  for select using (auth.uid() = user_id);
+
+drop policy if exists "Trainees can update own feedback" on public.feedback;
+create policy "Trainees can update own feedback" on public.feedback
+  for update using (auth.uid() = user_id);
+
+drop policy if exists "Service role can manage all feedback" on public.feedback;
+create policy "Service role can manage all feedback" on public.feedback
+  for all using (auth.role() = 'service_role');
+
+drop trigger if exists feedback_updated_at on public.feedback;
+create trigger feedback_updated_at
+  before update on public.feedback
+  for each row
+  execute function public.handle_updated_at();
 --
 -- A) In the Supabase Dashboard > Project Settings > API:
 --    Copy the anon (public) key and the service_role key.
