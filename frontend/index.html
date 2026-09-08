@@ -3711,15 +3711,45 @@ return (
     // ==========================================
     function Screen12Quiz({ user, onBack }) {
       const [stage, setStage] = React.useState('start');
+      const [selectedSubject, setSelectedSubject] = React.useState(null);
       const [questionCount, setQuestionCount] = React.useState(10);
       const [questions, setQuestions] = React.useState([]);
       const [currentIndex, setCurrentIndex] = React.useState(0);
       const [answers, setAnswers] = React.useState({});
       const [finished, setFinished] = React.useState(false);
       const [score, setScore] = React.useState(0);
+      const [saving, setSaving] = React.useState(false);
+      const [saveError, setSaveError] = React.useState(null);
+
+      const allSubjects = [
+        'General Science',
+        'Mathematics',
+        'Geography',
+        'History',
+        'Current Affairs',
+        'Logical Reasoning',
+        'Computer Basics'
+      ];
+
+      const subjectIcons = {
+        'General Science': '🔬',
+        'Mathematics': '📐',
+        'Geography': '🌍',
+        'History': '📜',
+        'Current Affairs': '📰',
+        'Logical Reasoning': '🧩',
+        'Computer Basics': '💻'
+      };
+
+      function getSubjectIcon(subject) {
+        return subjectIcons[subject] || '📚';
+      }
 
       const handleStartQuiz = () => {
-        const picked = pickRandomQuestions(questionCount);
+        if (!selectedSubject) return;
+        const subjectQuestions = getQuestionsBySubject(selectedSubject);
+        const shuffled = shuffleArray(subjectQuestions);
+        const picked = shuffled.slice(0, Math.min(questionCount, shuffled.length));
         setQuestions(picked);
         setCurrentIndex(0);
         setAnswers({});
@@ -3751,7 +3781,7 @@ return (
         }
       };
 
-      const finishQuiz = () => {
+      const finishQuiz = async () => {
         let correct = 0;
         questions.forEach((q, i) => {
           if (answers[i] === q.correctIndex) {
@@ -3762,10 +3792,54 @@ return (
         setScore(pct);
         setFinished(true);
         setStage('result');
+
+        // Save to quiz_attempts table
+        setSaving(true);
+        setSaveError(null);
+        try {
+          const token = localStorage.getItem('capacity_connect_token');
+          if (token) {
+            const response = await fetch(API_BASE + '/quiz-attempts', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + token
+              },
+              body: JSON.stringify({
+                user_id: user.id,
+                topic: selectedSubject,
+                score: pct,
+                total: questions.length,
+                correct: correct
+              })
+            });
+            if (!response.ok) {
+              const err = await response.json().catch(() => ({}));
+              throw new Error(err.message || 'Failed to save quiz result');
+            }
+          }
+        } catch (err) {
+          setSaveError(err.message || 'Failed to save quiz result');
+        } finally {
+          setSaving(false);
+        }
       };
 
-      const handleRestart = () => {
+      const handleRetrySameTopic = () => {
+        const subjectQuestions = getQuestionsBySubject(selectedSubject);
+        const shuffled = shuffleArray(subjectQuestions);
+        const picked = shuffled.slice(0, Math.min(questionCount, shuffled.length));
+        setQuestions(picked);
+        setCurrentIndex(0);
+        setAnswers({});
+        setFinished(false);
+        setScore(0);
+        setStage('quiz');
+      };
+
+      const handleChooseAnotherTopic = () => {
         setStage('start');
+        setSelectedSubject(null);
         setQuestions([]);
         setCurrentIndex(0);
         setAnswers({});
@@ -3798,6 +3872,10 @@ return (
       const reviewItemCorrectClass = 'p-4 rounded-xl border-2 border-emerald-500 bg-emerald-500/10';
       const reviewItemIncorrectClass = 'p-4 rounded-xl border-2 border-red-500 bg-red-500/10';
       const reviewItemUnansweredClass = 'p-4 rounded-xl border-2 border-amber-500 bg-amber-500/10';
+      const subjectCardBaseClass = 'p-4 rounded-xl border-2 transition cursor-pointer text-center ';
+      const subjectCardSelectedClass = subjectCardBaseClass + 'border-teal-500 bg-teal-500/10';
+      const subjectCardUnselectedClass = subjectCardBaseClass + 'border-electric-blue/10 hover:border-teal-500 hover:bg-electric-blue/5';
+      const subjectIconClass = 'text-3xl mb-2 block';
 
       if (stage === 'start') {
         return (
@@ -3806,10 +3884,34 @@ return (
               <div className="text-center mb-8">
                 <span className="text-5xl mb-4 block">❓</span>
                 <h1 className="text-3xl font-extrabold text-white mb-2">Knowledge Quiz</h1>
-                <p className="text-slate-400">Test your knowledge across multiple subjects</p>
+                <p className="text-slate-400">Select a topic and number of questions to begin</p>
               </div>
 
               <div className="space-y-6">
+                <div>
+                  <label className="block text-sm font-semibold text-slate-200 mb-3">
+                    Choose a topic
+                  </label>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+                    {allSubjects.map((subject) => {
+                      const isSelected = selectedSubject === subject;
+                      let subjectCardClass = subjectCardUnselectedClass;
+                      if (isSelected) subjectCardClass = subjectCardSelectedClass;
+                      return (
+                        <button
+                          key={subject}
+                          type="button"
+                          onClick={() => setSelectedSubject(subject)}
+                          className={subjectCardClass}
+                        >
+                          <span className={subjectIconClass}>{getSubjectIcon(subject)}</span>
+                          <span className="text-sm font-semibold text-white">{subject}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
                 <div>
                   <label className="block text-sm font-semibold text-slate-200 mb-3">
                     How many questions would you like to attempt?
@@ -3829,14 +3931,15 @@ return (
                 <div className="text-center">
                   <button
                     onClick={handleStartQuiz}
-                    className={buttonPrimaryClass}
+                    disabled={!selectedSubject}
+                    className={selectedSubject ? buttonPrimaryClass : buttonDisabledClass}
                   >
                     Start Quiz
                   </button>
                 </div>
 
                 <div className="text-center text-xs text-slate-500">
-                  Questions drawn from: General Science, Mathematics, Geography, History, Current Affairs, Logical Reasoning, Computer Basics
+                  Available topics: General Science, Mathematics, Geography, History, Current Affairs, Logical Reasoning, Computer Basics
                 </div>
               </div>
             </div>
@@ -3926,18 +4029,26 @@ return (
         const wrongCount = questions.filter((q, i) => answers[i] !== undefined && answers[i] !== q.correctIndex).length;
         const unansweredCount = questions.filter((q, i) => answers[i] === undefined).length;
 
+        let resultIcon = '📚';
+        if (score >= 70) resultIcon = '🎉';
+        else if (score >= 50) resultIcon = '👍';
+
         return (
           <div className={resultScreenClass}>
             <div className={cardClass}>
               <div className="text-center mb-8">
-                <span className="text-5xl mb-4 block">
-                  {score >= 70 ? '🎉' : score >= 50 ? '👍' : '📚'}
-                </span>
+                <span className="text-5xl mb-4 block">{resultIcon}</span>
                 <h1 className="text-3xl font-extrabold text-white mb-2">Quiz Complete!</h1>
                 <p className={resultScoreClass}>{score}%</p>
                 <p className={resultSubtextClass}>
                   {correctCount} correct, {wrongCount} incorrect, {unansweredCount} unanswered out of {questions.length}
                 </p>
+                {saveError && (
+                  <p className="text-xs text-red-400 mt-2">Save failed: {saveError}</p>
+                )}
+                {saving && !saveError && (
+                  <p className="text-xs text-teal-400 mt-2">Saving result...</p>
+                )}
               </div>
 
               <div className="space-y-3 mb-8 max-h-96 overflow-y-auto">
@@ -3971,10 +4082,16 @@ return (
 
               <div className="flex flex-col sm:flex-row gap-3 justify-center">
                 <button
-                  onClick={handleRestart}
+                  onClick={handleRetrySameTopic}
+                  className={buttonPrimaryClass}
+                >
+                  Retry Same Topic
+                </button>
+                <button
+                  onClick={handleChooseAnotherTopic}
                   className={buttonSecondaryClass}
                 >
-                  Take New Quiz
+                  Choose Another Topic
                 </button>
                 <button
                   onClick={onBack}

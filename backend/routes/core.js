@@ -304,6 +304,48 @@ userRouter.get('/quiz-results/:userId', authMiddleware, requireRole('trainee', '
 });
 
 /**
+ * POST /api/user/quiz-attempts
+ * Saves a quiz attempt to the quiz_attempts table
+ */
+userRouter.post('/quiz-attempts', authMiddleware, requireRole('trainee', 'trainer'), async (req, res) => {
+  try {
+    const { user_id, topic, score, total, correct } = req.body || {};
+
+    if (!user_id || !topic || score === undefined || total === undefined) {
+      return res.status(400).json({
+        error: 'Validation failed',
+        message: 'user_id, topic, score, and total are required.'
+      });
+    }
+
+    if (!isSupabaseAvailable) {
+      return res.status(200).json({ success: true, source: 'fallback' });
+    }
+
+    const { data, error } = await supabase
+      .from('quiz_attempts')
+      .insert([{
+        user_id: user_id,
+        topic: topic,
+        score: score,
+        total: total,
+        correct: correct || 0,
+        created_at: new Date().toISOString()
+      }]);
+
+    if (error) {
+      console.error('[QuizAttempts] Insert error:', error.message);
+      return res.status(200).json({ success: false, source: 'fallback' });
+    }
+
+    res.status(201).json({ success: true, source: 'computed' });
+  } catch (err) {
+    console.error('[QuizAttempts]', err.message);
+    res.status(200).json({ success: false, source: 'fallback' });
+  }
+});
+
+/**
  * GET /api/user/dashboard/:userId
  * Protected: authenticated users only (trainee, trainer, admin).
  */
