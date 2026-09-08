@@ -1993,9 +1993,8 @@ return (
         const score = Math.round((correct / quickQuizQuestions.length) * 100);
         setQuickQuizScore(score);
         setQuickQuizFinished(true);
-        const xp = 15;
-        setQuizResult({ score, totalCorrect: correct, total: quickQuizQuestions.length, xp });
-        showToast(`Quiz complete! ${score}% — +${xp} XP`, 'success');
+        setQuizResult({ score, totalCorrect: correct, total: quickQuizQuestions.length });
+        showToast(`Quiz complete! ${score}%`, 'success');
       };
 
       const resetQuickQuiz = () => {
@@ -2148,7 +2147,7 @@ if (loading) return <div className="py-20 text-center text-sm text-slate-400">Lo
                 <h3 className="text-lg font-black text-white flex items-center gap-2 font-mono tracking-wide">
                   <span className="text-amber-400">⚡ Quick AI Quiz</span>
                 </h3>
-                <span className="text-xs text-slate-400 dark:text-slate-500">Test any topic • 15 XP reward</span>
+                <span className="text-xs text-slate-400 dark:text-slate-500">Test any topic</span>
               </div>
 
               {quizStarted ? (
@@ -2182,7 +2181,7 @@ if (loading) return <div className="py-20 text-center text-sm text-slate-400">Lo
                 <div className="text-center py-8">
                   <p className="text-3xl font-extrabold text-white mb-2">Quick Quiz Complete!</p>
                   <p className="text-lg text-amber-400 font-black mb-4">{quizResult.score}% — {quizResult.totalCorrect}/{quizResult.total} correct</p>
-                  <p className="text-xs text-slate-400 dark:text-slate-500 mb-4">+{quizResult.xp} XP earned</p>
+                  <p className="text-xs text-slate-400 dark:text-slate-500 mb-4">Quiz Complete!</p>
                   <button onClick={resetQuickQuiz} className="px-5 py-2 bg-gradient-to-r from-cyan-500 to-blue-600 text-white rounded-xl text-xs font-black btn-micro">Take Another Quick Quiz</button>
                 </div>
               ) : (
