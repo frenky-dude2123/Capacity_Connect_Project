@@ -835,6 +835,99 @@ Return as a JSON array under the key "questions".`;
   }
 });
 
+/**
+ * POST /api/ai/quick-quiz
+ * Protected: trainee or trainer.
+ * Generates a short quiz on any user-specified topic (free-standing,
+ * not tied to any course enrollment). Falls back to mock data when no
+ * API key is configured.
+ */
+router.post('/quick-quiz', authMiddleware, requireRole('trainee', 'trainer'), async (req, res) => {
+  try {
+    const { topic = 'General Knowledge', count = 5 } = req.body || {};
+    const safeCount = Math.min(Math.max(parseInt(count) || 3, 3), 10);
+
+    const prompt = `
+Generate ${safeCount} multiple-choice quiz questions on the topic: "${topic}".
+Difficulty: intermediate.
+
+Each question must include:
+- A clear question text that references the topic
+- Exactly 4 answer options
+- A "correctIndex" field (0-3) indicating the correct answer
+- A brief "explanation" of why the answer is correct
+
+Return as a JSON array under the key "questions".`;
+
+    const schema = {
+      type: 'object',
+      properties: {
+        questions: {
+          type: 'array',
+          items: {
+            type: 'object',
+            properties: {
+              question: { type: 'string' },
+              options: { type: 'array', items: { type: 'string' }, minItems: 4, maxItems: 4 },
+              correctIndex: { type: 'integer', minimum: 0, maximum: 3 },
+              explanation: { type: 'string' }
+            },
+            required: ['question', 'options', 'correctIndex']
+          },
+          minItems: 1,
+          maxItems: 10
+        }
+      },
+      required: ['questions']
+    };
+
+    const result = await callLLMAPI(prompt, '', schema);
+
+    if (result.usedMock || !result.data) {
+      const questions = MOCK_QUIZ_QUESTIONS.slice(0, safeCount).map((q, i) => ({
+        ...q,
+        topic,
+        question: '[' + topic + '] ' + q.question,
+      }));
+      return res.json({
+        questions,
+        source: 'mock',
+        model: 'fallback',
+        count: questions.length,
+        error: result.error || null
+      });
+    }
+
+    const questions = (result.data.questions || []).slice(0, safeCount).map(q => ({
+      ...q,
+      topic,
+    }));
+
+    res.json({
+      questions,
+      source: 'ai',
+      model: GEMINI_MODEL,
+      count: questions.length
+    });
+  } catch (err) {
+    console.error('[AI] Quick quiz error:', err.message);
+    const count = Math.min(parseInt(req.body?.count) || 3, 3);
+    const topic = req.body?.topic || 'General Knowledge';
+    const questions = MOCK_QUIZ_QUESTIONS.slice(0, count).map(q => ({
+      ...q,
+      topic,
+      question: '[' + topic + '] ' + q.question,
+    }));
+    res.status(200).json({
+      questions,
+      source: 'mock',
+      model: 'error-fallback',
+      count: questions.length,
+      error: err.message
+    });
+  }
+});
+
 // ============================================================
 // TOPIC 9: AI Course Recommendation Engine
 // ============================================================
