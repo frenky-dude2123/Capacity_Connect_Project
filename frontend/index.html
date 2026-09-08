@@ -1165,6 +1165,7 @@ tailwind.config = {
     ];
     function shuffleArray(arr) { const a = arr.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
     function pickRandomQuestions(count) { return shuffleArray(QUIZ_POOL).slice(0, Math.min(count, QUIZ_POOL.length)); }
+    function getQuestionsBySubject(subject) { return QUIZ_POOL.filter(q => q.subject === subject); }
     function generateAIReport(score, weakTopics) {
       const pct = typeof score === 'string' ? parseInt(score, 10) : score;
       if (pct >= 80) return { badge: `${pct}% - Advanced Competency`, strengths: ['Strong conceptual understanding', 'Correct application of core principles', 'Good decision-making under constraints'], improvements: weakTopics.length ? weakTopics : [], recommendation: 'Proceed to the next track or advanced capstone module.' };
