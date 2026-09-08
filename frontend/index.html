@@ -1096,27 +1096,75 @@ tailwind.config = {
     }
 
     // ==========================================
-    // QUIZ POOL (15 questions)
+    // QUIZ POOL - Multidisciplinary Question Bank (50 questions)
     // ==========================================
-    const LOCAL_QUIZ_POOL = [
-      { id: 'q1', topic: 'Cloud Architecture', question: 'What is the primary benefit of deploying the Circuit Breaker pattern in distributed microservices?', options: ['Preventing cascading service failures by failing fast during downstream outages', 'Directly increasing database throughput by bypassing cache layers', 'Encrypting inter-service payloads using asymmetric cryptography', 'Automatically reducing the size of container images in production'], correctIndex: 0 },
-      { id: 'q2', topic: 'Security & Compliance', question: 'Under the principle of Least Privilege (PoLP), how should user and service permissions be assigned?', options: ['Grant broad administrative access to ensure uninterrupted developer productivity', 'Provide only the minimum necessary permissions required to perform specific job duties', 'Delegate root credentials across all members of the incident response team', 'Disable token expiration on internal microservice-to-microservice APIs'], correctIndex: 1 },
-      { id: 'q3', topic: 'Distributed Systems', question: 'Which consistency and recovery approach is commonly utilized in the Saga pattern when a step fails?', options: ['Immediate distributed database rollback via distributed locking', 'Executing compensating transactions in reverse order to restore consistency', 'Ignoring downstream service errors and logging a warning', 'Restarting the entire application cluster from cold storage'], correctIndex: 1 },
-      { id: 'q4', topic: 'Cloud Architecture', question: 'Which load balancing layer operates at the transport layer and does not inspect HTTP headers?', options: ['Layer 7 reverse proxy', 'Layer 4 load balancer', 'API gateway', 'Service mesh sidecar'], correctIndex: 1 },
-      { id: 'q5', topic: 'Security & Compliance', question: 'In ISO 27001, what is the primary purpose of an ISMS?', options: ['To increase cloud storage capacity', 'To systematically manage sensitive company information so it remains secure', 'To replace all firewalls with VPNs', 'To automate software deployments'], correctIndex: 1 },
-      { id: 'q6', topic: 'Software Engineering', question: 'What is Domain-Driven Design (DDD) primarily used for?', options: ['Designing database indexes', 'Aligning software architecture with complex business domains', 'Compiling source code faster', 'Managing Kubernetes manifests'], correctIndex: 1 },
-      { id: 'q7', topic: 'Cloud Architecture', question: 'Which AWS service is primarily used for auto-scaling compute capacity?', options: ['AWS Lambda', 'Amazon EC2 Auto Scaling', 'Amazon RDS', 'AWS CloudFormation'], correctIndex: 1 },
-      { id: 'q8', topic: 'Security & Compliance', question: 'What does Zero Trust architecture assume about network traffic?', options: ['All internal traffic is trusted', 'No traffic is trusted by default, even inside the network', 'Only external traffic is untrusted', 'Trust is based on IP address alone'], correctIndex: 1 },
-      { id: 'q9', topic: 'Distributed Systems', question: 'What is the main purpose of the Raft consensus protocol?', options: ['To replace SQL databases', 'To manage a replicated log across distributed nodes', 'To encrypt service communications', 'To render UI components'], correctIndex: 1 },
-      { id: 'q10', topic: 'Software Engineering', question: 'Event Sourcing persists state as a sequence of what?', options: ['SQL transactions', 'Immutable events', 'JSON configs', 'HTML templates'], correctIndex: 1 },
-      { id: 'q11', topic: 'Cloud Architecture', question: 'What does multi-region active-active failover help achieve?', options: ['Single point of failure', 'Higher availability by running redundant systems simultaneously', 'Lower latency by using one region only', 'Faster database queries'], correctIndex: 1 },
-      { id: 'q12', topic: 'Security & Compliance', question: 'Which of the following is a cryptographic key management service?', options: ['AWS KMS', 'AWS S3', 'AWS CloudFront', 'AWS IAM'], correctIndex: 0 },
-      { id: 'q13', topic: 'Distributed Systems', question: 'OpenTelemetry primarily provides what capability?', options: ['Database sharding', 'Distributed tracing and observability', 'Container orchestration', 'Identity federation'], correctIndex: 1 },
-      { id: 'q14', topic: 'Software Engineering', question: 'Which pattern decomposes a monolith by aligning services with business capabilities?', options: ['Singleton pattern', 'Domain-Driven Design bounded contexts', 'Factory pattern', 'Observer pattern'], correctIndex: 1 },
-      { id: 'q15', topic: 'Cloud Architecture', question: 'What is a common use case for a service mesh in Kubernetes?', options: ['Running batch jobs', 'Managing service-to-service communication, retries, and observability', 'Storing secrets', 'Building Docker images'], correctIndex: 1 }
+    const QUIZ_POOL = [
+      // General Science
+      { id: 'q1', subject: 'General Science', question: 'What is the chemical symbol for gold?', options: ['Ag', 'Au', 'Fe', 'Cu'], correctIndex: 1 },
+      { id: 'q2', subject: 'General Science', question: 'Which planet is known as the Red Planet?', options: ['Venus', 'Mars', 'Jupiter', 'Saturn'], correctIndex: 1 },
+      { id: 'q3', subject: 'General Science', question: 'What is the hardest natural substance on Earth?', options: ['Gold', 'Iron', 'Diamond', 'Platinum'], correctIndex: 2 },
+      { id: 'q4', subject: 'General Science', question: 'What gas do plants absorb from the atmosphere during photosynthesis?', options: ['Oxygen', 'Nitrogen', 'Carbon Dioxide', 'Hydrogen'], correctIndex: 2 },
+      { id: 'q5', subject: 'General Science', question: 'How many bones are in an adult human body?', options: ['206', '208', '210', '212'], correctIndex: 0 },
+      { id: 'q36', subject: 'General Science', question: 'What is the speed of light in a vacuum?', options: ['300,000 km/s', '150,000 km/s', '450,000 km/s', '600,000 km/s'], correctIndex: 0 },
+      { id: 'q37', subject: 'General Science', question: 'Which element has the atomic number 1?', options: ['Helium', 'Hydrogen', 'Lithium', 'Oxygen'], correctIndex: 1 },
+      { id: 'q38', subject: 'General Science', question: 'What is the powerhouse of the cell?', options: ['Nucleus', 'Mitochondria', 'Ribosome', 'Cell Membrane'], correctIndex: 1 },
+
+      // Mathematics
+      { id: 'q6', subject: 'Mathematics', question: 'What is the value of π (pi) to two decimal places?', options: ['3.12', '3.14', '3.16', '3.18'], correctIndex: 1 },
+      { id: 'q7', subject: 'Mathematics', question: 'What is 15% of 200?', options: ['25', '30', '35', '40'], correctIndex: 1 },
+      { id: 'q8', subject: 'Mathematics', question: 'What is the square root of 144?', options: ['10', '11', '12', '13'], correctIndex: 2 },
+      { id: 'q9', subject: 'Mathematics', question: 'If a triangle has angles of 30° and 60°, what is the third angle?', options: ['80°', '90°', '100°', '110°'], correctIndex: 1 },
+      { id: 'q10', subject: 'Mathematics', question: 'What is the next number in the sequence: 2, 4, 8, 16, ?', options: ['24', '28', '32', '36'], correctIndex: 2 },
+      { id: 'q39', subject: 'Mathematics', question: 'What is the factorial of 5 (5!)?', options: ['100', '120', '140', '160'], correctIndex: 1 },
+      { id: 'q40', subject: 'Mathematics', question: 'How many degrees in a right angle?', options: ['45°', '90°', '180°', '360°'], correctIndex: 1 },
+
+      // Geography
+      { id: 'q11', subject: 'Geography', question: 'What is the capital city of Australia?', options: ['Sydney', 'Melbourne', 'Canberra', 'Brisbane'], correctIndex: 2 },
+      { id: 'q12', subject: 'Geography', question: 'Which is the longest river in the world?', options: ['Amazon', 'Nile', 'Yangtze', 'Mississippi'], correctIndex: 1 },
+      { id: 'q13', subject: 'Geography', question: 'Mount Everest is located in which mountain range?', options: ['Andes', 'Rockies', 'Himalayas', 'Alps'], correctIndex: 2 },
+      { id: 'q14', subject: 'Geography', question: 'Which country has the largest population in the world?', options: ['India', 'China', 'USA', 'Indonesia'], correctIndex: 0 },
+      { id: 'q15', subject: 'Geography', question: 'What is the smallest country in the world by land area?', options: ['Monaco', 'Vatican City', 'San Marino', 'Liechtenstein'], correctIndex: 1 },
+      { id: 'q41', subject: 'Geography', question: 'Which ocean is the largest by surface area?', options: ['Atlantic', 'Indian', 'Arctic', 'Pacific'], correctIndex: 3 },
+      { id: 'q42', subject: 'Geography', question: 'The Equator divides the Earth into which two hemispheres?', options: ['East and West', 'Northern and Southern', 'Land and Water', 'Tropical and Polar'], correctIndex: 1 },
+
+      // History
+      { id: 'q16', subject: 'History', question: 'In which year did World War II end?', options: ['1944', '1945', '1946', '1947'], correctIndex: 1 },
+      { id: 'q17', subject: 'History', question: 'Who was the first person to walk on the Moon?', options: ['Buzz Aldrin', 'Neil Armstrong', 'Yuri Gagarin', 'Michael Collins'], correctIndex: 1 },
+      { id: 'q18', subject: 'History', question: 'The Great Wall of China was primarily built to protect against invasions from which group?', options: ['Mongols', 'Romans', 'Persians', 'Huns'], correctIndex: 0 },
+      { id: 'q19', subject: 'History', question: 'Which ancient civilization built the pyramids of Giza?', options: ['Mesopotamians', 'Ancient Egyptians', 'Mayans', 'Greeks'], correctIndex: 1 },
+      { id: 'q20', subject: 'History', question: 'The Renaissance period began in which country?', options: ['France', 'Italy', 'Spain', 'England'], correctIndex: 1 },
+      { id: 'q43', subject: 'History', question: 'Who wrote the play "Romeo and Juliet"?', options: ['Charles Dickens', 'William Shakespeare', 'Jane Austen', 'Mark Twain'], correctIndex: 1 },
+      { id: 'q44', subject: 'History', question: 'The Industrial Revolution began in which country?', options: ['USA', 'France', 'England', 'Germany'], correctIndex: 2 },
+
+      // Current Affairs
+      { id: 'q21', subject: 'Current Affairs', question: 'Which international organization is responsible for maintaining international peace and security?', options: ['World Bank', 'International Monetary Fund', 'United Nations', 'World Trade Organization'], correctIndex: 2 },
+      { id: 'q22', subject: 'Current Affairs', question: 'What does COP stand for in the context of climate change conferences?', options: ['Conference of Parties', 'Climate Observation Protocol', 'Carbon Offset Program', 'Conservation of Planet'], correctIndex: 0 },
+      { id: 'q23', subject: 'Current Affairs', question: 'Which country hosted the 2024 Summer Olympics?', options: ['USA', 'France', 'Japan', 'Australia'], correctIndex: 1 },
+      { id: 'q24', subject: 'Current Affairs', question: 'What is the name of the NASA program aimed at returning humans to the Moon?', options: ['Artemis', 'Apollo', 'Orion', 'Voyager'], correctIndex: 0 },
+      { id: 'q25', subject: 'Current Affairs', question: 'Which technology company developed the AI model GPT?', options: ['Google', 'Microsoft', 'OpenAI', 'Meta'], correctIndex: 2 },
+      { id: 'q45', subject: 'Current Affairs', question: 'What does AI stand for?', options: ['Automated Intelligence', 'Artificial Intelligence', 'Advanced Information', 'Algorithmic Integration'], correctIndex: 1 },
+      { id: 'q46', subject: 'Current Affairs', question: 'Which social media platform has the most users worldwide?', options: ['Instagram', 'Twitter/X', 'Facebook', 'TikTok'], correctIndex: 2 },
+
+      // Logical Reasoning
+      { id: 'q26', subject: 'Logical Reasoning', question: 'If all roses are flowers, and some flowers are red, which statement must be true?', options: ['All roses are red', 'Some roses are red', 'No roses are red', 'Cannot be determined'], correctIndex: 3 },
+      { id: 'q27', subject: 'Logical Reasoning', question: 'Complete the analogy: Book is to Reading as Fork is to ?', options: ['Writing', 'Eating', 'Cooking', 'Cleaning'], correctIndex: 1 },
+      { id: 'q28', subject: 'Logical Reasoning', question: 'What comes next in the pattern: A, C, E, G, ?', options: ['H', 'I', 'J', 'K'], correctIndex: 1 },
+      { id: 'q29', subject: 'Logical Reasoning', question: 'If it takes 5 machines 5 minutes to make 5 widgets, how long would it take 100 machines to make 100 widgets?', options: ['5 minutes', '100 minutes', '20 minutes', '1 minute'], correctIndex: 0 },
+      { id: 'q30', subject: 'Logical Reasoning', question: 'A farmer has 17 sheep. All but 9 run away. How many sheep does the farmer have left?', options: ['8', '9', '17', '0'], correctIndex: 1 },
+      { id: 'q47', subject: 'Logical Reasoning', question: 'If you rearrange the letters "CIFAIPC" you would have the name of a(n):', options: ['City', 'Animal', 'Ocean', 'Planet'], correctIndex: 1 },
+      { id: 'q48', subject: 'Logical Reasoning', question: 'Which word does not belong: Apple, Banana, Carrot, Orange?', options: ['Apple', 'Banana', 'Carrot', 'Orange'], correctIndex: 2 },
+
+      // Computer Basics
+      { id: 'q31', subject: 'Computer Basics', question: 'What does CPU stand for?', options: ['Central Processing Unit', 'Computer Personal Unit', 'Central Program Unit', 'Core Processing Unit'], correctIndex: 0 },
+      { id: 'q32', subject: 'Computer Basics', question: 'Which of the following is an example of an operating system?', options: ['Microsoft Word', 'Windows', 'Google Chrome', 'Adobe Photoshop'], correctIndex: 1 },
+      { id: 'q33', subject: 'Computer Basics', question: 'What does HTTP stand for?', options: ['HyperText Transfer Protocol', 'High Tech Transfer Protocol', 'HyperText Transmission Program', 'Home Tool Transfer Protocol'], correctIndex: 0 },
+      { id: 'q34', subject: 'Computer Basics', question: 'Which device is used to connect a computer to a network?', options: ['Keyboard', 'Mouse', 'Network Card / NIC', 'Monitor'], correctIndex: 2 },
+      { id: 'q35', subject: 'Computer Basics', question: 'What is the main function of RAM in a computer?', options: ['Permanent storage', 'Temporary memory for running programs', 'Processing graphics', 'Connecting to the internet'], correctIndex: 1 },
+      { id: 'q49', subject: 'Computer Basics', question: 'What does URL stand for?', options: ['Universal Resource Locator', 'Uniform Resource Locator', 'Unified Resource Link', 'Universal Reference Link'], correctIndex: 1 },
+      { id: 'q50', subject: 'Computer Basics', question: 'Which file extension is commonly used for compressed files?', options: ['.doc', '.pdf', '.zip', '.txt'], correctIndex: 2 },
     ];
     function shuffleArray(arr) { const a = arr.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
-    function pickRandomQuestions(count = 5) { return shuffleArray(LOCAL_QUIZ_POOL).slice(0, Math.min(count, LOCAL_QUIZ_POOL.length)); }
+    function pickRandomQuestions(count) { return shuffleArray(QUIZ_POOL).slice(0, Math.min(count, QUIZ_POOL.length)); }
     function generateAIReport(score, weakTopics) {
       const pct = typeof score === 'string' ? parseInt(score, 10) : score;
       if (pct >= 80) return { badge: `${pct}% - Advanced Competency`, strengths: ['Strong conceptual understanding', 'Correct application of core principles', 'Good decision-making under constraints'], improvements: weakTopics.length ? weakTopics : [], recommendation: 'Proceed to the next track or advanced capstone module.' };
@@ -1318,6 +1366,7 @@ return (
       '9': ['trainer'],
       '10': ['trainee', 'trainer'],
       '11': ['trainee', 'trainer'],
+      '12': ['trainee'],
     };
 
     function getRoleScreens(role) {
@@ -1337,6 +1386,7 @@ return (
         { screen: '2', label: 'My Dashboard', icon: '📊' },
         { screen: '3', label: 'Course Catalog', icon: '📚' },
         { screen: '10', label: 'Course Materials', icon: '📁' },
+        { screen: '12', label: 'Quiz', icon: '❓' },
         { screen: '8', label: 'AI Skill Gap Scanner', icon: '🤖' },
         { screen: '6', label: 'My Certifications', icon: '🎓' },
         { screen: '11', label: 'Edit Profile', icon: '✏️' },
@@ -3657,6 +3707,291 @@ return (
     }
 
     // ==========================================
+    // SCREEN 12: QUIZ (Trainee standalone quiz feature)
+    // ==========================================
+    function Screen12Quiz({ user, onBack }) {
+      const [stage, setStage] = React.useState('start');
+      const [questionCount, setQuestionCount] = React.useState(10);
+      const [questions, setQuestions] = React.useState([]);
+      const [currentIndex, setCurrentIndex] = React.useState(0);
+      const [answers, setAnswers] = React.useState({});
+      const [finished, setFinished] = React.useState(false);
+      const [score, setScore] = React.useState(0);
+
+      const handleStartQuiz = () => {
+        const picked = pickRandomQuestions(questionCount);
+        setQuestions(picked);
+        setCurrentIndex(0);
+        setAnswers({});
+        setFinished(false);
+        setScore(0);
+        setStage('quiz');
+      };
+
+      const handleAnswer = (qIdx, optIdx) => {
+        if (finished) return;
+        setAnswers(prev => {
+          const next = { ...prev };
+          next[qIdx] = optIdx;
+          return next;
+        });
+      };
+
+      const handleNext = () => {
+        if (currentIndex < questions.length - 1) {
+          setCurrentIndex(prev => prev + 1);
+        } else {
+          finishQuiz();
+        }
+      };
+
+      const handlePrev = () => {
+        if (currentIndex > 0) {
+          setCurrentIndex(prev => prev - 1);
+        }
+      };
+
+      const finishQuiz = () => {
+        let correct = 0;
+        questions.forEach((q, i) => {
+          if (answers[i] === q.correctIndex) {
+            correct++;
+          }
+        });
+        const pct = Math.round((correct / questions.length) * 100);
+        setScore(pct);
+        setFinished(true);
+        setStage('result');
+      };
+
+      const handleRestart = () => {
+        setStage('start');
+        setQuestions([]);
+        setCurrentIndex(0);
+        setAnswers({});
+        setFinished(false);
+        setScore(0);
+      };
+
+      const currentQuestion = questions[currentIndex];
+      const progressText = 'Question ' + (currentIndex + 1) + ' of ' + questions.length;
+      const answeredCount = Object.keys(answers).length;
+      const answeredText = answeredCount + ' of ' + questions.length + ' answered';
+      const isLastQuestion = currentIndex === questions.length - 1;
+      const canFinish = answeredCount === questions.length;
+
+      // Build class strings to avoid template literals in JSX
+      const startScreenClass = 'max-w-2xl mx-auto px-4 py-12';
+      const quizScreenClass = 'max-w-3xl mx-auto px-4 py-8';
+      const resultScreenClass = 'max-w-2xl mx-auto px-4 py-12';
+      const cardClass = 'glass-card border border-electric-blue/20 rounded-2xl p-6 sm:p-8';
+      const progressBarContainerClass = 'w-full bg-slate-800 rounded-full h-2 overflow-hidden mb-6';
+      const progressBarFillClass = 'bg-gradient-to-r from-teal-500 to-cyan-600 h-2 rounded-full transition-all duration-300';
+      const questionCardClass = 'glass-card border border-electric-blue/10 rounded-xl p-6 mb-6';
+      const optionLabelClassBase = 'flex items-start gap-3 p-4 rounded-xl border-2 transition cursor-pointer ';
+      const buttonPrimaryClass = 'px-6 py-3 bg-gradient-to-r from-teal-500 to-cyan-600 hover:from-teal-400 hover:to-cyan-500 text-white rounded-xl font-black text-sm btn-micro shadow-lg shadow-teal-500/30 transition';
+      const buttonSecondaryClass = 'px-6 py-3 bg-slate-800 hover:bg-slate-700 text-white rounded-xl font-black text-sm btn-micro border border-electric-blue/20 transition';
+      const buttonDisabledClass = 'px-6 py-3 bg-slate-700 text-slate-500 rounded-xl font-black text-sm cursor-not-allowed';
+      const navButtonContainerClass = 'flex flex-wrap gap-3 mt-6';
+      const resultScoreClass = 'text-5xl font-extrabold text-white';
+      const resultSubtextClass = 'text-slate-400 mt-2';
+      const reviewItemCorrectClass = 'p-4 rounded-xl border-2 border-emerald-500 bg-emerald-500/10';
+      const reviewItemIncorrectClass = 'p-4 rounded-xl border-2 border-red-500 bg-red-500/10';
+      const reviewItemUnansweredClass = 'p-4 rounded-xl border-2 border-amber-500 bg-amber-500/10';
+
+      if (stage === 'start') {
+        return (
+          <div className={startScreenClass}>
+            <div className={cardClass}>
+              <div className="text-center mb-8">
+                <span className="text-5xl mb-4 block">❓</span>
+                <h1 className="text-3xl font-extrabold text-white mb-2">Knowledge Quiz</h1>
+                <p className="text-slate-400">Test your knowledge across multiple subjects</p>
+              </div>
+
+              <div className="space-y-6">
+                <div>
+                  <label className="block text-sm font-semibold text-slate-200 mb-3">
+                    How many questions would you like to attempt?
+                  </label>
+                  <select
+                    value={questionCount}
+                    onChange={(e) => setQuestionCount(parseInt(e.target.value, 10))}
+                    className="w-full px-4 py-3 bg-slate-900 border border-electric-blue/30 rounded-xl text-white text-base focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none"
+                  >
+                    <option value="5">5 questions</option>
+                    <option value="10">10 questions</option>
+                    <option value="15">15 questions</option>
+                    <option value="20">20 questions</option>
+                  </select>
+                </div>
+
+                <div className="text-center">
+                  <button
+                    onClick={handleStartQuiz}
+                    className={buttonPrimaryClass}
+                  >
+                    Start Quiz
+                  </button>
+                </div>
+
+                <div className="text-center text-xs text-slate-500">
+                  Questions drawn from: General Science, Mathematics, Geography, History, Current Affairs, Logical Reasoning, Computer Basics
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+      }
+
+      if (stage === 'quiz') {
+        const percent = Math.round(((currentIndex + 1) / questions.length) * 100);
+        let progressBarFillStyle = { width: percent + '%' };
+        let optionLabelClass = '';
+        let isSelected = false;
+
+        return (
+          <div className={quizScreenClass}>
+            <div className={cardClass}>
+              <div className="mb-4">
+                <div className="flex items-center justify-between text-sm font-semibold text-slate-300 mb-2">
+                  <span>{progressText}</span>
+                  <span>{answeredText}</span>
+                </div>
+                <div className={progressBarContainerClass}>
+                  <div className={progressBarFillClass} style={progressBarFillStyle}></div>
+                </div>
+              </div>
+
+              <div className={questionCardClass}>
+                <p className="text-lg font-semibold text-white mb-6">{currentQuestion.question}</p>
+                <div className="space-y-3">
+                  {currentQuestion.options.map((opt, i) => {
+                    isSelected = answers[currentIndex] === i;
+                    optionLabelClass = optionLabelClassBase;
+                    if (isSelected) {
+                      optionLabelClass = optionLabelClass + 'border-teal-500 bg-teal-500/10';
+                    } else {
+                      optionLabelClass = optionLabelClass + 'border-electric-blue/10 hover:border-teal-500';
+                    }
+                    return (
+                      <label key={i} className={optionLabelClass}>
+                        <input
+                          type="radio"
+                          name={'q' + currentIndex}
+                          checked={isSelected}
+                          onChange={() => handleAnswer(currentIndex, i)}
+                          className="mt-1 w-5 h-5 text-teal-500 focus:ring-teal-500"
+                        />
+                        <span className="text-slate-200 leading-relaxed">{opt}</span>
+                      </label>
+                    );
+                  })}
+                </div>
+              </div>
+
+              <div className={navButtonContainerClass}>
+                <button
+                  onClick={handlePrev}
+                  disabled={currentIndex === 0}
+                  className={currentIndex === 0 ? buttonDisabledClass : buttonSecondaryClass}
+                >
+                  Previous
+                </button>
+                {isLastQuestion ? (
+                  <button
+                    onClick={finishQuiz}
+                    disabled={!canFinish}
+                    className={canFinish ? buttonPrimaryClass : buttonDisabledClass}
+                  >
+                    Finish Quiz & See Results
+                  </button>
+                ) : (
+                  <button
+                    onClick={handleNext}
+                    disabled={answers[currentIndex] === undefined}
+                    className={answers[currentIndex] === undefined ? buttonDisabledClass : buttonPrimaryClass}
+                  >
+                    Next Question
+                  </button>
+                )}
+              </div>
+            </div>
+          </div>
+        );
+      }
+
+      if (stage === 'result') {
+        const correctCount = questions.filter((q, i) => answers[i] === q.correctIndex).length;
+        const wrongCount = questions.filter((q, i) => answers[i] !== undefined && answers[i] !== q.correctIndex).length;
+        const unansweredCount = questions.filter((q, i) => answers[i] === undefined).length;
+
+        return (
+          <div className={resultScreenClass}>
+            <div className={cardClass}>
+              <div className="text-center mb-8">
+                <span className="text-5xl mb-4 block">
+                  {score >= 70 ? '🎉' : score >= 50 ? '👍' : '📚'}
+                </span>
+                <h1 className="text-3xl font-extrabold text-white mb-2">Quiz Complete!</h1>
+                <p className={resultScoreClass}>{score}%</p>
+                <p className={resultSubtextClass}>
+                  {correctCount} correct, {wrongCount} incorrect, {unansweredCount} unanswered out of {questions.length}
+                </p>
+              </div>
+
+              <div className="space-y-3 mb-8 max-h-96 overflow-y-auto">
+                <p className="text-xs font-black uppercase text-slate-400 mb-3">Answer Review</p>
+                {questions.map((q, i) => {
+                  const userAnswer = answers[i];
+                  const isCorrect = userAnswer === q.correctIndex;
+                  const isAnswered = userAnswer !== undefined;
+                  let reviewClass = reviewItemIncorrectClass;
+                  if (isCorrect) {
+                    reviewClass = reviewItemCorrectClass;
+                  } else if (!isAnswered) {
+                    reviewClass = reviewItemUnansweredClass;
+                  }
+                  return (
+                    <div key={i} className={reviewClass}>
+                      <p className="text-sm font-semibold text-white mb-2">Q{i + 1}: {q.question}</p>
+                      <p className="text-sm text-slate-300 mb-1">
+                        <span className="font-medium">Your answer:</span> {isAnswered ? q.options[userAnswer] : 'Not answered'}
+                      </p>
+                      {!isCorrect && (
+                        <p className="text-sm text-teal-400 font-semibold">
+                          Correct answer: {q.options[q.correctIndex]}
+                        </p>
+                      )}
+                      <p className="text-xs text-slate-500 mt-1">Subject: {q.subject}</p>
+                    </div>
+                  );
+                })}
+              </div>
+
+              <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                <button
+                  onClick={handleRestart}
+                  className={buttonSecondaryClass}
+                >
+                  Take New Quiz
+                </button>
+                <button
+                  onClick={onBack}
+                  className={buttonPrimaryClass}
+                >
+                  Back to Dashboard
+                </button>
+              </div>
+            </div>
+          </div>
+        );
+      }
+
+      return null;
+    }
+
+    // ==========================================
     // NOTIFICATION BELL (personal user notifications)
     // ==========================================
     function NotificationBell({ user }) {
@@ -3996,6 +4331,17 @@ return (
                 </aside>
                 <div className="flex-1 overflow-y-auto">
                   <EditProfile user={user} onBack={() => navigate(user?.role === 'trainer' ? '9' : '2')} />
+                </div>
+              </div>
+            )}
+
+            {user && screen === '12' && roleAllowed(['trainee']) && (
+              <div className="flex">
+                <aside className="hidden md:block w-64 border-r border-electric-blue/10">
+                  <Sidebar user={user} currentScreen={screen} onNavigate={navigate} activeTab={activeAdminTab} setActiveTab={setActiveAdminTab} />
+                </aside>
+                <div className="flex-1 overflow-y-auto">
+                  <Screen12Quiz user={user} onBack={() => navigate('2')} />
                 </div>
               </div>
             )}
