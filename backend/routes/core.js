@@ -437,16 +437,22 @@ userRouter.get('/dashboard/:userId', authMiddleware, requireRole('trainee', 'tra
 userRouter.put('/profile', authMiddleware, async (req, res) => {
   try {
     const userId = req.user.id;
+    const body = req.body || {};
 
     if (!isSupabaseAvailable) {
-      return res.status(500).json({ error: 'Database not configured', details: 'Supabase is not available' });
+      const updatedUser = { ...req.user, ...body };
+      return res.status(200).json({
+        message: 'Profile updated successfully (demo mode)',
+        user: updatedUser,
+        source: 'in-memory-fallback'
+      });
     }
 
-    const existingColumns = ['qualification', 'skills', 'subjects'];
+    const existingColumns = ['qualification', 'skills', 'subjects', 'interests', 'work_experience', 'bio', 'certificates'];
     const updatePayload = {};
     existingColumns.forEach(col => {
-      if (req.body?.[col] !== undefined) {
-        updatePayload[col] = req.body[col] || null;
+      if (body[col] !== undefined) {
+        updatePayload[col] = body[col] || null;
       }
     });
 
@@ -627,6 +633,11 @@ adminRouter.get('/stats', requireRole('admin'), async (req, res) => {
           { month: 'Mar', enrollments: 25 }, { month: 'Apr', enrollments: 15 },
           { month: 'May', enrollments: 22 }, { month: 'Jun', enrollments: 30 }
         ],
+        activeUsersTimeline: [
+          { month: 'Jan', users: 820 }, { month: 'Feb', users: 932 },
+          { month: 'Mar', users: 901 }, { month: 'Apr', users: 1034 },
+          { month: 'May', users: 1290 }, { month: 'Jun', users: 1124 }
+        ],
         source: 'in-memory-fallback'
       };
       return res.status(200).json(mockStats);
@@ -665,6 +676,7 @@ adminRouter.get('/stats', requireRole('admin'), async (req, res) => {
 
     const now = new Date();
     const monthlyEnrollments = [];
+    const activeUsersTimeline = [];
     for (let i = 5; i >= 0; i--) {
       const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
       const monthName = d.toLocaleString('default', { month: 'short' });
@@ -675,6 +687,12 @@ adminRouter.get('/stats', requireRole('admin'), async (req, res) => {
         return created >= start && created <= end;
       }).length;
       monthlyEnrollments.push({ month: monthName, enrollments: count });
+      // For activeUsersTimeline, count unique user_ids created in that month
+      const uniqueUsers = new Set((enrollments || []).filter(e => {
+        const created = new Date(e.created_at);
+        return created >= start && created <= end && e.user_id;
+      }).map(e => e.user_id)).size;
+      activeUsersTimeline.push({ month: monthName, users: uniqueUsers });
     }
 
     const registeredUsers = (users || []).slice(0, 5).map(u => ({
@@ -696,7 +714,8 @@ adminRouter.get('/stats', requireRole('admin'), async (req, res) => {
       overdueComplianceCount: 0,
       registeredUsers,
       departmentTelemetry: [],
-      monthlyEnrollments
+      monthlyEnrollments,
+      activeUsersTimeline
     });
   } catch (err) {
     console.error('[Admin] Stats error:', err.message);
@@ -1229,6 +1248,70 @@ feedbackRouter.get('/admin/summary', authMiddleware, requireRole('admin'), async
 });
 
 coreRouter.use('/feedback', feedbackRouter);
+
+// ==========================================
+// IN-APP USER NOTIFICATIONS
+// ==========================================
+const notificationRouter = express.Router();
+
+// In-memory notification store (mock when Supabase unavailable)
+const mockNotifications = {};
+function ensureMockNotifications(userId) {
+  if (!mockNotifications[userId]) {
+    mockNotifications[userId] = [
+      { id: 'notif_1', user_id: userId, title: 'Course Enrollment', message: 'You are enrolled in Advanced Astrophysics', read: false, created_at: new Date().toISOString() },
+      { id: 'notif_2', user_id: userId, title: 'Quiz Available', message: 'New quiz: Module Assessment is ready to take', read: false, created_at: new Date().toISOString() },
+      { id: 'notif_3', user_id: userId, title: 'Profile Update', message: 'Your profile was saved successfully', read: true, created_at: new Date().toISOString() }
+    ];
+  }
+  return mockNotifications[userId];
+}
+
+notificationRouter.get('/', authMiddleware, async (req, res) => {
+  try {
+    const userId = req.user?.id;
+    if (!userId) return res.status(401).json({ error: 'Unauthorized' });
+    let notifs = [];
+    if (!isSupabaseAvailable) {
+      notifs = ensureMockNotifications(userId);
+    } else {
+      const { data, error } = await supabase
+        .from('notifications')
+        .select('*')
+        .eq('user_id', userId)
+        .order('created_at', { ascending: false });
+      if (error) { console.error('[Notifications] Error:', error.message); notifs = []; }
+      else notifs = data || [];
+    }
+    res.status(200).json(notifs);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to fetch notifications', details: err.message });
+  }
+});
+
+notificationRouter.post('/:id/read', authMiddleware, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const userId = req.user?.id;
+    if (!isSupabaseAvailable) {
+      const userNotifs = mockNotifications[userId] || [];
+      const idx = userNotifs.findIndex(n => n.id === id);
+      if (idx >= 0) userNotifs[idx].read = true;
+      return res.json({ message: 'Marked as read', source: 'in-memory-fallback' });
+    }
+    const { error } = await supabase
+      .from('notifications')
+      .update({ read: true })
+      .eq('id', id)
+      .eq('user_id', userId);
+    if (error) return res.status(500).json({ error: error.message });
+    res.json({ message: 'Marked as read' });
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to mark notification', details: err.message });
+  }
+});
+
+coreRouter.use('/notifications', notificationRouter);
 
 module.exports = coreRouter;
 module.exports.authRouter = authRouter;
