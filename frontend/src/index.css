@@ -1,0 +1,290 @@
+/* ===== MULTI-COLOR SPACE / EARTH THEME ===== */
+/* Shared theme CSS for Capacity Connect inner pages (Stitch components) */
+/* Mirrors the palette and animations used in frontend/index.html */
+
+:root {
+  /* Space base */
+  --space-black: #05070a;
+  --space-navy: #0a0e27;
+  --space-deep: #0d1b2a;
+  --space-blue: #1b2838;
+
+  /* Homepage — Purple/Nebula */
+  --home-bg: #0f0a1f;
+  --home-bg2: #1a0b2e;
+  --home-accent: #c084fc;
+  --home-accent2: #a855f7;
+  --home-glow: rgba(168, 85, 247, 0.25);
+
+  /* Trainee — Teal/Ocean */
+  --trainee-bg: #0a1f1f;
+  --trainee-bg2: #0d2a2a;
+  --trainee-accent: #2dd4bf;
+  --trainee-accent2: #14b8a6;
+  --trainee-glow: rgba(45, 212, 191, 0.25);
+
+  /* Trainer — Amber/Sunset */
+  --trainer-bg: #1a0f05;
+  --trainer-bg2: #2a1508;
+  --trainer-accent: #f59e0b;
+  --trainer-accent2: #ff6b35;
+  --trainer-glow: rgba(245, 158, 11, 0.25);
+
+  /* Admin — Crimson/Deep Red */
+  --admin-bg: #1a0505;
+  --admin-bg2: #2a0808;
+  --admin-accent: #ef4444;
+  --admin-accent2: #dc2626;
+  --admin-glow: rgba(239, 68, 68, 0.25);
+
+  /* Earth/Nature — Green */
+  --earth-accent: #22c55e;
+  --earth-accent2: #16a34a;
+  --earth-glow: rgba(34, 197, 94, 0.25);
+
+  /* Gold/Yellow — Stars/Sun */
+  --gold-accent: #fbbf24;
+  --gold-accent2: #f59e0b;
+  --gold-glow: rgba(251, 191, 36, 0.25);
+
+  /* Shared text */
+  --white: #ffffff;
+  --star-white: #f8fafc;
+  --text-primary: #e2e8f0;
+  --text-secondary: #94a3b8;
+  --text-tertiary: #64748b;
+  --border-subtle: rgba(148, 163, 184, 0.15);
+  --glass-bg: rgba(13, 27, 42, 0.7);
+  --glass-border: rgba(0, 212, 255, 0.15);
+
+  /* Role accent colors (CSS variables for dynamic use) */
+  --accent: var(--home-accent);
+  --accent-dim: var(--home-glow);
+  --accent-hover: var(--home-accent2);
+}
+
+/* ===== BASE BACKGROUND ===== */
+body {
+  background-color: var(--space-navy) !important;
+  font-family: 'Inter', system-ui, sans-serif;
+  color: var(--text-primary);
+}
+
+/* ===== SPACE GRADIENT BACKGROUND ===== */
+.bg-space-gradient {
+  background: linear-gradient(180deg, var(--space-black) 0%, var(--space-navy) 40%, var(--space-deep) 100%);
+}
+
+/* ===== COSMIC BACKGROUND (multi-color nebula) ===== */
+.cosmic-bg {
+  background:
+    radial-gradient(ellipse at 20% 10%, rgba(168, 85, 247, 0.08) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 90%, rgba(239, 68, 68, 0.06) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 50%, rgba(45, 212, 191, 0.04) 0%, transparent 60%),
+    linear-gradient(180deg, #05070a 0%, #0a0e27 100%);
+}
+
+/* ===== STARFIELD ===== */
+.bg-starfield {
+  background-image:
+    radial-gradient(1px 1px at 20px 30px, rgba(255, 255, 255, 0.8), transparent),
+    radial-gradient(1px 1px at 100px 50px, rgba(255, 255, 255, 0.5), transparent),
+    radial-gradient(1px 1px at 200px 150px, rgba(255, 255, 255, 0.6), transparent),
+    radial-gradient(1px 1px at 300px 250px, rgba(255, 255, 255, 0.4), transparent),
+    radial-gradient(2px 2px at 400px 100px, rgba(168, 85, 247, 0.8), transparent),
+    radial-gradient(1px 1px at 500px 300px, rgba(255, 255, 255, 0.5), transparent),
+    radial-gradient(1px 1px at 50px 400px, rgba(255, 255, 255, 0.3), transparent),
+    radial-gradient(2px 2px at 150px 500px, rgba(45, 212, 191, 0.6), transparent);
+  background-size: 550px 550px;
+}
+
+/* ===== TWINKLING STARS ANIMATION ===== */
+@keyframes twinkle {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 0.8; }
+}
+.star {
+  position: absolute;
+  border-radius: 50%;
+  background-color: white;
+  pointer-events: none;
+  z-index: 0;
+  animation: twinkle 3s ease-in-out infinite;
+}
+
+/* ===== SUBTLE NEBULA DRIFT ===== */
+@keyframes nebula-drift {
+  0%, 100% { transform: translateX(0) translateY(0) scale(1); opacity: 0.15; }
+  33% { transform: translateX(-10px) translateY(-5px) scale(1.02); opacity: 0.18; }
+  66% { transform: translateX(5px) translateY(-10px) scale(0.98); opacity: 0.12; }
+}
+.nebula-drift {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 0;
+  animation: nebula-drift 25s ease-in-out infinite;
+  filter: blur(80px);
+}
+
+/* ===== GENTLE PLANET ROTATION ===== */
+@keyframes planet-rotate {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+.planet-rotate {
+  animation: planet-rotate 120s linear infinite;
+  pointer-events: none;
+}
+
+/* ===== FADE-IN TRANSITION ===== */
+.fade-in {
+  animation: fadeIn 0.6s ease-in-out;
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ===== GENTLE PULSE GLOW ON STAT CARDS ===== */
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 15px var(--accent-dim); }
+  50% { box-shadow: 0 0 30px var(--accent-dim), 0 0 45px var(--accent-dim); }
+}
+.stat-card-glow {
+  animation: pulse-glow 4s ease-in-out infinite;
+}
+
+/* ===== HOVER GLOW ON CARDS ===== */
+@keyframes hover-glow {
+  0% { box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); }
+  100% { box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4), 0 0 30px var(--accent-dim); }
+}
+
+/* ===== ROLE ACCENT COLOR CLASSES ===== */
+/* Trainee — Teal/Ocean */
+.theme-trainee {
+  --accent: var(--trainee-accent);
+  --accent-dim: var(--trainee-glow);
+  --accent-hover: var(--trainee-accent2);
+  --role-bg: var(--trainee-bg);
+  --role-bg2: var(--trainee-bg2);
+}
+
+/* Trainer — Amber/Sunset */
+.theme-trainer {
+  --accent: var(--trainer-accent);
+  --accent-dim: var(--trainer-glow);
+  --accent-hover: var(--trainer-accent2);
+  --role-bg: var(--trainer-bg);
+  --role-bg2: var(--trainer-bg2);
+}
+
+/* Admin — Crimson/Deep Red */
+.theme-admin {
+  --accent: var(--admin-accent);
+  --accent-dim: var(--admin-glow);
+  --accent-hover: var(--admin-accent2);
+  --role-bg: var(--admin-bg);
+  --role-bg2: var(--admin-bg2);
+}
+
+/* Earth/Nature (shared) */
+.theme-earth {
+  --accent: var(--earth-accent);
+  --accent-dim: var(--earth-glow);
+  --accent-hover: var(--earth-accent2);
+}
+
+/* ===== GLASSMORPHISM ===== */
+.glass-card {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: 1rem;
+}
+
+/* ===== COSMIC CARD (glass with role-accent border) ===== */
+.cosmic-card {
+  background: rgba(15, 23, 42, 0.85);
+  border-radius: 1rem;
+  border-color: var(--accent-dim);
+}
+
+/* ===== HUD PANEL (inset glow) ===== */
+.hud-panel {
+  box-shadow: inset 0 0 25px rgba(45, 212, 191, 0.06);
+}
+
+/* ===== ROLE-SPECIFIC BACKGROUNDS ===== */
+.bg-trainee-portal {
+  background: linear-gradient(180deg, var(--trainee-bg) 0%, var(--trainee-bg2) 100%);
+}
+.bg-trainer-portal {
+  background: linear-gradient(180deg, var(--trainer-bg) 0%, var(--trainer-bg2) 100%);
+}
+.bg-admin-portal {
+  background: linear-gradient(180deg, var(--admin-bg) 0%, var(--admin-bg2) 100%);
+}
+
+/* ===== ORBITAL BACKGROUND (used by all themed components) ===== */
+.orbital-bg {
+  background:
+    radial-gradient(ellipse at 20% 10%, rgba(168, 85, 247, 0.06) 0%, transparent 45%),
+    radial-gradient(ellipse at 80% 90%, rgba(239, 68, 68, 0.05) 0%, transparent 45%),
+    radial-gradient(ellipse at 50% 50%, rgba(45, 212, 191, 0.03) 0%, transparent 55%),
+    linear-gradient(180deg, #05070a 0%, #0a0e27 100%);
+}
+
+/* Auth — Purple/Nebula theme */
+.theme-auth {
+  --accent: var(--home-accent);
+  --accent-dim: var(--home-glow);
+  --accent-hover: var(--home-accent2);
+  --role-bg: var(--home-bg);
+  --role-bg2: var(--home-bg2);
+}
+
+/* ===== DARK MODE TEXT OVERRIDES ===== */
+.text-space-100 { color: #f1f5f9 !important; }
+.text-space-200 { color: #e2e8f0 !important; }
+.text-space-300 { color: #cbd5e1 !important; }
+.text-space-400 { color: #94a3b8 !important; }
+.text-space-500 { color: #64748b !important; }
+
+/* ===== DARK MODE INPUT OVERRIDES ===== */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="url"],
+input[type="file"],
+textarea,
+select {
+  background-color: rgba(15, 23, 42, 0.8) !important;
+  border-color: rgba(45, 212, 191, 0.2) !important;
+  color: #f1f5f9 !important;
+}
+input::placeholder,
+textarea::placeholder {
+  color: #64748b !important;
+}
+
+/* ===== SCROLLBAR ===== */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #475569;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #64748b;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 640px) {
+  .text-2xl { font-size: 1.25rem; }
+  .text-3xl { font-size: 1.5rem; }
+}

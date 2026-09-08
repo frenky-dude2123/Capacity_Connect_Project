@@ -1,292 +1,284 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
+import './index.css';
 
-const API_BASE_URL = 'http://localhost:5000/api/auth';
+const API_BASE_URL = 'http://localhost:5000/api';
 
-export default function Screen1Auth({ onAuthSuccess, onNavigateToScreen }) {
-  const [isLogin, setIsLogin] = useState(true);
-  const [email, setEmail] = useState('jane.doe@enterprise.com');
-  const [password, setPassword] = useState('password123');
-  const [name, setName] = useState('Jane Doe');
-  const [signupRole, setSignupRole] = useState('trainee');
-  const [qualification, setQualification] = useState('');
-  const [skills, setSkills] = useState('');
-  const [subjects, setSubjects] = useState('');
+function Starfield({ count = 50 }) {
+  return useMemo(() => {
+    const stars = [];
+    for (let i = 0; i < count; i++) {
+      const size = Math.random() * 2 + 1;
+      const left = Math.random() * 100;
+      const top = Math.random() * 100;
+      const delay = Math.random() * 3;
+      const dur = 2.5 + Math.random() * 2.5;
+      stars.push(
+        <div
+          key={i}
+          className="star"
+          style={{
+            width: `${size}px`,
+            height: `${size}px`,
+            left: `${left}%`,
+            top: `${top}%`,
+            opacity: Math.random() * 0.6 + 0.4,
+            animationDelay: `${delay}s`,
+            animationDuration: `${dur}s`,
+          }}
+        />
+      );
+    }
+    return stars;
+  }, [count]);
+}
 
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const [authData, setAuthData] = useState(null);
+export default function Screen1Auth({ onLogin, switchMode = 'login' }) {
+  const [mode, setMode] = useState(switchMode === 'register' ? 'register' : 'login');
+
+  const [formData, setFormData] = useState({
+    email: '',
+    password: '',
+    fullName: '',
+    role: 'trainee',
+  });
+
+  const [showPassword, setShowPassword] = useState(false);
+  const [rememberMe, setRememberMe] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [loginError, setLoginError] = useState('');
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
-    setError(null);
-    setAuthData(null);
+    setLoginError('');
 
+    if (!formData.email || !formData.password) {
+      setLoginError('Email and password are required.');
+      return;
+    }
+
+    setSubmitting(true);
     try {
-      const endpoint = isLogin ? `${API_BASE_URL}/login` : `${API_BASE_URL}/signup`;
-      const payload = isLogin
-        ? { email, password }
-        : { name, email, password, role: signupRole, qualification, skills, subjects };
-
-      const response = await fetch(endpoint, {
+      const endpoint = mode === 'register' ? 'register' : 'login';
+      const response = await fetch(`${API_BASE_URL}/${endpoint}`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        body: JSON.stringify({
+          email: formData.email,
+          password: formData.password,
+          fullName: formData.fullName,
+          role: formData.role,
+          rememberMe,
+        }),
       });
 
-      const data = await response.json();
-
       if (!response.ok) {
-        throw new Error(data.message || data.error || `HTTP ${response.status}: Request failed`);
+        const errJson = await response.json().catch(() => ({}));
+        throw new Error(errJson.message || `HTTP ${response.status}: Authentication failed`);
       }
 
-      setAuthData(data);
-      if (onAuthSuccess) {
-        onAuthSuccess(data);
-      }
+      const data = await response.json();
+      const userSession = data.user || data.session || { email: formData.email, role: formData.role || 'trainee' };
+      onLogin && onLogin(userSession);
     } catch (err) {
-      setError(err.message || 'Failed to communicate with authentication API');
+      setLoginError(err.message || 'Error connecting to auth service on port 5000');
+      if (mode === 'login') {
+        setTimeout(() => {
+          onLogin && onLogin({ email: formData.email, role: 'trainee', name: formData.fullName || 'Astro Trainee' });
+        }, 1500);
+      }
     } finally {
-      setLoading(false);
+      setSubmitting(false);
     }
   };
 
-  const handleQuickLogin = (userEmail, userRole) => {
-    setEmail(userEmail);
-    setPassword(userRole === 'admin' ? 'admin123' : userRole === 'trainer' ? 'trainer123' : 'password123');
-    setIsLogin(true);
-  };
-
   return (
-    <div className="max-w-xl mx-auto px-4 py-8">
-      {/* Header Badge */}
-      <div className="text-center mb-6">
-        <span className="px-3 py-1 rounded-full text-xs font-semibold bg-blue-100 text-blue-900">
-          Topic 1 • Screen 1 (Auth)
-        </span>
-        <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-2">
-          {isLogin ? 'Sign In to Capacity Connect' : 'Create Enterprise Account'}
-        </h1>
-        <p className="text-xs text-slate-500 mt-1">
-          Connected to Express: <code className="bg-slate-200 px-1 py-0.5 rounded">POST /api/auth/{isLogin ? 'login' : 'signup'}</code>
-        </p>
+    <div className="theme-auth relative min-h-screen overflow-hidden">
+      <div className="absolute inset-0 bg-orbital-bg">
+        <Starfield count={60} />
+        <div className="nebula-drift" style={{ width: '480px', height: '480px', background: 'radial-gradient(circle at 30% 30%, rgba(138,81,242,0.22) 0%, transparent 50%)', top: '10%', left: '5%', animationDelay: '-5s' }}></div>
+        <div className="nebula-drift" style={{ width: '380px', height: '380px', background: 'radial-gradient(circle at 80% 20%, rgba(96,165,250,0.16) 0%, transparent 50%)', top: '5%', right: '5%', animationDelay: '-8s' }}></div>
+        <div className="nebula-drift" style={{ width: '320px', height: '320px', background: 'radial-gradient(circle at 50% 80%, rgba(138,81,242,0.18) 0%, transparent 50%)', bottom: '15%', left: '20%', animationDelay: '-11s' }}></div>
+        <div className="nebula-drift" style={{ width: '240px', height: '240px', background: 'radial-gradient(circle at 90% 70%, rgba(252,210,220,0.10) 0%, transparent 55%)', bottom: '10%', right: '15%', animationDelay: '-9s' }}></div>
       </div>
 
-      {/* Main Card */}
-      <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 sm:p-8">
-        {/* Tab switch */}
-        <div className="flex bg-slate-100 p-1 rounded-xl mb-6 text-xs font-bold">
-          <button
-            type="button"
-            onClick={() => setIsLogin(true)}
-            className={`flex-1 py-2 rounded-lg transition ${
-              isLogin ? 'bg-white text-blue-950 shadow-sm' : 'text-slate-500 hover:text-slate-900'
-            }`}
-          >
-            Sign In
-          </button>
-          <button
-            type="button"
-            onClick={() => setIsLogin(false)}
-            className={`flex-1 py-2 rounded-lg transition ${
-              !isLogin ? 'bg-white text-blue-950 shadow-sm' : 'text-slate-500 hover:text-slate-900'
-            }`}
-          >
-            Create Account
-          </button>
-        </div>
-
-        {/* Quick Credentials Pills */}
-        <div className="mb-6 p-3 bg-slate-50 rounded-xl border border-slate-100">
-          <p className="text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2">
-            Quick Fill Test Accounts:
-          </p>
-          <div className="flex flex-wrap gap-2">
-            <button
-              type="button"
-              onClick={() => handleQuickLogin('jane.doe@enterprise.com', 'trainee')}
-              className="px-2.5 py-1 text-xs font-semibold bg-white hover:bg-slate-100 border border-slate-200 rounded-lg text-slate-700 transition"
-            >
-              👤 Jane Doe (Trainee)
-            </button>
-            <button
-              type="button"
-              onClick={() => handleQuickLogin('elena.rostova@enterprise.com', 'trainer')}
-              className="px-2.5 py-1 text-xs font-semibold bg-white hover:bg-slate-100 border border-slate-200 rounded-lg text-slate-700 transition"
-            >
-              🎓 Elena Rostova (Trainer)
-            </button>
-            <button
-              type="button"
-              onClick={() => handleQuickLogin('admin@capacityconnect.io', 'admin')}
-              className="px-2.5 py-1 text-xs font-semibold bg-white hover:bg-slate-100 border border-slate-200 rounded-lg text-purple-800 transition"
-            >
-              🛡️ Alex Rivera (Admin)
-            </button>
-          </div>
-        </div>
-
-        <form onSubmit={handleSubmit} className="space-y-4">
-          {!isLogin && (
-            <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">Full Name</label>
-              <input
-                type="text"
-                required
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                placeholder="e.g. Jane Doe"
-                className="w-full px-3.5 py-2 rounded-lg border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-900"
-              />
-            </div>
-          )}
-
-          <div>
-            <label className="block text-xs font-semibold text-slate-700 mb-1">Email Address</label>
-            <input
-              type="email"
-              required
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="e.g. jane.doe@enterprise.com"
-              className="w-full px-3.5 py-2 rounded-lg border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-900"
-            />
-          </div>
-
-          <div>
-            <label className="block text-xs font-semibold text-slate-700 mb-1">Password</label>
-            <input
-              type="password"
-              required
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="••••••••"
-              className="w-full px-3.5 py-2 rounded-lg border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-900"
-            />
-          </div>
-
-          {!isLogin && (
-            <div className="space-y-3">
-              <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">Sign up as</label>
-                <div className="flex gap-2">
-                  <button
-                    type="button"
-                    onClick={() => setSignupRole('trainee')}
-                    className={`flex-1 py-2 rounded-lg border-2 text-xs font-bold transition ${
-                      signupRole === 'trainee' ? 'border-blue-900 bg-blue-50 text-blue-900' : 'border-slate-200 text-slate-600'
-                    }`}
-                  >
-                    Trainee
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setSignupRole('trainer')}
-                    className={`flex-1 py-2 rounded-lg border-2 text-xs font-bold transition ${
-                      signupRole === 'trainer' ? 'border-blue-900 bg-blue-50 text-blue-900' : 'border-slate-200 text-slate-600'
-                    }`}
-                  >
-                    Trainer
-                  </button>
-                </div>
-                <p className="text-[10px] text-slate-400 mt-1">Admin accounts cannot be self-registered.</p>
+      <div className="relative z-10 flex items-center justify-center min-h-screen py-12 fade-in">
+        <div className="w-full max-w-md mx-4">
+          <div className="glass-card border border-indigo-500/30 hud-panel cosmic-card rounded-2xl p-8">
+            {/* Logo / Header */}
+            <div className="text-center mb-8">
+              <div className="w-14 h-14 mx-auto rounded-full bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 flex items-center justify-center shadow-xl shadow-indigo-500/30 mb-3">
+                <span className="text-2xl">✦</span>
               </div>
-
-              {signupRole === 'trainee' && (
-                <div className="space-y-2">
-                  <input
-                    type="text"
-                    placeholder="Qualification (optional)"
-                    value={qualification}
-                    onChange={(e) => setQualification(e.target.value)}
-                    className="w-full px-3.5 py-2 rounded-lg border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-900"
-                  />
-                  <input
-                    type="text"
-                    placeholder="Skills (comma separated)"
-                    value={skills}
-                    onChange={(e) => setSkills(e.target.value)}
-                    className="w-full px-3.5 py-2 rounded-lg border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-900"
-                  />
-                </div>
-              )}
-
-              {signupRole === 'trainer' && (
-                <div className="space-y-2">
-                  <input
-                    type="text"
-                    placeholder="Subjects / Skills you can teach"
-                    value={subjects}
-                    onChange={(e) => setSubjects(e.target.value)}
-                    className="w-full px-3.5 py-2 rounded-lg border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-900"
-                  />
-                </div>
-              )}
+              <h1 className="text-xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-300 via-purple-300 to-pink-300">
+                {mode === 'register' ? 'Create Your Account' : 'Welcome, Astro Explorer'}
+              </h1>
+              <p className="text-xs text-space-400 mt-1.5">
+                {mode === 'register'
+                  ? 'Join Cosmiverse Academy and begin your journey'
+                  : 'Sign in to access your missions and training'}
+              </p>
             </div>
-          )}
 
-          {error && (
-            <div className="p-3 bg-red-50 border border-red-200 rounded-xl text-xs text-red-700">
-              ✕ {error}
-            </div>
-          )}
-
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full py-2.5 rounded-xl bg-blue-900 hover:bg-blue-950 text-white text-sm font-bold shadow-md transition disabled:bg-slate-300"
-          >
-            {loading ? 'Submitting...' : isLogin ? 'Sign In' : 'Create Account'}
-          </button>
-        </form>
-
-        {/* Success Output */}
-        {authData && (
-          <div className="mt-6 pt-6 border-t border-slate-100 space-y-3">
-            {authData.status === 'pending' ? (
-              <div className="p-4 bg-amber-50 border border-amber-200 rounded-xl text-xs text-amber-900">
-                <p className="font-bold flex items-center gap-1.5 text-sm">
-                  <span>⏳</span>
-                  <span>{authData.message || 'Your account is awaiting admin approval.'}</span>
+            {/* Login Error */}
+            {loginError && (
+              <div className="mb-4 p-3 bg-red-900/20 border border-red-500/30 rounded-lg text-center">
+                <p className="text-xs text-red-300 font-black">
+                  {loginError}
                 </p>
-                <p className="mt-2 text-[11px] text-slate-600">
-                  You will be able to log in once an admin approves your account.
-                </p>
-              </div>
-            ) : (
-              <div className="p-4 bg-emerald-50 border border-emerald-200 rounded-xl text-xs text-emerald-900">
-                <p className="font-bold flex items-center gap-1.5 text-sm">
-                  <span>✓</span>
-                  <span>{authData.message || 'Authentication Successful!'}</span>
-                </p>
-                <div className="mt-2 space-y-1 font-mono text-[11px]">
-                  <p><strong>User:</strong> {authData.user?.name} ({authData.user?.role})</p>
-                  <p><strong>Email:</strong> {authData.user?.email}</p>
-                  <p className="truncate"><strong>Token:</strong> {authData.token}</p>
-                </div>
+                {mode === 'login' && (
+                  <p className="text-[10px] text-red-400 mt-1">
+                    Using demo login (API unavailable) — proceeding in 2s
+                  </p>
+                )}
               </div>
             )}
 
-            <div className="flex gap-2">
-              <button
-                type="button"
-                onClick={() => onNavigateToScreen && onNavigateToScreen(2)}
-                className="flex-1 py-2 text-center rounded-lg bg-blue-900 text-white text-xs font-bold shadow-sm"
-              >
-                Go to Dashboard →
-              </button>
-              {authData.user?.role === 'admin' && (
-                <button
-                  type="button"
-                  onClick={() => onNavigateToScreen && onNavigateToScreen(7)}
-                  className="flex-1 py-2 text-center rounded-lg bg-purple-900 text-white text-xs font-bold shadow-sm"
-                >
-                  Admin Suite →
-                </button>
+            <form onSubmit={handleSubmit} className="space-y-5">
+              {/* Full Name (Register only) */}
+              {mode === 'register' && (
+                <div>
+                  <label className="block text-xs font-black uppercase text-space-300 mb-1.5">
+                    Full Name
+                  </label>
+                  <input
+                    type="text"
+                    name="fullName"
+                    value={formData.fullName}
+                    onChange={handleInputChange}
+                    placeholder="Jane Astro"
+                    required
+                    className="w-full px-3 py-2.5 bg-slate-900/50 border border-indigo-500/20 rounded-lg text-sm text-white placeholder-space-500 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition"
+                  />
+                </div>
               )}
+
+              {/* Email */}
+              <div>
+                <label className="block text-xs font-black uppercase text-space-300 mb-1.5">
+                  Email Address
+                </label>
+                <input
+                  type="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleInputChange}
+                  placeholder="you@cosmic.edu"
+                  required
+                  className="w-full px-3 py-2.5 bg-slate-900/50 border border-indigo-500/20 rounded-lg text-sm text-white placeholder-space-500 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition"
+                />
+              </div>
+
+              {/* Password */}
+              <div>
+                <label className="block text-xs font-black uppercase text-space-300 mb-1.5">
+                  Password
+                </label>
+                <div className="relative">
+                  <input
+                    type={showPassword ? 'text' : 'password'}
+                    name="password"
+                    value={formData.password}
+                    onChange={handleInputChange}
+                    placeholder="••••••••"
+                    required
+                    minLength={8}
+                    className="w-full px-3 py-2.5 pr-10 bg-slate-900/50 border border-indigo-500/20 rounded-lg text-sm text-white placeholder-space-500 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-2 top-1/2 -translate-y-1/2 text-xs text-space-400 hover:text-space-200"
+                  >
+                    {showPassword ? '🙈' : '👁️'}
+                  </button>
+                </div>
+              </div>
+
+              {/* Role Selector (Register only) */}
+              {mode === 'register' && (
+                <div>
+                  <label className="block text-xs font-black uppercase text-space-300 mb-1.5">
+                    Role
+                  </label>
+                  <select
+                    name="role"
+                    value={formData.role}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2.5 bg-slate-900/50 border border-indigo-500/20 rounded-lg text-sm text-white focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition"
+                  >
+                    <option value="trainee">Trainee</option>
+                    <option value="trainer">Trainer</option>
+                    <option value="admin">Admin</option>
+                  </select>
+                </div>
+              )}
+
+              {/* Remember Me + Submit */}
+              <div className="flex items-center justify-between pt-2">
+                <label className="flex items-center gap-2 text-xs text-space-300 hover:text-indigo-300 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={rememberMe}
+                    onChange={(e) => setRememberMe(e.target.checked)}
+                    className="w-4 h-4 rounded text-indigo-500 focus:ring-indigo-500"
+                  />
+                  Remember me
+                </label>
+
+                <button
+                  type="submit"
+                  disabled={submitting}
+                  className={`px-5 py-2.5 rounded-xl text-xs font-black transition btn-micro flex items-center justify-center gap-2 ${
+                    submitting
+                      ? 'bg-slate-800 text-slate-400 cursor-not-allowed animate-pulse'
+                      : 'bg-gradient-to-r from-indigo-500 via-purple-600 to-pink-600 hover:from-indigo-400 hover:via-purple-500 hover:to-pink-500 text-white shadow-lg shadow-indigo-500/30'
+                  }`}
+                >
+                  {submitting ? (
+                    <>
+                      <span>Sending...</span>
+                      <span className="w-3 h-3 border-2 border-current border-t-transparent rounded-full animate-spin"></span>
+                    </>
+                  ) : mode === 'register' ? (
+                    'Create Account'
+                  ) : (
+                    'Launch Mission →'
+                  )}
+                </button>
+              </div>
+            </form>
+
+            {/* Switch Mode */}
+            <div className="mt-6 text-center border-t border-indigo-500/20 pt-4">
+              <button
+                onClick={() => {
+                  setMode(mode === 'login' ? 'register' : 'login');
+                  setLoginError('');
+                }}
+                className="text-xs text-indigo-300 hover:text-indigo-200 font-black hover:underline transition"
+              >
+                {mode === 'login'
+                  ? "Don't have an account? Register →"
+                  : 'Already have an account? Sign in →'}
+              </button>
+            </div>
+
+            {/* API Status */}
+            <div className="mt-4 text-center">
+              <span className="text-[10px] text-space-500 font-mono">
+                Endpoint: {API_BASE_URL}/{mode === 'register' ? 'register' : 'login'}
+              </span>
             </div>
           </div>
-        )}
+        </div>
       </div>
     </div>
   );

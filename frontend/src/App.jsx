@@ -33,85 +33,108 @@ export default function App() {
     setCurrentScreen(screen.toString());
   };
 
+  const roleThemeClass =
+    currentUser.role === 'admin'
+      ? 'theme-admin'
+      : currentUser.role === 'trainer'
+      ? 'theme-trainer'
+      : 'theme-trainee';
+
   return (
-    <div className="min-h-screen bg-slate-100 text-slate-900 font-sans">
+    <div className={`min-h-screen font-sans ${roleThemeClass}`}>
       {/* Platform Navigation Header */}
-      <header className="bg-white border-b border-slate-200 sticky top-0 z-50 shadow-sm">
+      <header className="sticky top-0 z-50 border-b transition-all pointer-events-none">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-blue-900 text-white flex items-center justify-center font-bold text-sm shadow-sm">
+          <div className="flex items-center gap-3 pointer-events-auto">
+            <div className="w-9 h-9 rounded-xl bg-gradient-to-r from-cyan-500 via-indigo-500 to-purple-600 text-white flex items-center justify-center font-bold text-sm shadow-lg shadow-indigo-500/30">
               CC
             </div>
             <div>
-              <div className="text-sm font-bold text-slate-900 leading-tight">Capacity Connect</div>
-              <div className="text-[11px] text-slate-500">
-                User: <span className="font-semibold text-slate-700">{currentUser.name}</span> ({currentUser.role})
+              <div className="text-sm font-bold text-white leading-tight">Capacity Connect</div>
+              <div className="text-[11px] text-space-400">
+                User: <span className="font-semibold text-indigo-300">{currentUser.name}</span> ({currentUser.role})
               </div>
             </div>
           </div>
 
           {/* Screen Switcher Tabs */}
-          <div className="hidden lg:flex items-center gap-1 bg-slate-100 p-1 rounded-xl border border-slate-200 text-xs font-semibold">
+          <div className="hidden lg:flex items-center gap-1 bg-slate-900/40 p-1 rounded-xl border border-indigo-500/20 text-xs font-semibold pointer-events-auto">
             <button
               onClick={() => setCurrentScreen('1')}
-              className={`px-2.5 py-1.5 rounded-lg transition ${
-                currentScreen === '1' ? 'bg-white text-blue-950 shadow-sm' : 'text-slate-600 hover:text-slate-900'
+              className={`relative z-10 px-2.5 py-1.5 rounded-lg transition ${
+                currentScreen === '1'
+                  ? 'bg-gradient-to-r from-indigo-500 to-purple-600 text-white shadow-lg shadow-indigo-500/30'
+                  : 'text-space-300 hover:text-indigo-300 hover:bg-indigo-500/10'
               }`}
             >
               1: Auth
             </button>
             <button
               onClick={() => setCurrentScreen('2')}
-              className={`px-2.5 py-1.5 rounded-lg transition ${
-                currentScreen === '2' ? 'bg-white text-blue-950 shadow-sm' : 'text-slate-600 hover:text-slate-900'
+              className={`relative z-10 px-2.5 py-1.5 rounded-lg transition ${
+                currentScreen === '2'
+                  ? 'bg-gradient-to-r from-teal-500 to-cyan-600 text-white shadow-lg shadow-teal-500/30'
+                  : 'text-space-300 hover:text-teal-300 hover:bg-teal-500/10'
               }`}
             >
               2: Dashboard
             </button>
             <button
               onClick={() => setCurrentScreen('3')}
-              className={`px-2.5 py-1.5 rounded-lg transition ${
-                currentScreen === '3' ? 'bg-white text-blue-950 shadow-sm' : 'text-slate-600 hover:text-slate-900'
+              className={`relative z-10 px-2.5 py-1.5 rounded-lg transition ${
+                currentScreen === '3'
+                  ? 'bg-gradient-to-r from-teal-500 to-cyan-600 text-white shadow-lg shadow-teal-500/30'
+                  : 'text-space-300 hover:text-teal-300 hover:bg-teal-500/10'
               }`}
             >
               3: Catalog
             </button>
             <button
               onClick={() => setCurrentScreen('4')}
-              className={`px-2.5 py-1.5 rounded-lg transition ${
-                currentScreen === '4' ? 'bg-white text-blue-950 shadow-sm' : 'text-slate-600 hover:text-slate-900'
+              className={`relative z-10 px-2.5 py-1.5 rounded-lg transition ${
+                currentScreen === '4'
+                  ? 'bg-gradient-to-r from-teal-500 to-cyan-600 text-white shadow-lg shadow-teal-500/30'
+                  : 'text-space-300 hover:text-teal-300 hover:bg-teal-500/10'
               }`}
             >
               4: Detail ({selectedCourseId})
             </button>
             <button
               onClick={() => setCurrentScreen('5')}
-              className={`px-2.5 py-1.5 rounded-lg transition ${
-                currentScreen === '5' ? 'bg-white text-blue-950 shadow-sm' : 'text-slate-600 hover:text-slate-900'
+              className={`relative z-10 px-2.5 py-1.5 rounded-lg transition ${
+                currentScreen === '5'
+                  ? 'bg-gradient-to-r from-teal-500 to-cyan-600 text-white shadow-lg shadow-teal-500/30'
+                  : 'text-space-300 hover:text-teal-300 hover:bg-teal-500/10'
               }`}
             >
               5: Player ({selectedCourseId})
             </button>
             <button
               onClick={() => setCurrentScreen('6')}
-              className={`px-2.5 py-1.5 rounded-lg transition ${
-                currentScreen === '6' ? 'bg-white text-blue-950 shadow-sm' : 'text-slate-600 hover:text-slate-900'
+              className={`relative z-10 px-2.5 py-1.5 rounded-lg transition ${
+                currentScreen === '6'
+                  ? 'bg-gradient-to-r from-amber-500 to-yellow-600 text-white shadow-lg shadow-amber-500/30'
+                  : 'text-space-300 hover:text-amber-300 hover:bg-amber-500/10'
               }`}
             >
               6: Certificate
             </button>
             <button
               onClick={() => setCurrentScreen('7')}
-              className={`px-2.5 py-1.5 rounded-lg transition ${
-                currentScreen === '7' ? 'bg-purple-900 text-white shadow-sm' : 'text-slate-600 hover:text-slate-900'
+              className={`relative z-10 px-2.5 py-1.5 rounded-lg transition ${
+                currentScreen === '7'
+                  ? 'bg-gradient-to-r from-crimson-500 to-rose-600 text-white shadow-lg shadow-crimson-500/30'
+                  : 'text-space-300 hover:text-crimson-300 hover:bg-crimson-500/10'
               }`}
             >
               7: Admin
             </button>
             <button
               onClick={() => setCurrentScreen('8')}
-              className={`px-2.5 py-1.5 rounded-lg transition ${
-                currentScreen === '8' ? 'bg-indigo-900 text-white shadow-sm' : 'text-slate-600 hover:text-slate-900'
+              className={`relative z-10 px-2.5 py-1.5 rounded-lg transition ${
+                currentScreen === '8'
+                  ? 'bg-gradient-to-r from-indigo-500 to-purple-600 text-white shadow-lg shadow-indigo-500/30'
+                  : 'text-space-300 hover:text-indigo-300 hover:bg-indigo-500/10'
               }`}
             >
               8: AI Skill Gap
@@ -119,11 +142,11 @@ export default function App() {
           </div>
 
           {/* Mobile switcher select */}
-          <div className="lg:hidden">
+          <div className="lg:hidden pointer-events-auto">
             <select
               value={currentScreen}
               onChange={(e) => setCurrentScreen(e.target.value)}
-              className="text-xs bg-slate-100 border border-slate-200 rounded-lg p-1.5 font-semibold"
+              className="text-xs bg-slate-900/40 border border-indigo-500/20 rounded-lg p-1.5 font-semibold text-space-200 focus:ring-indigo-500"
             >
               <option value="1">Screen 1: Auth</option>
               <option value="2">Screen 2: Learner Dashboard</option>
@@ -139,11 +162,11 @@ export default function App() {
       </header>
 
       {/* Main Canvas */}
-      <main className="pb-16">
+      <main>
         {currentScreen === '1' && (
           <Screen1Auth
-            onAuthSuccess={handleAuthSuccess}
-            onNavigateToScreen={handleNavigate}
+            onLogin={handleAuthSuccess}
+            switchMode={switchMode}
           />
         )}
         {currentScreen === '2' && (
