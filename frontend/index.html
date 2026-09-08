@@ -1489,7 +1489,7 @@ const roleLabel = user?.role?.charAt(0).toUpperCase() + user?.role?.slice(1) || 
         <div className="sidebar-bg flex flex-col h-full w-64 overflow-y-auto">
           <div className="p-5 border-b border-electric-blue/10 flex items-center gap-3">
             <div className="w-12 h-12 rounded-2xl glass-card flex items-center justify-center text-2xl border border-electric-blue/20 shadow-lg" style={{boxShadow: '0 0 30px var(--accent-dim)'}}>
-              {user?.role === 'trainee' ? '🎓' : user?.role === 'trainer' ? '👩‍🏫' : '🛡️'}
+              {getRoleIcon(user?.role)}
             </div>
             <div>
               <p className="font-bold text-sm text-white">{user?.name || 'Unknown'}</p>
@@ -1555,7 +1555,7 @@ return (
             {/* Mobile top bar */}
             <div className="md:hidden flex items-center gap-3 px-4 py-3 border-b border-electric-blue/10 glass-card sticky top-0 z-40">
               <div className="w-9 h-9 rounded-xl glass-card flex items-center justify-center text-lg border border-electric-blue/20">
-                {user?.role === 'trainee' ? '🎓' : user?.role === 'trainer' ? '👩‍🏫' : '🛡️'}
+                {getRoleIcon(user?.role)}
               </div>
               <span className="font-bold text-sm text-white">Capacity Connect</span>
               <span className="text-[10px] text-slate-400 ml-auto">{roleLabel} Portal</span>
@@ -3385,7 +3385,7 @@ return (
                       <div className="flex-1">
                         <div className="flex items-center gap-2 mb-1">
                           <span className="text-lg">{getTypeIcon(m.type)}</span>
-                           <span className={"px-2 py-0.5 text-[10px] font-black rounded uppercase " + (m.type === 'video' ? 'bg-teal-500/20 text-teal-300 border border-teal-400/30' : m.type === 'document' ? 'bg-blue-500/20 text-blue-300 border border-blue-400/30' : 'bg-amber-500/20 text-amber-300 border border-amber-400/30')}>{m.type}</span>
+                           <span className={"px-2 py-0.5 text-[10px] font-black rounded uppercase " + getTypeBadgeClass(m.type)}>{m.type}</span>
                           <span className="px-2 py-0.5 bg-space-blue/50 text-slate-300 text-[10px] font-black rounded">Course: {m.course_id}</span>
                         </div>
                         <h3 className="text-sm font-black text-white group-hover:text-amber-300 transition-colors">{m.title}</h3>
@@ -3480,10 +3480,22 @@ return (
         ]).finally(() => setLoading(false));
       }, [courseId]);
 
+      const getRoleIcon = (role) => {
+        if (role === 'trainee') return '🎓';
+        if (role === 'trainer') return '👩‍🏫';
+        return '🛡️';
+      };
+
       const getTypeIcon = (t) => {
         if (t === 'video') return '🎥';
         if (t === 'document') return '📄';
         return '📝';
+      };
+
+      const getTypeBadgeClass = (t) => {
+        if (t === 'video') return 'bg-teal-500/20 text-teal-300 border border-teal-400/30';
+        if (t === 'document') return 'bg-blue-500/20 text-blue-300 border border-blue-400/30';
+        return 'bg-amber-500/20 text-amber-300 border border-amber-400/30';
       };
 
       const getTypeColor = (t) => {
