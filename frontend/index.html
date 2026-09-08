@@ -1710,23 +1710,22 @@ function Screen1Auth({ onAuthSuccess, onNavigate, initialSignup }) {
       const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true); setError(null); setAuthData(null);
+        const endpoint = isLogin ? `${API_BASE}/auth/login` : `${API_BASE}/auth/signup`;
+        const payload = isLogin ? { email, password } : { name, email, password, role: signupRole, qualification, skills, subjects };
         try {
-          const endpoint = isLogin ? `${API_BASE}/auth/login` : `${API_BASE}/auth/signup`;
-          const payload = isLogin ? { email, password } : { name, email, password, role: signupRole, qualification, skills, subjects };
-          try {
-            const res = await fetch(endpoint, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
-            const data = await res.json();
-            if (!res.ok) throw new Error(data.message || 'Request failed');
-            if (data.token) { try { localStorage.setItem('capacity_connect_token', data.token); } catch {} }
-            setAuthData(data);
-            if (onAuthSuccess) onAuthSuccess(data);
-          } catch (err) {
-            if (err.name === 'TypeError' && err.message.includes('fetch')) {
-              setError('Cannot connect to backend: The API server may be offline. Try again later.');
-            } else {
-              setError(err.message);
-            }
-          } finally { setLoading(false); }
+          const res = await fetch(endpoint, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+          const data = await res.json();
+          if (!res.ok) throw new Error(data.message || 'Request failed');
+          if (data.token) { try { localStorage.setItem('capacity_connect_token', data.token); } catch {} }
+          setAuthData(data);
+          if (onAuthSuccess) onAuthSuccess(data);
+        } catch (err) {
+          if (err.name === 'TypeError' && err.message.includes('fetch')) {
+            setError('Cannot connect to backend: The API server may be offline. Try again later.');
+          } else {
+            setError(err.message);
+          }
+        } finally { setLoading(false); }
       };
 
       const getRoleRedirect = (role) => {

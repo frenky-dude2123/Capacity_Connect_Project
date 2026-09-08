@@ -115,7 +115,7 @@ const MOCK_COURSES = [
  * Returns list of all courses from Supabase.
  * Protected: authenticated users (trainee, trainer, admin).
  */
-router.get('/catalog', authMiddleware, requireRole('trainee', 'trainer'), async (req, res) => {
+router.get('/catalog', authMiddleware, requireRole('trainee', 'trainer', 'admin'), async (req, res) => {
   try {
     if (!isSupabaseAvailable) {
       return res.status(200).json(MOCK_COURSES.map(c => ({
@@ -149,7 +149,7 @@ router.get('/catalog', authMiddleware, requireRole('trainee', 'trainer'), async 
  * Returns specific course info from Supabase.
  * Protected: authenticated users (trainee, trainer, admin).
  */
-router.get('/detail/:id', authMiddleware, requireRole('trainee', 'trainer'), async (req, res) => {
+router.get('/detail/:id', authMiddleware, requireRole('trainee', 'trainer', 'admin'), async (req, res) => {
   try {
     const courseId = Number(req.params.id);
 
@@ -203,7 +203,7 @@ router.get('/detail/:id', authMiddleware, requireRole('trainee', 'trainer'), asy
  * Returns lesson player data from Supabase.
  * Protected: authenticated users (trainee, trainer, admin).
  */
-router.get('/player/:id', authMiddleware, requireRole('trainee', 'trainer'), async (req, res) => {
+router.get('/player/:id', authMiddleware, requireRole('trainee', 'trainer', 'admin'), async (req, res) => {
   try {
     const courseId = Number(req.params.id);
 
