@@ -1663,22 +1663,22 @@ return (
           <div className="glass-card rounded-2xl border border-cyan-500/20 p-6 space-y-4 cosmic-card shadow-lg">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs font-black text-slate-300 mb-1">Name</label>
-                <input type="text" value={user?.name || ''} disabled className="w-full px-3.5 py-2 rounded-lg border border-cyan-500/30 bg-space-blue/40 text-sm text-white focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500" />
+                <label className="block text-xs font-black text-slate-300 dark:text-slate-200 mb-1">Name</label>
+                <input type="text" value={user?.name || ''} disabled className="w-full px-3.5 py-2 rounded-lg border border-cyan-500/30 bg-space-blue/40 text-sm text-white dark:text-white focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500" />
               </div>
               <div>
-                <label className="block text-xs font-black text-slate-300 mb-1">Email</label>
-                <input type="email" value={user?.email || ''} disabled className="w-full px-3.5 py-2 rounded-lg border border-electric-blue/10 bg-space-blue/30 text-sm text-slate-400" />
+                <label className="block text-xs font-black text-slate-300 dark:text-slate-200 mb-1">Email</label>
+                <input type="email" value={user?.email || ''} disabled className="w-full px-3.5 py-2 rounded-lg border border-electric-blue/10 bg-space-blue/30 text-sm text-slate-700 dark:text-slate-400" />
               </div>
             </div>
 
             {fields.map(f => (
               <div key={f.key}>
-                <label className="block text-xs font-black text-slate-300 mb-1">{f.label}</label>
+                <label className="block text-xs font-black text-slate-300 dark:text-slate-200 mb-1">{f.label}</label>
                 {f.type === 'textarea' ? (
-                  <textarea value={form[f.key]} onChange={update(f.key)} placeholder={f.placeholder} className="w-full h-20 px-3.5 py-2 rounded-lg border border-cyan-500/30 bg-space-blue/40 text-sm text-white resize-y focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500" />
+                  <textarea value={form[f.key]} onChange={update(f.key)} placeholder={f.placeholder} className="w-full h-20 px-3.5 py-2 rounded-lg border border-cyan-500/30 bg-space-blue/40 text-sm text-white dark:text-white resize-y focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500" />
                 ) : (
-                  <input type="text" value={form[f.key]} onChange={update(f.key)} placeholder={f.placeholder} className="w-full px-3.5 py-2 rounded-lg border border-electric-blue/10 bg-white dark:bg-space-blue/30 text-sm" />
+                  <input type="text" value={form[f.key]} onChange={update(f.key)} placeholder={f.placeholder} className="w-full px-3.5 py-2 rounded-lg border border-electric-blue/10 bg-white dark:bg-space-blue/30 text-sm text-slate-800 dark:text-slate-200" />
                 )}
               </div>
             ))}
@@ -1868,6 +1868,96 @@ return (
       const [aiLoading, setAiLoading] = React.useState(false);
       const [aiError, setAiError] = React.useState(null);
 
+      // Quick AI Quiz state
+      const [quickQuizTopic, setQuickQuizTopic] = React.useState('');
+      const [quickQuizLoading, setQuickQuizLoading] = React.useState(false);
+      const [quickQuizQuestions, setQuickQuizQuestions] = React.useState([]);
+      const [quizStarted, setQuizStarted] = React.useState(false);
+      const [currentQuickQIndex, setCurrentQuickQIndex] = React.useState(0);
+      const [quickUserAnswers, setQuickUserAnswers] = React.useState({});
+      const [quickQuizFinished, setQuickQuizFinished] = React.useState(false);
+      const [quickQuizScore, setQuickQuizScore] = React.useState(0);
+      const [quizResult, setQuizResult] = React.useState(null);
+
+      const currentQuickQ = quickQuizQuestions[currentQuickQIndex];
+
+      const startQuickQuiz = async () => {
+        if (!quickQuizTopic.trim()) return;
+        setQuickQuizLoading(true);
+        try {
+          const res = await apiRequest(`${API_BASE}/ai/quick-quiz`, {
+            method: 'POST',
+            body: JSON.stringify({ topic: quickQuizTopic, count: 5 })
+          });
+          const questions = res.questions || res || [];
+          setQuickQuizQuestions(questions);
+          setQuizStarted(true);
+          setCurrentQuickQIndex(0);
+          setQuickUserAnswers({});
+          setQuickQuizFinished(false);
+          setQuickQuizScore(0);
+          setQuizResult(null);
+          showToast(`Quiz generated on "${quickQuizTopic}"`, 'success');
+        } catch (err) {
+          // Fallback: generate from LOCAL_QUIZ_POOL with topic-specific framing
+          const fallback = pickRandomQuestions(5).map(q => ({
+            ...q,
+            question: `[${quickQuizTopic}] ${q.question}`,
+          }));
+          setQuickQuizQuestions(fallback);
+          setQuizStarted(true);
+          setCurrentQuickQIndex(0);
+          setQuickUserAnswers({});
+          setQuickQuizFinished(false);
+          setQuickQuizScore(0);
+          setQuizResult(null);
+          showToast(`Quiz on "${quickQuizTopic}" ready (sample data)`, 'success');
+        } finally {
+          setQuickQuizLoading(false);
+        }
+      };
+
+      const handleQuickQuizAnswer = (qIdx, optIdx) => {
+        if (quickQuizFinished) return;
+        setQuickUserAnswers(prev => ({ ...prev, [qIdx]: optIdx }));
+      };
+
+      const nextQuickQuestion = () => {
+        if (currentQuickQIndex < quickQuizQuestions.length - 1) {
+          setCurrentQuickQIndex(currentQuickQIndex + 1);
+        } else {
+          finishQuickQuiz();
+        }
+      };
+
+      const prevQuickQuestion = () => {
+        if (currentQuickQIndex > 0) setCurrentQuickQIndex(currentQuickQIndex - 1);
+      };
+
+      const finishQuickQuiz = () => {
+        let correct = 0;
+        quickQuizQuestions.forEach((q, i) => {
+          if (quickUserAnswers[i] === q.correctIndex) correct++;
+        });
+        const score = Math.round((correct / quickQuizQuestions.length) * 100);
+        setQuickQuizScore(score);
+        setQuickQuizFinished(true);
+        const xp = 15;
+        setQuizResult({ score, totalCorrect: correct, total: quickQuizQuestions.length, xp });
+        showToast(`Quiz complete! ${score}% — +${xp} XP`, 'success');
+      };
+
+      const resetQuickQuiz = () => {
+        setQuickQuizTopic('');
+        setQuickQuizQuestions([]);
+        setQuizStarted(false);
+        setCurrentQuickQIndex(0);
+        setQuickUserAnswers({});
+        setQuickQuizFinished(false);
+        setQuickQuizScore(0);
+        setQuizResult(null);
+      };
+
       React.useEffect(() => {
         fetchWithToken(`${API_BASE}/user/dashboard/${userId}`)
           .then(r => r.json())
@@ -2002,8 +2092,71 @@ if (loading) return <div className="py-20 text-center text-sm text-slate-400">Lo
               </div>
             </div>
 
-<div className="glass-card p-6 cosmic-card rounded-2xl border border-cyan-500/20 shadow-lg">
+            <div className="glass-card p-6 cosmic-card rounded-2xl border border-cyan-500/20 shadow-lg">
               <div className="flex items-center justify-between mb-4">
+                <h3 className="text-lg font-black text-white flex items-center gap-2 font-mono tracking-wide">
+                  <span className="text-amber-400">⚡ Quick AI Quiz</span>
+                </h3>
+                <span className="text-xs text-slate-400 dark:text-slate-500">Test any topic • 15 XP reward</span>
+              </div>
+
+              {quizStarted ? (
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-black text-slate-400 dark:text-slate-400 uppercase">Question {currentQuickQIndex + 1} of {quickQuizQuestions.length}</span>
+                    <span className="text-xs font-black text-slate-400">{currentQuickScore} / {quickQuizQuestions.length} answered</span>
+                  </div>
+                  <p className="text-sm font-semibold text-slate-800 dark:text-slate-200">{currentQuickQ?.question}</p>
+                  <div className="space-y-2">
+                    {currentQuickQ?.options?.map((opt, i) => {
+                      const isSelected = quickUserAnswers[currentQuickQIndex] === i;
+                      return (
+                        <label key={i} className={"flex items-start gap-3 p-3 rounded-xl border-2 transition cursor-pointer " + (isSelected ? 'border-amber-400 bg-amber-500/10' : 'border-electric-blue/10 hover:border-amber-400/50 bg-slate-900/50')}>
+                          <input type="radio" name={"quickq" + currentQuickQIndex} disabled={quickQuizFinished} checked={isSelected} onChange={() => handleQuickQuizAnswer(currentQuickQIndex, i)} className="mt-1 w-4 h-4 text-amber-400" />
+                          <div className="flex-1 text-sm text-slate-800 dark:text-slate-200 leading-snug">{opt}</div>
+                        </label>
+                      );
+                    })}
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    <button onClick={prevQuickQuestion} disabled={currentQuickQIndex === 0 || quickQuizFinished} className="px-4 py-2 bg-space-blue/50 text-xs font-black text-slate-200 dark:text-slate-200 rounded-lg disabled:opacity-40 btn-micro">Previous</button>
+                    {!quickQuizFinished ? (
+                      <button onClick={nextQuickQuestion} disabled={quickUserAnswers[currentQuickQIndex] === undefined} className="px-4 py-2 bg-cyan-500 text-white text-xs font-black rounded-lg disabled:opacity-40 btn-micro">Next</button>
+                    ) : (
+                      <button onClick={resetQuickQuiz} className="px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white text-xs font-black rounded-lg btn-micro">New Quiz</button>
+                    )}
+                  </div>
+                </div>
+              ) : quizResult ? (
+                <div className="text-center py-8">
+                  <p className="text-3xl font-extrabold text-white mb-2">Quick Quiz Complete!</p>
+                  <p className="text-lg text-amber-400 font-black mb-4">{quizResult.score}% — {quizResult.totalCorrect}/{quizResult.total} correct</p>
+                  <p className="text-xs text-slate-400 dark:text-slate-500 mb-4">+{quizResult.xp} XP earned</p>
+                  <button onClick={resetQuickQuiz} className="px-5 py-2 bg-gradient-to-r from-cyan-500 to-blue-600 text-white rounded-xl text-xs font-black btn-micro">Take Another Quick Quiz</button>
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  <input
+                    type="text"
+                    value={quickQuizTopic}
+                    onChange={(e) => setQuickQuizTopic(e.target.value)}
+                    placeholder="Enter a topic (e.g. Cloud Security, Agile Methodology)"
+                    className="w-full px-4 py-2.5 rounded-lg border border-cyan-500/30 bg-space-blue/40 text-sm text-white focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500"
+                  />
+                  <button
+                    onClick={startQuickQuiz}
+                    disabled={!quickQuizTopic.trim() || quickQuizLoading}
+                    className="w-full py-2.5 rounded-xl text-xs font-black btn-micro bg-gradient-to-r from-amber-500 to-orange-600 text-white shadow-lg shadow-amber-500/30 hover:shadow-amber-500/50 disabled:opacity-40 disabled:cursor-not-allowed"
+                  >
+                    {quickQuizLoading ? 'Generating Quiz...' : 'Start Quick Quiz'}
+                  </button>
+                  <p className="text-[10px] text-slate-500 dark:text-slate-600">5 questions will be generated on your chosen topic using AI</p>
+                </div>
+              )}
+            </div>
+
+            <div className="glass-card p-6 cosmic-card rounded-2xl border border-cyan-500/20 shadow-lg">
+            <div className="flex items-center justify-between mb-4">
                 <h3 className="text-lg font-black text-white flex items-center gap-2 font-mono tracking-wide">
                   <span className="text-cyan-400">🤖 AI RECOMMENDATIONS</span>
                 </h3>
@@ -2415,7 +2568,7 @@ return (
                   <div className="space-y-4">
                     <div className="flex items-center justify-between">
                       <span className="text-xs font-black text-slate-400 dark:text-slate-400 uppercase">Question {currentQuestionIndex + 1} of {quizQuestions.length}</span>
-                      <span className="text-xs font-black text-slate-400">{Object.keys(userAnswers).length} of {quizQuestions.length} answered</span>
+                      <span className="text-xs font-black text-slate-400 dark:text-slate-400">{Object.keys(userAnswers).length} of {quizQuestions.length} answered</span>
                     </div>
                     <p className="text-sm font-semibold text-slate-800 dark:text-slate-200">{currentQ.question}</p>
                     <div className="space-y-2">
@@ -2458,14 +2611,14 @@ return (
                         return (
                           <div key={i} className={"p-3 rounded-xl border-2 " + (isCorrect ? 'border-emerald-500 bg-electric-blue/10 dark:bg-emerald-900/30' : 'border-red-500 bg-crimson/10 dark:bg-red-900/30')}>
                             <p className="text-xs font-semibold text-slate-800 dark:text-slate-200 mb-1">Q{i + 1}: {q.question}</p>
-                            <p className="text-xs text-slate-300">Your answer: {isAnswered ? q.options[userAnswer] : 'Not answered'}</p>
+                    <p className="text-xs text-slate-300 dark:text-slate-400">Your answer: {isAnswered ? q.options[userAnswer] : 'Not answered'}</p>
                             {!isCorrect && <p className="text-xs text-electric-blue font-black">Correct answer: {q.options[q.correctIndex]}</p>}
                           </div>
                         );
                       })}
                     </div>
                     <div className="flex gap-3">
-                      <button onClick={retakeQuiz} className="px-4 py-2 bg-space-blue/50 text-xs font-black rounded-lg btn-micro">Retake Quiz</button>
+                  <button onClick={retakeQuiz} className="px-4 py-2 bg-space-blue/50 text-xs font-black text-slate-200 dark:text-slate-200 rounded-lg btn-micro">Retake Quiz</button>
                       {quizScore >= PASSING_SCORE_THRESHOLD && <button onClick={takeNewQuiz} className="px-4 py-2 bg-electric-blue text-white text-xs font-black rounded-lg btn-micro">Take New Quiz ▶</button>}
                     </div>
                   </div>
@@ -2480,7 +2633,7 @@ return (
                 <div className="text-center">
                   <p className="text-xs font-black uppercase tracking-widest text-slate-400 dark:text-slate-400">Quiz Assessment Report</p>
                   <h2 className="text-3xl font-extrabold text-white mt-2">{reportModal.badge}</h2>
-                  <p className="text-sm text-slate-400 mt-1">Final Score: {quizScore}% | Best: {bestScore !== null && bestScore !== undefined ? bestScore : quizScore}%</p>
+                  <p className="text-sm text-slate-400 dark:text-slate-400 mt-1">Final Score: {quizScore}% | Best: {bestScore !== null && bestScore !== undefined ? bestScore : quizScore}%</p>
                 </div>
                 <div className="bg-space-blue/20 rounded-2xl border border-electric-blue/10 p-6 space-y-4">
                   <div>
@@ -2501,7 +2654,7 @@ return (
                   </div>
                 </div>
                 <div className="flex justify-end gap-3">
-                  <button onClick={() => setReportModal(null)} className="px-5 py-2 bg-space-blue/50 text-xs font-black rounded-lg btn-micro">Close Report</button>
+                  <button onClick={() => setReportModal(null)} className="px-5 py-2 bg-space-blue/50 text-xs font-black text-slate-200 dark:text-slate-200 rounded-lg btn-micro">Close Report</button>
                   {quizScore < PASSING_SCORE_THRESHOLD ? (
                     <button onClick={retakeQuiz} className="px-5 py-2 bg-amber-600 hover:bg-amber-700 text-white text-xs font-black rounded-lg btn-micro">Review & Retake Quiz</button>
                   ) : (

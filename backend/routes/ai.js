@@ -658,6 +658,66 @@ const MOCK_QUIZ_QUESTIONS = [
     ],
     correctIndex: 1,
     explanation: 'The Saga pattern uses compensating transactions to undo completed steps when a step fails.'
+  },
+  {
+    question: 'What is the primary purpose of using a CDN (Content Delivery Network) in cloud deployments?',
+    options: [
+      'Encrypting data in transit between regions',
+      'Caching content at edge locations for faster delivery',
+      'Managing database replication across availability zones',
+      'Automatically scaling compute instances'
+    ],
+    correctIndex: 1,
+    topic: 'Cloud Architecture',
+    explanation: 'CDNs cache static content at edge locations closer to users, reducing latency and improving page load times.'
+  },
+  {
+    question: 'In ISO 27001, what is the role of a Statement of Applicability (SoA)?',
+    options: [
+      'It is the audit report issued to certification bodies',
+      'It documents applicable controls and their implementation status',
+      'It is the risk register for the ISMS',
+      'It defines the scope of the ISMS'
+    ],
+    correctIndex: 1,
+    topic: 'Security & Compliance',
+    explanation: 'The SoA documents which Annex A controls are applicable and whether they are implemented or justified as not applicable.'
+  },
+  {
+    question: 'Which phase of the incident response lifecycle involves containing the damage and preventing further impact?',
+    options: [
+      'Preparation',
+      'Detection and Analysis',
+      'Containment, Eradication, and Recovery',
+      'Post-Incident Activity'
+    ],
+    correctIndex: 2,
+    topic: 'Security & Compliance',
+    explanation: 'Containment strategies limit the scope of an incident to prevent further damage, followed by eradication and recovery.'
+  },
+  {
+    question: 'What is the key operational difference between a Deployment and a StatefulSet in Kubernetes?',
+    options: [
+      'Deployments manage stateless apps; StatefulSets manage stateful apps with stable network identities',
+      'Deployments use YAML; StatefulSets use JSON',
+      'Deployments run on bare metal; StatefulSets run in cloud only',
+      'Deployments auto-scale; StatefulSets do not'
+    ],
+    correctIndex: 0,
+    topic: 'Cloud Architecture',
+    explanation: 'StatefulSets provide stable network IDs and persistent storage for stateful applications, unlike Deployments which are stateless.'
+  },
+  {
+    question: 'In a Zero Trust architecture, what does "never trust, always verify" mean for network segmentation?',
+    options: [
+      'All internal traffic is trusted without inspection',
+      'All network traffic is encrypted and authenticated regardless of source',
+      'Only perimeter traffic is inspected',
+      'Network segmentation is eliminated for performance'
+    ],
+    correctIndex: 1,
+    topic: 'Security & Compliance',
+    explanation: 'Zero Trust requires all traffic to be authenticated and authorized regardless of whether it originates inside or outside the network perimeter.'
   }
 ];
 
@@ -832,6 +892,74 @@ Return as a JSON array under the key "questions".`;
       count: questions.length,
       error: err.message
     });
+  }
+});
+
+/**
+ * POST /api/ai/quick-quiz
+ * Protected: trainee or trainer.
+ * Generates a short quiz on any user-specified topic (free-standing,
+ * not tied to any course enrollment). Falls back to mock data when no
+ * API key is configured.
+ */
+router.post("/quick-quiz", authMiddleware, requireRole("trainee", "trainer"), async (req, res) => {
+  try {
+    const { topic = "General Knowledge", count = 5 } = req.body || {};
+    const safeCount = Math.min(Math.max(parseInt(count) || 3, 3), 10);
+
+    const prompt = `
+Generate ${safeCount} multiple-choice quiz questions on the topic: "${topic}".
+Difficulty: intermediate.
+
+Each question must include:
+- A clear question text that references the topic
+- Exactly 4 answer options
+- A "correctIndex" field (0-3) indicating the correct answer
+- A brief "explanation" of why the answer is correct
+
+Return as a JSON array under the key "questions".`;
+
+    const schema = {
+      type: "object",
+      properties: {
+        questions: {
+          type: "array",
+          items: {
+            type: "object",
+            properties: {
+              question: { type: "string" },
+              options: { type: "array", items: { type: "string" }, minItems: 4, maxItems: 4 },
+              correctIndex: { type: "integer", minimum: 0, maximum: 3 },
+              explanation: { type: "string" }
+            },
+            required: ["question", "options", "correctIndex"]
+          },
+          minItems: 1,
+          maxItems: 10
+        }
+      },
+      required: ["questions"]
+    };
+
+    const result = await callLLMAPI(prompt, "", schema);
+
+    if (result.usedMock || !result.data) {
+      const questions = MOCK_QUIZ_QUESTIONS.slice(0, safeCount).map((q, i) => ({
+        ...q,
+        topic,
+        question: "[" + topic + "] " + q.question,
+      }));
+      return res.json({ questions, source: "mock", model: "fallback", count: questions.length, error: result.error || null });
+    }
+
+    const questions = (result.data.questions || []).slice(0, safeCount).map(q => ({ ...q, topic }));
+
+    res.json({ questions, source: "ai", model: GEMINI_MODEL, count: questions.length });
+  } catch (err) {
+    console.error("[AI] Quick quiz error:", err.message);
+    const count = Math.min(parseInt(req.body?.count) || 3, 3);
+    const questions = MOCK_QUIZ_QUESTIONS.slice(0, count).map(q => ({ ...q, topic: req.body?.topic || "General Knowledge", question: "[" + (req.body?.topic || "General") + "] " + q.question }));
+    res.status(200).json({ questions, source: "mock", model: "error-fallback", count: questions.length, error: err.message });
   }
 });
 
