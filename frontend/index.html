@@ -3631,7 +3631,7 @@ return (
     function Screen12Quiz({ user, onBack }) {
       const [stage, setStage] = React.useState('start');
       const [selectedSubject, setSelectedSubject] = React.useState(null);
-      const [questionCount, setQuestionCount] = React.useState(10);
+      const [questionCount, setQuestionCount] = React.useState('10');
       const [questions, setQuestions] = React.useState([]);
       const [currentIndex, setCurrentIndex] = React.useState(0);
       const [answers, setAnswers] = React.useState({});
@@ -3668,7 +3668,7 @@ return (
         if (!selectedSubject) return;
         const subjectQuestions = getQuestionsBySubject(selectedSubject);
         const shuffled = shuffleArray(subjectQuestions);
-        const picked = shuffled.slice(0, Math.min(questionCount, shuffled.length));
+        const picked = shuffled.slice(0, Math.min(parseInt(questionCount), shuffled.length));
         setQuestions(picked);
         setCurrentIndex(0);
         setAnswers({});
@@ -3747,7 +3747,7 @@ return (
       const handleRetrySameTopic = () => {
         const subjectQuestions = getQuestionsBySubject(selectedSubject);
         const shuffled = shuffleArray(subjectQuestions);
-        const picked = shuffled.slice(0, Math.min(questionCount, shuffled.length));
+        const picked = shuffled.slice(0, Math.min(parseInt(questionCount), shuffled.length));
         setQuestions(picked);
         setCurrentIndex(0);
         setAnswers({});
@@ -3837,7 +3837,7 @@ return (
                   </label>
                   <select
                     value={questionCount}
-                    onChange={(e) => setQuestionCount(parseInt(e.target.value, 10))}
+                    onChange={(e) => setQuestionCount(e.target.value)}
                     className="w-full px-4 py-3 bg-slate-900 border border-electric-blue/30 rounded-xl text-white text-base focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none"
                   >
                     <option value="5">5 questions</option>
