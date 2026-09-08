@@ -107,7 +107,7 @@ authRouter.post('/login', async (req, res) => {
         });
       }
 
-    const token = `mock-jwt-token-${supabaseUser.id}-${Date.now()}`;
+    const token = `mock-jwt-token-${supabaseUser.id}-${supabaseUser.role}-${Date.now()}`;
     const redirectMap = {
       trainee: '/trainee/dashboard',
       trainer: '/trainer/dashboard',
@@ -206,7 +206,7 @@ authRouter.post('/signup', async (req, res) => {
       });
     }
 
-    const token = `mock-jwt-token-${supabaseUser.id}-${Date.now()}`;
+    const token = `mock-jwt-token-${supabaseUser.id}-${supabaseUser.role}-${Date.now()}`;
 
     res.status(201).json({
       message: 'User registered successfully. Awaiting admin approval.',

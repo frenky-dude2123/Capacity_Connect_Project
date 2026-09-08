@@ -125,9 +125,13 @@ function fallbackAppendUser(usersArray, user) {
 /**
  * Auth middleware: reads the Authorization header, extracts the token,
  * looks up the user by ID, and sets req.user.
+<<<<<<< HEAD
  * Token format: mock-jwt-token-{userId}-{timestamp}
  * When Supabase is unavailable, falls back to a synthetic user object
  * so auth-dependent routes still function in development.
+=======
+ * Token format: mock-jwt-token-{userId}-{role}-{timestamp}
+>>>>>>> 677ae6c (Add new courses and fix light-mode text contrast)
  * Safe to call on every request — if no token is present, it just calls next().
  */
 async function authenticateToken(token) {
@@ -163,11 +167,25 @@ function authMiddleware(req, res, next) {
   const authHeader = req.headers['authorization'] || '';
   if (authHeader.startsWith('Bearer ')) {
     const token = authHeader.substring(7);
+<<<<<<< HEAD
     authenticateToken(token).then(user => {
       if (user) req.user = user;
       next();
     }).catch(() => next());
     return;
+=======
+    const match = token.match(/^mock-jwt-token-(.+)-(\w+)-(\d+)$/);
+    if (match) {
+      const userId = match[1];
+      const role = match[2];
+      req.user = { id: userId, role: role };
+      getUserById(userId).then(user => {
+        if (user) req.user = { ...req.user, ...user };
+        next();
+      }).catch(() => next());
+      return;
+    }
+>>>>>>> 677ae6c (Add new courses and fix light-mode text contrast)
   }
   next();
 }

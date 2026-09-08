@@ -1488,7 +1488,7 @@ const roleLabel = user?.role?.charAt(0).toUpperCase() + user?.role?.slice(1) || 
         <div className="sidebar-bg flex flex-col h-full w-64 overflow-y-auto">
           <div className="p-5 border-b border-electric-blue/10 flex items-center gap-3">
             <div className="w-12 h-12 rounded-2xl glass-card flex items-center justify-center text-2xl border border-electric-blue/20 shadow-lg" style={{boxShadow: '0 0 30px var(--accent-dim)'}}>
-              {getRoleIcon(user?.role)}
+              {user?.role === 'trainee' ? '🎓' : user?.role === 'trainer' ? '👩‍🏫' : '🛡️'}
             </div>
             <div>
               <p className="font-bold text-sm text-white">{user?.name || 'Unknown'}</p>
@@ -1554,7 +1554,7 @@ return (
             {/* Mobile top bar */}
             <div className="md:hidden flex items-center gap-3 px-4 py-3 border-b border-electric-blue/10 glass-card sticky top-0 z-40">
               <div className="w-9 h-9 rounded-xl glass-card flex items-center justify-center text-lg border border-electric-blue/20">
-                {getRoleIcon(user?.role)}
+                {user?.role === 'trainee' ? '🎓' : user?.role === 'trainer' ? '👩‍🏫' : '🛡️'}
               </div>
               <span className="font-bold text-sm text-white">Capacity Connect</span>
               <span className="text-[10px] text-slate-400 ml-auto">{roleLabel} Portal</span>

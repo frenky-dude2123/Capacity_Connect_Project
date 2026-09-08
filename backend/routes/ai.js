@@ -411,13 +411,13 @@ function looksLikeGibberish(text) {
 
   // Check for excessive random/special characters (not typical in resumes)
   const randomCharRatio = (cleaned.match(/[^a-zA-Z0-9\s.,!?'"\-():/]/g) || []).length / Math.max(cleaned.length, 1);
-  if (randomCharRatio > 0.3 && cleaned.length < 200) return true;
+    if (randomCharRatio > 0.5 && cleaned.length < 200) return true;
 
-  // Check for minimum word diversity — if 80%+ of words are duplicates, likely gibberish
-  const wordFreq = {};
-  words.forEach(w => { wordFreq[w.toLowerCase()] = (wordFreq[w.toLowerCase()] || 0) + 1; });
-  const uniqueRatio = Object.keys(wordFreq).length / words.length;
-  if (uniqueRatio < 0.3 && words.length > 10) return true;
+    // Check for minimum word diversity — if 15%+ of words are duplicates, likely gibberish
+    const wordFreq = {};
+    words.forEach(w => { wordFreq[w.toLowerCase()] = (wordFreq[w.toLowerCase()] || 0) + 1; });
+    const uniqueRatio = Object.keys(wordFreq).length / words.length;
+    if (uniqueRatio < 0.15 && words.length > 10) return true;
 
   return false;
 }
