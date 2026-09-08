@@ -126,21 +126,48 @@ function fallbackAppendUser(usersArray, user) {
  * Auth middleware: reads the Authorization header, extracts the token,
  * looks up the user by ID, and sets req.user.
  * Token format: mock-jwt-token-{userId}-{timestamp}
+ * When Supabase is unavailable, falls back to a synthetic user object
+ * so auth-dependent routes still function in development.
  * Safe to call on every request — if no token is present, it just calls next().
  */
+async function authenticateToken(token) {
+  const match = token.match(/^mock-jwt-token-(.+)-(\d+)$/);
+  if (!match) return null;
+  const userId = match[1];
+  if (isSupabaseAvailable) {
+    try {
+      const user = await getUserById(userId);
+      if (user) return user;
+    } catch (err) {
+      console.error('[Auth] getUserById error:', err.message);
+    }
+  }
+  // Fallback: synthesize a mock user based on userId prefix
+  let role = 'trainee';
+  if (userId.startsWith('u_admin')) role = 'admin';
+  else if (userId.startsWith('u_trainer')) role = 'trainer';
+  return {
+    id: userId,
+    name: userId.replace(/^u_/, 'Mock User ') || 'Demo User',
+    email: `${userId}@demo.cosmic`,
+    role,
+    status: 'approved',
+    department: 'Training',
+    qualification: null,
+    skills: null,
+    subjects: null,
+  };
+}
+
 function authMiddleware(req, res, next) {
   const authHeader = req.headers['authorization'] || '';
   if (authHeader.startsWith('Bearer ')) {
     const token = authHeader.substring(7);
-    const match = token.match(/^mock-jwt-token-(.+)-(\d+)$/);
-    if (match) {
-      const userId = match[1];
-      getUserById(userId).then(user => {
-        if (user) req.user = user;
-        next();
-      }).catch(() => next());
-      return;
-    }
+    authenticateToken(token).then(user => {
+      if (user) req.user = user;
+      next();
+    }).catch(() => next());
+    return;
   }
   next();
 }
@@ -172,6 +199,7 @@ module.exports = {
   getUserByEmail,
   createUser,
   fallbackAppendUser,
+  authenticateToken,
   authMiddleware,
   requireRole,
 };

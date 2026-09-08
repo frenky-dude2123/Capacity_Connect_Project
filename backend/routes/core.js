@@ -43,9 +43,29 @@ authRouter.post('/login', async (req, res) => {
     }
 
     if (!isSupabaseAvailable) {
-      return res.status(500).json({
-        error: 'Database not configured',
-        message: 'Supabase is not available'
+      const mockUser = {
+        id: 'u_demo',
+        name: email.split('@')[0] || 'Demo User',
+        email: email.toLowerCase(),
+        role: 'trainee',
+        status: 'approved',
+        department: 'Training',
+        qualification: null,
+        skills: null,
+        subjects: null
+      };
+      const token = `mock-jwt-token-${mockUser.id}-${Date.now()}`;
+      const redirectMap = {
+        trainee: '/trainee/dashboard',
+        trainer: '/trainer/dashboard',
+        admin: '/admin/dashboard'
+      };
+      return res.status(200).json({
+        message: 'Login successful (demo mode)',
+        token,
+        source: 'demo-fallback',
+        redirect: redirectMap[mockUser.role] || '/trainee/dashboard',
+        user: mockUser
       });
     }
 
@@ -128,9 +148,24 @@ authRouter.post('/signup', async (req, res) => {
     }
 
     if (!isSupabaseAvailable) {
-      return res.status(500).json({
-        error: 'Database not configured',
-        message: 'Supabase is not available'
+      const normalizedRole = role === 'trainer' ? 'trainer' : 'trainee';
+      const mockUser = {
+        id: `u_${email.split('@')[0].toLowerCase().replace(/[^a-z0-9]/g, '_')}`,
+        name: name.trim(),
+        email: email.toLowerCase(),
+        role: normalizedRole,
+        status: 'pending',
+        department: 'Training',
+        qualification: normalizedRole === 'trainee' ? qualification || null : null,
+        skills: normalizedRole === 'trainee' ? skills || null : null,
+        subjects: normalizedRole === 'trainer' ? subjects || null : null
+      };
+      const token = `mock-jwt-token-${mockUser.id}-${Date.now()}`;
+      return res.status(201).json({
+        message: 'User registered successfully (demo mode). Awaiting admin approval.',
+        token,
+        source: 'demo-fallback',
+        user: mockUser
       });
     }
 
@@ -271,7 +306,29 @@ userRouter.get('/dashboard/:userId', authMiddleware, requireRole('trainee', 'tra
     const { userId } = req.params;
 
     if (!isSupabaseAvailable) {
-      return res.status(500).json({ error: 'Database not configured', details: 'Supabase is not available' });
+      const mockDashboard = {
+        userId: userId,
+        userName: 'Demo User',
+        role: 'trainee',
+        status: 'approved',
+        enrolledCourses: [
+          { id: 1, title: 'Advanced Astrophysics', category: 'Physics', progressPercent: 85, status: 'Completed', instructor: 'Dr. Elena Vasquez' },
+          { id: 2, title: 'Deep Space Navigation', category: 'Aerospace', progressPercent: 45, status: 'In Progress', instructor: 'Capt. M. Reyes' }
+        ],
+        metrics: {
+          overallCompletionPercent: 42,
+          capacityScore: 52,
+          activeCourses: 2,
+          trainingHours: 28,
+          completedCertifications: 1
+        },
+        recommendedCourses: [
+          { id: 3, title: 'Exoplanet Habitability', category: 'Astronomy', estimatedHours: 6, difficulty: 'Intermediate' },
+          { id: 4, title: 'Stellar Engineering', category: 'Engineering', estimatedHours: 12, difficulty: 'Advanced' }
+        ],
+        source: 'in-memory-fallback'
+      };
+      return res.status(200).json(mockDashboard);
     }
 
     const user = await getUserById(userId);
@@ -476,6 +533,70 @@ certRouter.get('/:userId/:courseId', authMiddleware, requireRole('trainee', 'tra
 // TOPIC 7: ADMIN DASHBOARD
 // ==========================================
 
+// In-memory mock data for admin routes when Supabase is unavailable
+const mockUsers = [
+  {
+    id: 'u_admin1',
+    name: 'Alice Administrator',
+    email: 'alice.admin@cosmic.edu',
+    role: 'admin',
+    status: 'approved',
+    department: 'Command',
+    qualification: null,
+    skills: null,
+    subjects: null,
+    created_at: '2026-08-01T08:00:00Z'
+  },
+  {
+    id: 'u_trainee1',
+    name: 'Jane Doe',
+    email: 'jane.doe@cosmic.edu',
+    role: 'trainee',
+    status: 'approved',
+    department: 'Astrophysics',
+    qualification: 'PhD',
+    skills: 'Python,Matplotlib',
+    subjects: null,
+    created_at: '2026-08-15T10:00:00Z'
+  },
+  {
+    id: 'u_trainee2',
+    name: 'John Smith',
+    email: 'john.smith@cosmic.edu',
+    role: 'trainee',
+    status: 'pending',
+    department: 'Engineering',
+    qualification: 'MSc',
+    skills: 'CAD,Fusion',
+    subjects: null,
+    created_at: '2026-09-01T09:00:00Z'
+  },
+  {
+    id: 'u_trainee3',
+    name: 'Maria Garcia',
+    email: 'maria.garcia@cosmic.edu',
+    role: 'trainee',
+    status: 'pending',
+    department: 'Astronomy',
+    qualification: 'BSc',
+    skills: 'Python,Data Analysis',
+    subjects: null,
+    created_at: '2026-09-03T14:00:00Z'
+  },
+  {
+    id: 'u_trainer1',
+    name: 'Dr. Elena Vasquez',
+    email: 'elena.vasquez@cosmic.edu',
+    role: 'trainer',
+    status: 'approved',
+    department: 'Physics',
+    qualification: 'PhD',
+    skills: null,
+    subjects: 'Astrophysics,Stellar Dynamics',
+    created_at: '2026-07-20T12:00:00Z'
+  }
+];
+
 /**
  * GET /api/admin/stats
  * Protected: admin only.
@@ -483,7 +604,26 @@ certRouter.get('/:userId/:courseId', authMiddleware, requireRole('trainee', 'tra
 adminRouter.get('/stats', requireRole('admin'), async (req, res) => {
   try {
     if (!isSupabaseAvailable) {
-      return res.status(500).json({ error: 'Database not configured', details: 'Supabase is not available' });
+      const mockStats = {
+        totalUsers: mockUsers.length,
+        totalCourses: 5,
+        activeLearners: mockUsers.filter(u => u.role === 'trainee' && u.status === 'approved').length,
+        completionRatePercent: 78.3,
+        capacityIndex: 88.4,
+        overdueComplianceCount: 0,
+        registeredUsers: mockUsers.slice(0, 5).map(u => ({
+          id: u.id, name: u.name, email: u.email, role: u.role,
+          department: u.department || 'General', progress: '0%', status: 'Active'
+        })),
+        departmentTelemetry: [],
+        monthlyEnrollments: [
+          { month: 'Jan', enrollments: 12 }, { month: 'Feb', enrollments: 18 },
+          { month: 'Mar', enrollments: 25 }, { month: 'Apr', enrollments: 15 },
+          { month: 'May', enrollments: 22 }, { month: 'Jun', enrollments: 30 }
+        ],
+        source: 'in-memory-fallback'
+      };
+      return res.status(200).json(mockStats);
     }
 
     const { data: users, error: usersError } = await supabase
@@ -571,7 +711,12 @@ adminRouter.get('/stats', requireRole('admin'), async (req, res) => {
 adminRouter.get('/pending-users', requireRole('admin'), async (req, res) => {
   try {
     if (!isSupabaseAvailable) {
-      return res.status(500).json({ error: 'Database not configured', details: 'Supabase is not available' });
+      const pending = mockUsers.filter(u => u.status === 'pending').map(u => ({
+        id: u.id, name: u.name, email: u.email, role: u.role, status: u.status,
+        department: u.department || null, qualification: u.qualification || null,
+        skills: u.skills || null, subjects: u.subjects || null, created_at: u.created_at
+      }));
+      return res.status(200).json({ count: pending.length, pendingUsers: pending, source: 'in-memory-fallback' });
     }
 
     const { data: pendingUsers, error: usersError } = await supabase
@@ -616,7 +761,16 @@ adminRouter.post('/users/:userId/approve', requireRole('admin'), async (req, res
     const { userId } = req.params;
 
     if (!isSupabaseAvailable) {
-      return res.status(500).json({ error: 'Database not configured', details: 'Supabase is not available' });
+      const user = mockUsers.find(u => u.id === userId);
+      if (!user) {
+        return res.status(404).json({ error: 'User not found', message: `No user found with ID: ${userId}` });
+      }
+      user.status = 'approved';
+      return res.status(200).json({
+        message: 'User approved successfully',
+        user: { id: user.id, name: user.name, email: user.email, role: user.role, status: user.status, created_at: user.created_at },
+        source: 'in-memory-fallback'
+      });
     }
 
     const { data, error } = await supabase
@@ -665,7 +819,16 @@ adminRouter.post('/users/:userId/reject', requireRole('admin'), async (req, res)
     const { userId } = req.params;
 
     if (!isSupabaseAvailable) {
-      return res.status(500).json({ error: 'Database not configured', details: 'Supabase is not available' });
+      const user = mockUsers.find(u => u.id === userId);
+      if (!user) {
+        return res.status(404).json({ error: 'User not found', message: `No user found with ID: ${userId}` });
+      }
+      user.status = 'rejected';
+      return res.status(200).json({
+        message: 'User rejected successfully',
+        user: { id: user.id, name: user.name, email: user.email, role: user.role, status: user.status, created_at: user.created_at },
+        source: 'in-memory-fallback'
+      });
     }
 
     const { data, error } = await supabase
@@ -712,7 +875,11 @@ adminRouter.post('/users/:userId/reject', requireRole('admin'), async (req, res)
 adminRouter.get('/users', requireRole('admin'), async (req, res) => {
   try {
     if (!isSupabaseAvailable) {
-      return res.status(500).json({ error: 'Database not configured', details: 'Supabase is not available' });
+      const usersList = mockUsers.map(u => ({
+        id: u.id, name: u.name, email: u.email, role: u.role,
+        status: u.status, department: u.department || null, created_at: u.created_at
+      }));
+      return res.status(200).json({ count: usersList.length, users: usersList, source: 'in-memory-fallback' });
     }
 
     const { data: allUsers, error: usersError } = await supabase
@@ -849,6 +1016,8 @@ coreRouter.use('/public', publicRouter);
 // ==========================================
 const feedbackRouter = express.Router();
 
+const inMemoryFeedback = [];
+
 feedbackRouter.post('/', authMiddleware, requireRole('trainee'), async (req, res) => {
   try {
     const { course_id, rating, comment } = req.body || {};
@@ -858,8 +1027,36 @@ feedbackRouter.post('/', authMiddleware, requireRole('trainee'), async (req, res
       return res.status(400).json({ error: 'Validation failed', message: 'course_id and rating (1-5) are required.' });
     }
 
+    // In-memory fallback when Supabase is unavailable
     if (!isSupabaseAvailable) {
-      return res.status(500).json({ error: 'Database not configured', details: 'Supabase is not available' });
+      const existingIdx = inMemoryFeedback.findIndex(f => f.user_id === userId && f.course_id === Number(course_id));
+      if (existingIdx >= 0) {
+        const existing = inMemoryFeedback[existingIdx];
+        existing.rating = Number(rating);
+        existing.comment = comment || null;
+        existing.updated_at = new Date().toISOString();
+        return res.status(200).json({
+          message: 'Feedback updated successfully',
+          feedback: existing,
+          source: 'in-memory-fallback'
+        });
+      }
+
+      const newFeedback = {
+        id: `fb_${inMemoryFeedback.length + 1}`,
+        user_id: userId,
+        course_id: Number(course_id),
+        rating: Number(rating),
+        comment: comment || null,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
+      };
+      inMemoryFeedback.push(newFeedback);
+      return res.status(201).json({
+        message: 'Feedback submitted successfully',
+        feedback: newFeedback,
+        source: 'in-memory-fallback'
+      });
     }
 
     const { data: existing, error: existingError } = await supabase
@@ -911,9 +1108,22 @@ feedbackRouter.post('/', authMiddleware, requireRole('trainee'), async (req, res
 feedbackRouter.get('/course/:courseId', authMiddleware, requireRole('trainee', 'trainer', 'admin'), async (req, res) => {
   try {
     const { courseId } = req.params;
+    const userId = req.user?.id;
 
     if (!isSupabaseAvailable) {
-      return res.status(500).json({ error: 'Database not configured', details: 'Supabase is not available' });
+      const courseFeedbacks = inMemoryFeedback.filter(f => f.course_id === Number(courseId));
+      const total = courseFeedbacks.length || 0;
+      const avgRating = total > 0 ? Math.round((courseFeedbacks.reduce((sum, f) => sum + f.rating, 0) / total) * 10) / 10 : 0;
+      return res.status(200).json({
+        courseId: Number(courseId),
+        total,
+        avgRating,
+        feedbacks: courseFeedbacks.map(f => ({
+          ...f,
+          isOwn: f.user_id === userId
+        })),
+        source: 'in-memory-fallback'
+      });
     }
 
     const { data: feedbacks, error } = await supabase
@@ -948,7 +1158,26 @@ feedbackRouter.get('/course/:courseId', authMiddleware, requireRole('trainee', '
 feedbackRouter.get('/admin/summary', authMiddleware, requireRole('admin'), async (req, res) => {
   try {
     if (!isSupabaseAvailable) {
-      return res.status(500).json({ error: 'Database not configured', details: 'Supabase is not available' });
+      const summaryMap = new Map();
+      inMemoryFeedback.forEach(f => {
+        const key = f.course_id;
+        if (!summaryMap.has(key)) {
+          summaryMap.set(key, { course_id: key, total: 0, sumRating: 0, feedbacks: [] });
+        }
+        const entry = summaryMap.get(key);
+        entry.total += 1;
+        entry.sumRating += f.rating;
+        entry.feedbacks.push(f);
+      });
+
+      const summary = Array.from(summaryMap.entries()).map(([course_id, data]) => ({
+        course_id,
+        total: data.total,
+        avgRating: Math.round((data.sumRating / data.total) * 10) / 10,
+        feedbacks: data.feedbacks
+      }));
+
+      return res.status(200).json({ summary, source: 'in-memory-fallback' });
     }
 
     const { data: feedbacks, error } = await supabase

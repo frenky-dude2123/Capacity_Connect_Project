@@ -423,6 +423,7 @@ tailwind.config = {
       transform: translate(-50%, -50%);
       border: 1px solid rgba(255,255,255,0.04);
       border-radius: 50%;
+      pointer-events: none;
     }
     .orbit-ring::after {
       content: '';
@@ -433,6 +434,7 @@ tailwind.config = {
       border: 1px solid rgba(255,255,255,0.03);
       border-radius: 50%;
       animation: orbit-rotate 30s linear infinite;
+      pointer-events: none;
     }
     @keyframes orbit-rotate {
       from { transform: translate(-50%, -50%) rotate(0deg); }
@@ -456,6 +458,7 @@ tailwind.config = {
       -webkit-composite: xor;
       mask-composite: exclude;
       opacity: 0;
+      pointer-events: none;
       transition: opacity 300ms ease;
     }
     .cosmic-card:hover {
@@ -583,6 +586,7 @@ tailwind.config = {
       inset: 4px;
       border-radius: 50%;
       background: #0a0e27;
+      pointer-events: none;
     }
     .hologram-seal span {
       position: relative;
@@ -602,6 +606,7 @@ tailwind.config = {
       top: -2px; left: 16px; right: 16px;
       height: 2px;
       background: linear-gradient(90deg, transparent, #00d4ff, transparent);
+      pointer-events: none;
     }
     .spaceship-frame::after {
       content: '';
@@ -609,6 +614,7 @@ tailwind.config = {
       bottom: -2px; left: 16px; right: 16px;
       height: 2px;
       background: linear-gradient(90deg, transparent, #00d4ff, transparent);
+      pointer-events: none;
     }
     .corner-tick {
       position: absolute;
