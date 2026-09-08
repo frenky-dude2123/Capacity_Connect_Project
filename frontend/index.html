@@ -1928,7 +1928,6 @@ return (
       const [quickUserAnswers, setQuickUserAnswers] = React.useState({});
       const [quickQuizFinished, setQuickQuizFinished] = React.useState(false);
       const [quickQuizScore, setQuickQuizScore] = React.useState(0);
-      const [quizResult, setQuizResult] = React.useState(null);
 
       const currentQuickQ = quickQuizQuestions[currentQuickQIndex];
 
@@ -1947,7 +1946,6 @@ return (
           setQuickUserAnswers({});
           setQuickQuizFinished(false);
           setQuickQuizScore(0);
-          setQuizResult(null);
           showToast(`Quiz generated on "${quickQuizTopic}"`, 'success');
         } catch (err) {
           // Fallback: generate from LOCAL_QUIZ_POOL with topic-specific framing
@@ -1961,7 +1959,6 @@ return (
           setQuickUserAnswers({});
           setQuickQuizFinished(false);
           setQuickQuizScore(0);
-          setQuizResult(null);
           showToast(`Quiz on "${quickQuizTopic}" ready (sample data)`, 'success');
         } finally {
           setQuickQuizLoading(false);
@@ -1993,7 +1990,6 @@ return (
         const score = Math.round((correct / quickQuizQuestions.length) * 100);
         setQuickQuizScore(score);
         setQuickQuizFinished(true);
-        setQuizResult({ score, totalCorrect: correct, total: quickQuizQuestions.length });
         showToast(`Quiz complete! ${score}%`, 'success');
       };
 
@@ -2005,7 +2001,6 @@ return (
         setQuickUserAnswers({});
         setQuickQuizFinished(false);
         setQuickQuizScore(0);
-        setQuizResult(null);
       };
 
       React.useEffect(() => {
@@ -2176,13 +2171,6 @@ if (loading) return <div className="py-20 text-center text-sm text-slate-400">Lo
                       <button onClick={resetQuickQuiz} className="px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white text-xs font-black rounded-lg btn-micro">New Quiz</button>
                     )}
                   </div>
-                </div>
-              ) : quizResult ? (
-                <div className="text-center py-8">
-                  <p className="text-3xl font-extrabold text-white mb-2">Quick Quiz Complete!</p>
-                  <p className="text-lg text-amber-400 font-black mb-4">{quizResult.score}% — {quizResult.totalCorrect}/{quizResult.total} correct</p>
-                  <p className="text-xs text-slate-400 dark:text-slate-500 mb-4">Quiz Complete!</p>
-                  <button onClick={resetQuickQuiz} className="px-5 py-2 bg-gradient-to-r from-cyan-500 to-blue-600 text-white rounded-xl text-xs font-black btn-micro">Take Another Quick Quiz</button>
                 </div>
               ) : (
                 <div className="space-y-3">
