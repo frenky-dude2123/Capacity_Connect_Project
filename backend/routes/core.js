@@ -43,13 +43,19 @@ authRouter.post('/login', async (req, res) => {
     }
 
     if (!isSupabaseAvailable) {
+      const emailLower = email.toLowerCase();
+      let role = 'trainee';
+      if (emailLower.startsWith('admin') || emailLower.startsWith('trainer')) {
+        role = emailLower.startsWith('admin') ? 'admin' : 'trainer';
+      }
+      const rolePrefix = role === 'admin' ? 'u_admin' : role === 'trainer' ? 'u_trainer' : 'u_demo';
       const mockUser = {
-        id: 'u_demo',
-        name: email.split('@')[0] || 'Demo User',
-        email: email.toLowerCase(),
-        role: 'trainee',
+        id: `${rolePrefix}-${Date.now()}`,
+        name: email.split('@')[0] || role.charAt(0).toUpperCase() + role.slice(1) + ' User',
+        email: emailLower,
+        role: role,
         status: 'approved',
-        department: 'Training',
+        department: role === 'admin' ? 'Administration' : 'Training',
         qualification: null,
         skills: null,
         subjects: null
