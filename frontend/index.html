@@ -973,6 +973,11 @@ tailwind.config = {
       } else {
         API_BASE = 'http://localhost:5000/api';
       }
+      // Allow runtime override via meta tag or window var for Vercel deployments
+      if (window.CAPACITY_CONNECT_API_BASE) {
+        API_BASE = window.CAPACITY_CONNECT_API_BASE;
+      }
+      console.log('[API] Base:', API_BASE);
     })();
 
     // ==========================================
@@ -1034,15 +1039,25 @@ tailwind.config = {
       return fetch(url, { ...options, headers });
     }
     async function apiRequest(url, options = {}) {
-      const res = await fetchWithToken(url, options);
-      const data = await res.json().catch(() => null);
-      if (!res.ok) {
-        const err = new Error(data?.message || data?.error || 'Request failed');
-        err.status = res.status;
-        err.data = data;
-        throw err;
+      try {
+        const res = await fetchWithToken(url, options);
+        const data = await res.json().catch(() => null);
+        if (!res.ok) {
+          const err = new Error(data?.message || data?.error || 'Request failed');
+          err.status = res.status;
+          err.data = data;
+          throw err;
+        }
+        return data;
+      } catch (networkErr) {
+        if (networkErr.name === 'TypeError' && networkErr.message.includes('fetch')) {
+          const err = new Error('Cannot reach backend API. Check that the backend server is running and reachable from this origin.');
+          err.status = 0;
+          err.isNetworkError = true;
+          throw err;
+        }
+        throw networkErr;
       }
-      return data;
     }
 
     // ==========================================
@@ -1698,13 +1713,20 @@ function Screen1Auth({ onAuthSuccess, onNavigate, initialSignup }) {
         try {
           const endpoint = isLogin ? `${API_BASE}/auth/login` : `${API_BASE}/auth/signup`;
           const payload = isLogin ? { email, password } : { name, email, password, role: signupRole, qualification, skills, subjects };
-          const res = await fetch(endpoint, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
-          const data = await res.json();
-          if (!res.ok) throw new Error(data.message || 'Request failed');
-          if (data.token) { try { localStorage.setItem('capacity_connect_token', data.token); } catch {} }
-          setAuthData(data);
-          if (onAuthSuccess) onAuthSuccess(data);
-        } catch (err) { setError(err.message); } finally { setLoading(false); }
+          try {
+            const res = await fetch(endpoint, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.message || 'Request failed');
+            if (data.token) { try { localStorage.setItem('capacity_connect_token', data.token); } catch {} }
+            setAuthData(data);
+            if (onAuthSuccess) onAuthSuccess(data);
+          } catch (err) {
+            if (err.name === 'TypeError' && err.message.includes('fetch')) {
+              setError('Cannot connect to backend: The API server may be offline. Try again later.');
+            } else {
+              setError(err.message);
+            }
+          } finally { setLoading(false); }
       };
 
       const getRoleRedirect = (role) => {
@@ -2110,6 +2132,7 @@ return (
     // ==========================================
     function Page4Detail({ user, courseId, onBack, onLaunchPlayer }) {
       const [course, setCourse] = React.useState(null);
+      const [courseError, setCourseError] = React.useState(null);
       const [feedback, setFeedback] = React.useState(null);
       const [feedbackLoading, setFeedbackLoading] = React.useState(true);
       const [rating, setRating] = React.useState(0);
@@ -2120,8 +2143,14 @@ return (
       const [feedbackSuccess, setFeedbackSuccess] = React.useState(false);
 
       React.useEffect(() => {
-        apiRequest(`${API_BASE}/courses/detail/${courseId}`).then(setCourse).catch(err => console.error('[Detail]', err.message));
-        apiRequest(`${API_BASE}/feedback/course/${courseId}`).then(setFeedback).catch(err => console.error('[Feedback]', err.message)).finally(() => setFeedbackLoading(false));
+        apiRequest(`${API_BASE}/courses/detail/${courseId}`).then(setCourse).catch(err => {
+          console.error('[Detail]', err.message);
+          setCourseError(err.message);
+        });
+        apiRequest(`${API_BASE}/feedback/course/${courseId}`).then(setFeedback).catch(err => {
+          console.error('[Feedback]', err.message);
+          setFeedbackError(err.message);
+        }).finally(() => setFeedbackLoading(false));
       }, [courseId]);
 
       React.useEffect(() => {
@@ -2158,6 +2187,22 @@ return (
 return (
         <div className="max-w-4xl mx-auto px-4 py-6 md:py-8 space-y-6 bg-orbital-bg min-h-screen orbital-grid">
           <button onClick={onBack} className="text-xs font-black bg-cyan-500/10 border border-cyan-400/30 px-3 py-1.5 rounded-lg text-cyan-300 hover:bg-cyan-500/20 btn-micro transition-all">← Back to Catalog</button>
+          {!course && !courseError && (
+            <div className="py-20 flex items-center justify-center text-center">
+              <div>
+                <div className="w-8 h-8 border-4 border-cyan-500 border-t-transparent rounded-full animate-spin mx-auto"></div>
+                <p className="mt-4 text-sm text-slate-400">Loading course details...</p>
+                <p className="text-xs text-slate-500 mt-1">API: {API_BASE}/courses/detail/{courseId}</p>
+              </div>
+            </div>
+          )}
+          {courseError && !course && (
+            <div className="py-10 p-6 bg-red-900/20 border border-red-500/30 rounded-2xl text-center">
+              <p className="text-sm font-black text-red-300">Failed to load course details</p>
+              <p className="text-xs text-red-400 mt-1">{courseError}</p>
+              <p className="text-xs text-red-400/60 mt-2">Check that the backend server is running at {API_BASE}</p>
+            </div>
+          )}
           {course && (
             <div className="hud-panel rounded-2xl border border-cyan-500/20 p-6 sm:p-8 space-y-4">
               <span className="sector-badge">{course.category}</span>

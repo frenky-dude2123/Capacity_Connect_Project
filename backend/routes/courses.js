@@ -118,16 +118,13 @@ const MOCK_COURSES = [
 router.get('/catalog', authMiddleware, requireRole('trainee', 'trainer'), async (req, res) => {
   try {
     if (!isSupabaseAvailable) {
-      return res.status(200).json({
-        courses: MOCK_COURSES.map(c => ({
-          id: c.id,
-          title: c.title,
-          category: c.category,
-          description: c.description,
-          instructor: c.instructor
-        })),
-        source: 'in-memory-fallback'
-      });
+      return res.status(200).json(MOCK_COURSES.map(c => ({
+        id: c.id,
+        title: c.title,
+        category: c.category,
+        description: c.description,
+        instructor: c.instructor
+      })));
     }
 
     const { data, error } = await supabase
@@ -165,15 +162,12 @@ router.get('/detail/:id', authMiddleware, requireRole('trainee', 'trainer'), asy
         });
       }
       return res.status(200).json({
-        course: {
-          id: mockCourse.id,
-          title: mockCourse.title,
-          category: mockCourse.category,
-          description: mockCourse.description,
-          syllabus: mockCourse.syllabus || [],
-          instructor: mockCourse.instructor
-        },
-        source: 'in-memory-fallback'
+        id: mockCourse.id,
+        title: mockCourse.title,
+        category: mockCourse.category,
+        description: mockCourse.description,
+        syllabus: mockCourse.syllabus || [],
+        instructor: mockCourse.instructor
       });
     }
 
@@ -191,14 +185,12 @@ router.get('/detail/:id', authMiddleware, requireRole('trainee', 'trainer'), asy
     }
 
     res.json({
-      course: {
-        id: data.id,
-        title: data.title,
-        category: data.category,
-        description: data.description,
-        syllabus: data.syllabus || [],
-        instructor: data.instructor
-      }
+      id: data.id,
+      title: data.title,
+      category: data.category,
+      description: data.description,
+      syllabus: data.syllabus || [],
+      instructor: data.instructor
     });
   } catch (err) {
     console.error('[Courses] Detail error:', err.message);
@@ -224,15 +216,12 @@ router.get('/player/:id', authMiddleware, requireRole('trainee', 'trainer'), asy
         });
       }
       return res.status(200).json({
-        player: {
-          id: mockCourse.id,
-          title: mockCourse.title,
-          videoUrl: mockCourse.video_url,
-          readingContent: mockCourse.reading_content,
-          quiz: mockCourse.quiz || null,
-          syllabus: mockCourse.syllabus || []
-        },
-        source: 'in-memory-fallback'
+        id: mockCourse.id,
+        title: mockCourse.title,
+        videoUrl: mockCourse.video_url,
+        readingContent: mockCourse.reading_content,
+        quiz: mockCourse.quiz || null,
+        syllabus: mockCourse.syllabus || []
       });
     }
 
@@ -250,14 +239,12 @@ router.get('/player/:id', authMiddleware, requireRole('trainee', 'trainer'), asy
     }
 
     res.json({
-      player: {
-        id: data.id,
-        title: data.title,
-        videoUrl: data.video_url,
-        readingContent: data.reading_content,
-        quiz: data.quiz || null,
-        syllabus: data.syllabus || []
-      }
+      id: data.id,
+      title: data.title,
+      videoUrl: data.video_url,
+      readingContent: data.reading_content,
+      quiz: data.quiz || null,
+      syllabus: data.syllabus || []
     });
   } catch (err) {
     console.error('[Courses] Player error:', err.message);
