@@ -2872,7 +2872,7 @@ return (
            </div>
 
            {stats && !loading.stats && (
-             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+             <div className="grid grid-cols-2 sm:grid-cols-5 gap-4">
                <div className="hud-panel p-6 rounded-2xl">
                  <span className="text-xs text-slate-400 font-black uppercase font-mono">Total Fleet</span>
                  <p className="text-3xl font-extrabold font-mono text-cyan-400 mt-2">{stats?.totalUsers}</p>
@@ -2880,6 +2880,14 @@ return (
                <div className="hud-panel p-6 rounded-2xl">
                  <span className="text-xs text-slate-400 font-black uppercase font-mono">Active Operators</span>
                  <p className="text-3xl font-extrabold font-mono text-cyan-300 mt-2">{stats?.activeLearners}</p>
+               </div>
+               <div className="hud-panel p-6 rounded-2xl">
+                 <span className="text-xs text-slate-400 font-black uppercase font-mono">Monthly Active Operators</span>
+                 <p className="text-3xl font-extrabold font-mono text-emerald-400 mt-2">
+                   {(stats?.activeUsersTimeline && stats.activeUsersTimeline.length > 0
+                     ? stats.activeUsersTimeline[stats.activeUsersTimeline.length - 1].users
+                     : 0)}
+                 </p>
                </div>
                <div className="hud-panel p-6 rounded-2xl hud-panel-purple">
                  <span className="text-xs text-slate-400 font-black uppercase font-mono">Mission Success Rate</span>
