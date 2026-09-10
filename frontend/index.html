@@ -19,16 +19,6 @@ tailwind.config = {
       theme: {
         extend: {
           colors: {
-            // ===== TEXT COLOR SAFETY OVERRIDES FOR LIGHT MODE ====
-            .text-slate-200 { color: #1a1a2e !important; }
-            .text-slate-300 { color: #2a2a4a !important; }
-            .text-slate-400 { color: #3a3a6a !important; }
-            .text-slate-500 { color: #4a4a8a !important; }
-            .text-slate-600 { color: #5a5a9a !important; }
-            .text-slate-700 { color: #6a6aeb !important; }
-            .text-slate-800 { color: #7a7aeb !important; }
-            .text-slate-900 { color: #8a8aeb !important; }
-
             // ===== MULTI-COLOR SPACE/EARTH PALETTE =====
             // Homepage — Purple/Nebula
             nebula: {
@@ -1175,7 +1165,6 @@ tailwind.config = {
     ];
     function shuffleArray(arr) { const a = arr.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
     function pickRandomQuestions(count) { return shuffleArray(QUIZ_POOL).slice(0, Math.min(count, QUIZ_POOL.length)); }
-    function getQuestionsBySubject(subject) { return QUIZ_POOL.filter(q => q.subject === subject); }
     function generateAIReport(score, weakTopics) {
       const pct = typeof score === 'string' ? parseInt(score, 10) : score;
       if (pct >= 80) return { badge: `${pct}% - Advanced Competency`, strengths: ['Strong conceptual understanding', 'Correct application of core principles', 'Good decision-making under constraints'], improvements: weakTopics.length ? weakTopics : [], recommendation: 'Proceed to the next track or advanced capstone module.' };
@@ -1938,6 +1927,7 @@ return (
       const [quickUserAnswers, setQuickUserAnswers] = React.useState({});
       const [quickQuizFinished, setQuickQuizFinished] = React.useState(false);
       const [quickQuizScore, setQuickQuizScore] = React.useState(0);
+      const [quizResult, setQuizResult] = React.useState(null);
 
       const currentQuickQ = quickQuizQuestions[currentQuickQIndex];
 
@@ -1956,6 +1946,7 @@ return (
           setQuickUserAnswers({});
           setQuickQuizFinished(false);
           setQuickQuizScore(0);
+          setQuizResult(null);
           showToast(`Quiz generated on "${quickQuizTopic}"`, 'success');
         } catch (err) {
           // Fallback: generate from LOCAL_QUIZ_POOL with topic-specific framing
@@ -1969,6 +1960,7 @@ return (
           setQuickUserAnswers({});
           setQuickQuizFinished(false);
           setQuickQuizScore(0);
+          setQuizResult(null);
           showToast(`Quiz on "${quickQuizTopic}" ready (sample data)`, 'success');
         } finally {
           setQuickQuizLoading(false);
@@ -2000,7 +1992,9 @@ return (
         const score = Math.round((correct / quickQuizQuestions.length) * 100);
         setQuickQuizScore(score);
         setQuickQuizFinished(true);
-        showToast(`Quiz complete! ${score}%`, 'success');
+        const xp = 15;
+        setQuizResult({ score, totalCorrect: correct, total: quickQuizQuestions.length, xp });
+        showToast(`Quiz complete! ${score}% — +${xp} XP`, 'success');
       };
 
       const resetQuickQuiz = () => {
@@ -2011,6 +2005,7 @@ return (
         setQuickUserAnswers({});
         setQuickQuizFinished(false);
         setQuickQuizScore(0);
+        setQuizResult(null);
       };
 
       React.useEffect(() => {
@@ -2152,7 +2147,7 @@ if (loading) return <div className="py-20 text-center text-sm text-slate-400">Lo
                 <h3 className="text-lg font-black text-white flex items-center gap-2 font-mono tracking-wide">
                   <span className="text-amber-400">⚡ Quick AI Quiz</span>
                 </h3>
-                <span className="text-xs text-slate-400 dark:text-slate-500">Test any topic</span>
+                <span className="text-xs text-slate-400 dark:text-slate-500">Test any topic • 15 XP reward</span>
               </div>
 
               {quizStarted ? (
@@ -2181,6 +2176,13 @@ if (loading) return <div className="py-20 text-center text-sm text-slate-400">Lo
                       <button onClick={resetQuickQuiz} className="px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white text-xs font-black rounded-lg btn-micro">New Quiz</button>
                     )}
                   </div>
+                </div>
+              ) : quizResult ? (
+                <div className="text-center py-8">
+                  <p className="text-3xl font-extrabold text-white mb-2">Quick Quiz Complete!</p>
+                  <p className="text-lg text-amber-400 font-black mb-4">{quizResult.score}% — {quizResult.totalCorrect}/{quizResult.total} correct</p>
+                  <p className="text-xs text-slate-400 dark:text-slate-500 mb-4">+{quizResult.xp} XP earned</p>
+                  <button onClick={resetQuickQuiz} className="px-5 py-2 bg-gradient-to-r from-cyan-500 to-blue-600 text-white rounded-xl text-xs font-black btn-micro">Take Another Quick Quiz</button>
                 </div>
               ) : (
                 <div className="space-y-3">
@@ -2882,7 +2884,7 @@ return (
            </div>
 
            {stats && !loading.stats && (
-             <div className="grid grid-cols-2 sm:grid-cols-5 gap-4">
+             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                <div className="hud-panel p-6 rounded-2xl">
                  <span className="text-xs text-slate-400 font-black uppercase font-mono">Total Fleet</span>
                  <p className="text-3xl font-extrabold font-mono text-cyan-400 mt-2">{stats?.totalUsers}</p>
@@ -2890,14 +2892,6 @@ return (
                <div className="hud-panel p-6 rounded-2xl">
                  <span className="text-xs text-slate-400 font-black uppercase font-mono">Active Operators</span>
                  <p className="text-3xl font-extrabold font-mono text-cyan-300 mt-2">{stats?.activeLearners}</p>
-               </div>
-               <div className="hud-panel p-6 rounded-2xl">
-                 <span className="text-xs text-slate-400 font-black uppercase font-mono">Monthly Active Operators</span>
-                 <p className="text-3xl font-extrabold font-mono text-emerald-400 mt-2">
-                   {(stats?.activeUsersTimeline && stats.activeUsersTimeline.length > 0
-                     ? stats.activeUsersTimeline[stats.activeUsersTimeline.length - 1].users
-                     : 0)}
-                 </p>
                </div>
                <div className="hud-panel p-6 rounded-2xl hud-panel-purple">
                  <span className="text-xs text-slate-400 font-black uppercase font-mono">Mission Success Rate</span>
@@ -3717,45 +3711,15 @@ return (
     // ==========================================
     function Screen12Quiz({ user, onBack }) {
       const [stage, setStage] = React.useState('start');
-      const [selectedSubject, setSelectedSubject] = React.useState(null);
       const [questionCount, setQuestionCount] = React.useState(10);
       const [questions, setQuestions] = React.useState([]);
       const [currentIndex, setCurrentIndex] = React.useState(0);
       const [answers, setAnswers] = React.useState({});
       const [finished, setFinished] = React.useState(false);
       const [score, setScore] = React.useState(0);
-      const [saving, setSaving] = React.useState(false);
-      const [saveError, setSaveError] = React.useState(null);
-
-      const allSubjects = [
-        'General Science',
-        'Mathematics',
-        'Geography',
-        'History',
-        'Current Affairs',
-        'Logical Reasoning',
-        'Computer Basics'
-      ];
-
-      const subjectIcons = {
-        'General Science': '🔬',
-        'Mathematics': '📐',
-        'Geography': '🌍',
-        'History': '📜',
-        'Current Affairs': '📰',
-        'Logical Reasoning': '🧩',
-        'Computer Basics': '💻'
-      };
-
-      function getSubjectIcon(subject) {
-        return subjectIcons[subject] || '📚';
-      }
 
       const handleStartQuiz = () => {
-        if (!selectedSubject) return;
-        const subjectQuestions = getQuestionsBySubject(selectedSubject);
-        const shuffled = shuffleArray(subjectQuestions);
-        const picked = shuffled.slice(0, Math.min(questionCount, shuffled.length));
+        const picked = pickRandomQuestions(questionCount);
         setQuestions(picked);
         setCurrentIndex(0);
         setAnswers({});
@@ -3787,7 +3751,7 @@ return (
         }
       };
 
-      const finishQuiz = async () => {
+      const finishQuiz = () => {
         let correct = 0;
         questions.forEach((q, i) => {
           if (answers[i] === q.correctIndex) {
@@ -3798,54 +3762,10 @@ return (
         setScore(pct);
         setFinished(true);
         setStage('result');
-
-        // Save to quiz_attempts table
-        setSaving(true);
-        setSaveError(null);
-        try {
-          const token = localStorage.getItem('capacity_connect_token');
-          if (token) {
-            const response = await fetch(API_BASE + '/quiz-attempts', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + token
-              },
-              body: JSON.stringify({
-                user_id: user.id,
-                topic: selectedSubject,
-                score: pct,
-                total: questions.length,
-                correct: correct
-              })
-            });
-            if (!response.ok) {
-              const err = await response.json().catch(() => ({}));
-              throw new Error(err.message || 'Failed to save quiz result');
-            }
-          }
-        } catch (err) {
-          setSaveError(err.message || 'Failed to save quiz result');
-        } finally {
-          setSaving(false);
-        }
       };
 
-      const handleRetrySameTopic = () => {
-        const subjectQuestions = getQuestionsBySubject(selectedSubject);
-        const shuffled = shuffleArray(subjectQuestions);
-        const picked = shuffled.slice(0, Math.min(questionCount, shuffled.length));
-        setQuestions(picked);
-        setCurrentIndex(0);
-        setAnswers({});
-        setFinished(false);
-        setScore(0);
-        setStage('quiz');
-      };
-
-      const handleChooseAnotherTopic = () => {
+      const handleRestart = () => {
         setStage('start');
-        setSelectedSubject(null);
         setQuestions([]);
         setCurrentIndex(0);
         setAnswers({});
@@ -3878,10 +3798,6 @@ return (
       const reviewItemCorrectClass = 'p-4 rounded-xl border-2 border-emerald-500 bg-emerald-500/10';
       const reviewItemIncorrectClass = 'p-4 rounded-xl border-2 border-red-500 bg-red-500/10';
       const reviewItemUnansweredClass = 'p-4 rounded-xl border-2 border-amber-500 bg-amber-500/10';
-      const subjectCardBaseClass = 'p-4 rounded-xl border-2 transition cursor-pointer text-center ';
-      const subjectCardSelectedClass = subjectCardBaseClass + 'border-teal-500 bg-teal-500/10';
-      const subjectCardUnselectedClass = subjectCardBaseClass + 'border-electric-blue/10 hover:border-teal-500 hover:bg-electric-blue/5';
-      const subjectIconClass = 'text-3xl mb-2 block';
 
       if (stage === 'start') {
         return (
@@ -3890,34 +3806,10 @@ return (
               <div className="text-center mb-8">
                 <span className="text-5xl mb-4 block">❓</span>
                 <h1 className="text-3xl font-extrabold text-white mb-2">Knowledge Quiz</h1>
-                <p className="text-slate-400">Select a topic and number of questions to begin</p>
+                <p className="text-slate-400">Test your knowledge across multiple subjects</p>
               </div>
 
               <div className="space-y-6">
-                <div>
-                  <label className="block text-sm font-semibold text-slate-200 mb-3">
-                    Choose a topic
-                  </label>
-                  <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
-                    {allSubjects.map((subject) => {
-                      const isSelected = selectedSubject === subject;
-                      let subjectCardClass = subjectCardUnselectedClass;
-                      if (isSelected) subjectCardClass = subjectCardSelectedClass;
-                      return (
-                        <button
-                          key={subject}
-                          type="button"
-                          onClick={() => setSelectedSubject(subject)}
-                          className={subjectCardClass}
-                        >
-                          <span className={subjectIconClass}>{getSubjectIcon(subject)}</span>
-                          <span className="text-sm font-semibold text-white">{subject}</span>
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
-
                 <div>
                   <label className="block text-sm font-semibold text-slate-200 mb-3">
                     How many questions would you like to attempt?
@@ -3937,15 +3829,14 @@ return (
                 <div className="text-center">
                   <button
                     onClick={handleStartQuiz}
-                    disabled={!selectedSubject}
-                    className={selectedSubject ? buttonPrimaryClass : buttonDisabledClass}
+                    className={buttonPrimaryClass}
                   >
                     Start Quiz
                   </button>
                 </div>
 
                 <div className="text-center text-xs text-slate-500">
-                  Available topics: General Science, Mathematics, Geography, History, Current Affairs, Logical Reasoning, Computer Basics
+                  Questions drawn from: General Science, Mathematics, Geography, History, Current Affairs, Logical Reasoning, Computer Basics
                 </div>
               </div>
             </div>
@@ -4035,26 +3926,18 @@ return (
         const wrongCount = questions.filter((q, i) => answers[i] !== undefined && answers[i] !== q.correctIndex).length;
         const unansweredCount = questions.filter((q, i) => answers[i] === undefined).length;
 
-        let resultIcon = '📚';
-        if (score >= 70) resultIcon = '🎉';
-        else if (score >= 50) resultIcon = '👍';
-
         return (
           <div className={resultScreenClass}>
             <div className={cardClass}>
               <div className="text-center mb-8">
-                <span className="text-5xl mb-4 block">{resultIcon}</span>
+                <span className="text-5xl mb-4 block">
+                  {score >= 70 ? '🎉' : score >= 50 ? '👍' : '📚'}
+                </span>
                 <h1 className="text-3xl font-extrabold text-white mb-2">Quiz Complete!</h1>
                 <p className={resultScoreClass}>{score}%</p>
                 <p className={resultSubtextClass}>
                   {correctCount} correct, {wrongCount} incorrect, {unansweredCount} unanswered out of {questions.length}
                 </p>
-                {saveError && (
-                  <p className="text-xs text-red-400 mt-2">Save failed: {saveError}</p>
-                )}
-                {saving && !saveError && (
-                  <p className="text-xs text-teal-400 mt-2">Saving result...</p>
-                )}
               </div>
 
               <div className="space-y-3 mb-8 max-h-96 overflow-y-auto">
@@ -4088,16 +3971,10 @@ return (
 
               <div className="flex flex-col sm:flex-row gap-3 justify-center">
                 <button
-                  onClick={handleRetrySameTopic}
-                  className={buttonPrimaryClass}
-                >
-                  Retry Same Topic
-                </button>
-                <button
-                  onClick={handleChooseAnotherTopic}
+                  onClick={handleRestart}
                   className={buttonSecondaryClass}
                 >
-                  Choose Another Topic
+                  Take New Quiz
                 </button>
                 <button
                   onClick={onBack}
