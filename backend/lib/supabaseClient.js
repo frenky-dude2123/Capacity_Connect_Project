@@ -125,31 +125,42 @@ function fallbackAppendUser(usersArray, user) {
 /**
  * Auth middleware: reads the Authorization header, extracts the token,
  * looks up the user by ID, and sets req.user.
-<<<<<<< HEAD
- * Token format: mock-jwt-token-{userId}-{timestamp}
- * When Supabase is unavailable, falls back to a synthetic user object
- * so auth-dependent routes still function in development.
-=======
- * Token format: mock-jwt-token-{userId}-{role}-{timestamp}
->>>>>>> 677ae6c (Add new courses and fix light-mode text contrast)
- * Safe to call on every request — if no token is present, it just calls next().
+ * Token format supports both mock token types.
  */
 async function authenticateToken(token) {
-  const match = token.match(/^mock-jwt-token-(.+)-(\d+)$/);
-  if (!match) return null;
-  const userId = match[1];
+  let userId = null;
+  let role = null;
+
+  // Pattern 1: mock-jwt-token-{userId}-{role}-{timestamp}
+  const matchWithRole = token.match(/^mock-jwt-token-(.+)-(\w+)-(\d+)$/);
+  // Pattern 2: mock-jwt-token-{userId}-{timestamp}
+  const matchSimple = token.match(/^mock-jwt-token-(.+)-(\d+)$/);
+
+  if (matchWithRole) {
+    userId = matchWithRole[1];
+    role = matchWithRole[2];
+  } else if (matchSimple) {
+    userId = matchSimple[1];
+  } else {
+    return null;
+  }
+
   if (isSupabaseAvailable) {
     try {
       const user = await getUserById(userId);
-      if (user) return user;
+      if (user) return role ? { ...user, role } : user;
     } catch (err) {
       console.error('[Auth] getUserById error:', err.message);
     }
   }
-  // Fallback: synthesize a mock user based on userId prefix
-  let role = 'trainee';
-  if (userId.startsWith('u_admin')) role = 'admin';
-  else if (userId.startsWith('u_trainer')) role = 'trainer';
+
+  // Fallback: synthesize a mock user based on role or userId prefix
+  if (!role) {
+    role = 'trainee';
+    if (userId.startsWith('u_admin')) role = 'admin';
+    else if (userId.startsWith('u_trainer')) role = 'trainer';
+  }
+
   return {
     id: userId,
     name: userId.replace(/^u_/, 'Mock User ') || 'Demo User',
@@ -167,25 +178,13 @@ function authMiddleware(req, res, next) {
   const authHeader = req.headers['authorization'] || '';
   if (authHeader.startsWith('Bearer ')) {
     const token = authHeader.substring(7);
-<<<<<<< HEAD
-    authenticateToken(token).then(user => {
-      if (user) req.user = user;
-      next();
-    }).catch(() => next());
-    return;
-=======
-    const match = token.match(/^mock-jwt-token-(.+)-(\w+)-(\d+)$/);
-    if (match) {
-      const userId = match[1];
-      const role = match[2];
-      req.user = { id: userId, role: role };
-      getUserById(userId).then(user => {
-        if (user) req.user = { ...req.user, ...user };
+    authenticateToken(token)
+      .then((user) => {
+        if (user) req.user = user;
         next();
-      }).catch(() => next());
-      return;
-    }
->>>>>>> 677ae6c (Add new courses and fix light-mode text contrast)
+      })
+      .catch(() => next());
+    return;
   }
   next();
 }
@@ -201,7 +200,7 @@ function requireRole(...allowedRoles) {
     if (!role || !allowedRoles.includes(role)) {
       return res.status(403).json({
         error: 'Forbidden',
-        message: `Access denied. Required role: ${allowedRoles.join(' or ')}.`
+        message: `Access denied. Required role: ${allowedRoles.join(' or ')}.`,
       });
     }
     next();
