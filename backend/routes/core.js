@@ -24,6 +24,27 @@ const coreRouter = express.Router();
 // Course reference for certificates
 const courseTitles = {};
 
+function guardApproval(res, user) {
+  if (!user) return false;
+  if (user.status === 'pending') {
+    res.status(403).json({
+      error: 'Account pending',
+      message: 'Your account is awaiting admin approval.',
+      status: user.status
+    });
+    return true;
+  }
+  if (user.status === 'rejected') {
+    res.status(403).json({
+      error: 'Account rejected',
+      message: 'Your account registration was not approved.',
+      status: user.status
+    });
+    return true;
+  }
+  return false;
+}
+
 // ==========================================
 // TOPIC 1: AUTHENTICATION (Login / Signup)
 // ==========================================
@@ -91,21 +112,7 @@ authRouter.post('/login', async (req, res) => {
       });
     }
 
-    if (supabaseUser.status === 'pending') {
-        return res.status(403).json({
-          error: 'Account pending',
-          message: 'Your account is awaiting admin approval.',
-          status: supabaseUser.status
-        });
-      }
-
-      if (supabaseUser.status === 'rejected') {
-        return res.status(403).json({
-          error: 'Account rejected',
-          message: 'Your account registration was not approved.',
-          status: supabaseUser.status
-        });
-      }
+    if (guardApproval(res, supabaseUser)) return;
 
     const token = `mock-jwt-token-${supabaseUser.id}-${supabaseUser.role}-${Date.now()}`;
     const redirectMap = {
@@ -166,13 +173,15 @@ authRouter.post('/signup', async (req, res) => {
         skills: normalizedRole === 'trainee' ? skills || null : null,
         subjects: normalizedRole === 'trainer' ? subjects || null : null
       };
-      const token = `mock-jwt-token-${mockUser.id}-${Date.now()}`;
-      return res.status(201).json({
-        message: 'User registered successfully (demo mode). Awaiting admin approval.',
+      const token = `mock-jwt-token-${mockUser.id}-${mockUser.role}-${Date.now()}`;
+      if (guardApproval(res, mockUser)) return;
+      res.status(201).json({
+        message: 'User registered successfully (demo mode).',
         token,
         source: 'demo-fallback',
         user: mockUser
       });
+      return;
     }
 
     const normalizedRole = role === 'trainer' ? 'trainer' : 'trainee';
@@ -208,8 +217,10 @@ authRouter.post('/signup', async (req, res) => {
 
     const token = `mock-jwt-token-${supabaseUser.id}-${supabaseUser.role}-${Date.now()}`;
 
+    if (guardApproval(res, supabaseUser)) return;
+
     res.status(201).json({
-      message: 'User registered successfully. Awaiting admin approval.',
+      message: 'User registered successfully.',
       token,
       source: 'supabase',
       user: {
