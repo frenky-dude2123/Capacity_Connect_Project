@@ -955,7 +955,7 @@ tailwind.config = {
   <!-- Chart.js for Admin Analytics -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
 </head>
-<body class="bg-space-gradient bg-starfield min-h-screen text-slate-700 dark:text-slate-200 font-inter">
+<body class="bg-space-gradient bg-starfield min-h-screen text-slate-200 font-inter dark">
   <div id="root"></div>
 
   <script type="text/babel">
@@ -2025,7 +2025,7 @@ const fetchAIRecommendations = async () => {
         } catch (err) { setAiError(err.message); } finally { setAiLoading(false); }
       };
 
-      if (loading) return <div className="py-20 text-center text-sm text-slate-800 dark:text-slate-400">Loading Learner Dashboard...</div>;
+      if (loading) return <div className="py-20 text-center text-sm text-slate-400">Loading Learner Dashboard...</div>;
 
       const continueWatching = getContinueWatching();
       const currentCourse = dash?.enrolledCourses?.find(c => c.id === continueWatching?.courseId);
@@ -2035,7 +2035,7 @@ const fetchAIRecommendations = async () => {
            <div className="flex justify-between items-center pb-6 border-b border-cyan-500/20">
              <div>
                <span className="px-2.5 py-0.5 rounded-full text-xs font-black font-mono bg-cyan-500/20 text-cyan-300 border border-cyan-400/30">TRAINEE PORTAL • DASHBOARD</span>
-               <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white mt-1">Learner Dashboard: {dash?.userName}</h1>
+               <h1 className="text-2xl sm:text-3xl font-extrabold text-white mt-1">Learner Dashboard: {dash?.userName}</h1>
              </div>
              <button onClick={onOpenCatalog} className="px-4 py-2 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white dark:text-white rounded-xl text-xs font-black shadow-lg shadow-cyan-500/30 neon-glow">Explore Catalog →</button>
            </div>
@@ -2043,7 +2043,7 @@ const fetchAIRecommendations = async () => {
            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
              <div className="hud-panel p-6 rounded-2xl">
                <div className="flex items-center justify-between mb-3">
-                 <span className="text-xs text-slate-800 dark:text-slate-400 font-black uppercase font-mono">Fleet Readiness</span>
+                 <span className="text-xs text-slate-400 font-black uppercase font-mono">Fleet Readiness</span>
                  <span className="w-8 h-8 rounded-lg bg-gradient-to-br from-cyan-500/20 to-blue-600/20 flex items-center justify-center text-sm">🎯</span>
                </div>
                <p className="text-3xl font-extrabold font-mono text-cyan-400 mt-1">{dash?.metrics?.capacityScore}%</p>
@@ -2053,23 +2053,23 @@ const fetchAIRecommendations = async () => {
              </div>
              <div className="hud-panel p-6 rounded-2xl">
                <div className="flex items-center justify-between mb-3">
-                 <span className="text-xs text-slate-800 dark:text-slate-400 font-black uppercase font-mono">Active Sectors</span>
+                 <span className="text-xs text-slate-400 font-black uppercase font-mono">Active Sectors</span>
                  <span className="w-8 h-8 rounded-lg bg-gradient-to-br from-cyan-500/20 to-blue-600/20 flex items-center justify-center text-sm">📚</span>
                </div>
-               <p className="text-3xl font-extrabold font-mono text-slate-900 dark:text-white mt-1">{dash?.metrics?.activeCourses}</p>
+               <p className="text-3xl font-extrabold font-mono text-white mt-1">{dash?.metrics?.activeCourses}</p>
                <p className="text-[10px] text-slate-500 mt-2 font-mono">enrolled pathways</p>
              </div>
              <div className="hud-panel p-6 rounded-2xl">
                <div className="flex items-center justify-between mb-3">
-                 <span className="text-xs text-slate-800 dark:text-slate-400 font-black uppercase font-mono">Mission Hours</span>
+                 <span className="text-xs text-slate-400 font-black uppercase font-mono">Mission Hours</span>
                  <span className="w-8 h-8 rounded-lg bg-gradient-to-br from-amber-500/20 to-orange-600/20 flex items-center justify-center text-sm">⏱️</span>
                </div>
-               <p className="text-3xl font-extrabold font-mono text-slate-900 dark:text-white mt-1">{dash?.metrics?.trainingHours}h</p>
+               <p className="text-3xl font-extrabold font-mono text-white mt-1">{dash?.metrics?.trainingHours}h</p>
                <p className="text-[10px] text-slate-500 mt-2 font-mono">completed this quarter</p>
              </div>
              <div className="hud-panel p-6 rounded-2xl hud-panel-purple">
                <div className="flex items-center justify-between mb-3">
-                 <span className="text-xs text-slate-800 dark:text-slate-400 font-black uppercase font-mono">Clearance Badges</span>
+                 <span className="text-xs text-slate-400 font-black uppercase font-mono">Clearance Badges</span>
                  <span className="w-8 h-8 rounded-lg bg-gradient-to-br from-amber-500/20 to-yellow-500/20 flex items-center justify-center text-sm">🏆</span>
                </div>
                <p className="text-3xl font-extrabold font-mono text-amber-400 mt-1">{dash?.metrics?.completedCertifications}</p>
@@ -2082,11 +2082,11 @@ const fetchAIRecommendations = async () => {
                <div className="hud-panel rounded-2xl p-6 border border-cyan-500/20">
                  <div className="flex items-center gap-2 mb-3">
                    <span className="radar-pulse"></span>
-                   <h2 className="text-lg font-black text-slate-900 dark:text-white font-mono tracking-wide">ACTIVE ORBITAL MISSIONS</h2>
+                   <h2 className="text-lg font-black text-white font-mono tracking-wide">ACTIVE ORBITAL MISSIONS</h2>
                  </div>
                  <div className="flex items-center justify-between gap-4">
                    <div className="flex-1">
-                     <p className="text-sm text-slate-900 dark:text-slate-300 mt-1">Resume at lecture {continueWatching.lectureId}: {currentCourse.title}</p>
+                     <p className="text-sm text-slate-300 mt-1">Resume at lecture {continueWatching.lectureId}: {currentCourse.title}</p>
                      <div className="mt-3 w-full bg-slate-800 rounded-full h-2 overflow-hidden">
                        <div className="laser-bar h-2 rounded-full" style={{ width: getProgressPercent(continueWatching.completedLectures.length, currentCourse.syllabus?.length || 1) + '%' }}></div>
                      </div>
@@ -2095,7 +2095,7 @@ const fetchAIRecommendations = async () => {
                  </div>
                </div>
              )}
-             <h2 className="text-lg font-black text-slate-900 dark:text-white font-mono tracking-wide flex items-center gap-2">
+             <h2 className="text-lg font-black text-white font-mono tracking-wide flex items-center gap-2">
                <span className="w-2 h-2 rounded-full bg-cyan-400 radar-pulse"></span>
                My Enrolled Pathways
              </h2>
@@ -2104,9 +2104,9 @@ const fetchAIRecommendations = async () => {
                  <div key={c.id} className="hud-panel p-4 sm:p-6 flex flex-col justify-between rounded-2xl border border-cyan-500/20">
                    <div>
                       <span className="sector-badge">{c.category}</span>
-                      <h3 className="text-base font-black text-slate-900 dark:text-white mt-2">{c.title}</h3>
+                      <h3 className="text-base font-black text-white mt-2">{c.title}</h3>
                       <div className="mt-3">
-                        <div className="flex justify-between text-xs text-slate-900 dark:text-slate-300 font-black mb-1 font-mono">
+                        <div className="flex justify-between text-xs text-slate-300 font-black mb-1 font-mono">
                           <span>PROGRESS</span><span className="text-cyan-400">{c.progressPercent}%</span>
                         </div>
                         <div className="w-full bg-slate-800 rounded-full h-2 overflow-hidden">
@@ -2125,7 +2125,7 @@ const fetchAIRecommendations = async () => {
 
              <div className="glass-card p-6 cosmic-card rounded-2xl border border-cyan-500/20 shadow-lg">
              <div className="flex items-center justify-between mb-4">
-                 <h3 className="text-lg font-black text-slate-900 dark:text-white flex items-center gap-2 font-mono tracking-wide">
+                 <h3 className="text-lg font-black text-white flex items-center gap-2 font-mono tracking-wide">
                    <span className="text-cyan-400">🤖 AI RECOMMENDATIONS</span>
                  </h3>
                  <button
@@ -2140,7 +2140,7 @@ const fetchAIRecommendations = async () => {
                {aiLoading && (
                  <div className="py-10 text-center">
                    <div className="w-8 h-8 border-4 border-cyan-500 border-t-transparent rounded-full animate-spin mx-auto shadow-lg shadow-cyan-500/50 mb-3"></div>
-                   <p className="text-sm text-slate-900 dark:text-slate-300">AI analyzing weak areas and generating personalized recommendations...</p>
+                   <p className="text-sm text-slate-300">AI analyzing weak areas and generating personalized recommendations...</p>
                  </div>
               )}
 
@@ -2153,7 +2153,7 @@ const fetchAIRecommendations = async () => {
                   <p className={"text-xs font-black font-mono " + (aiRecs.source === 'ai' ? 'text-cyan-400' : 'text-amber-400')}>
                     {aiRecs.source === 'ai' ? '◆ Powered by Gemini LLM' : '◇ Using sample recommendations'}
                   </p>
-                  <p className="text-xs text-slate-800 dark:text-slate-400">{aiRecs.summary}</p>
+                  <p className="text-xs text-slate-400">{aiRecs.summary}</p>
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                     {aiRecs.recommendations?.map((rec) => (
                       <div key={rec.courseId} className="p-4 rounded-xl border border-cyan-500/20 bg-slate-900/50 hover:bg-slate-900/80 hover:shadow-cyan-500/20 transition-all">
@@ -2161,8 +2161,8 @@ const fetchAIRecommendations = async () => {
                           <span className="sector-badge">{rec.category}</span>
                           <span className="px-2 py-0.5 bg-slate-800 text-slate-300 text-[10px] font-black rounded font-mono">{rec.difficulty}</span>
                         </div>
-                        <h4 className="text-sm font-black text-slate-900 dark:text-white mb-1">{rec.title}</h4>
-                        <p className="text-xs text-slate-900 dark:text-slate-300 mb-2">{rec.reason}</p>
+                        <h4 className="text-sm font-black text-white mb-1">{rec.title}</h4>
+                        <p className="text-xs text-slate-300 mb-2">{rec.reason}</p>
                       </div>
                     ))}
                   </div>
@@ -2170,7 +2170,7 @@ const fetchAIRecommendations = async () => {
               )}
 
               {!aiLoading && !aiRecs && !aiError && (
-                <p className="text-xs text-slate-800 dark:text-slate-400 font-mono">Click "Generate with AI" to get personalized recommendations based on your weak quiz areas.</p>
+                <p className="text-xs text-slate-400 font-mono">Click "Generate with AI" to get personalized recommendations based on your weak quiz areas.</p>
               )}
             </div>
          </div>
@@ -2528,17 +2528,17 @@ return (
 
                <div className="glass-card rounded-2xl border border-electric-blue/10 p-6 space-y-4">
                  <div className="flex items-center justify-between">
-                   <h2 className="text-lg font-black text-slate-900 dark:text-white">Knowledge Check Quiz</h2>
+                   <h2 className="text-lg font-black text-white">Knowledge Check Quiz</h2>
                     {!quizStarted && <button onClick={startQuiz} className="px-4 py-2 bg-isro-orange text-white dark:text-white text-xs font-black rounded-lg btn-micro">Start Quiz</button>}
                  </div>
 
                  {quizStarted && quizQuestions.length > 0 && !quizFinished && (
                    <div className="space-y-4">
                      <div className="flex items-center justify-between">
-                       <span className="text-xs font-black text-slate-800 dark:text-slate-400 uppercase">Question {currentQuestionIndex + 1} of {quizQuestions.length}</span>
-                       <span className="text-xs font-black text-slate-800 dark:text-slate-400">{Object.keys(userAnswers).length} of {quizQuestions.length} answered</span>
+                       <span className="text-xs font-black text-slate-400 uppercase">Question {currentQuestionIndex + 1} of {quizQuestions.length}</span>
+                       <span className="text-xs font-black text-slate-400">{Object.keys(userAnswers).length} of {quizQuestions.length} answered</span>
                      </div>
-                     <p className="text-sm font-semibold text-slate-900 dark:text-slate-100 dark:text-slate-200">{currentQ.question}</p>
+                     <p className="text-sm font-semibold text-slate-200">{currentQ.question}</p>
                      <div className="space-y-2">
                        {currentQ.options?.map((opt, i) => {
                          const isSelected = userAnswers[currentQuestionIndex] === i;
@@ -2547,13 +2547,13 @@ return (
                          return (
                            <label key={i} className={"flex items-start gap-3 p-3 rounded-xl border-2 transition cursor-pointer " + (borderStyle)}>
                              <input type="radio" name={"q" + currentQuestionIndex} disabled={quizFinished} checked={isSelected} onChange={() => handleQuizAnswer(currentQuestionIndex, i)} className="mt-1 w-4 h-4 text-isro-orange" />
-                             <div className="flex-1 text-sm text-slate-900 dark:text-slate-100 dark:text-slate-200 leading-snug">{opt}</div>
+                             <div className="flex-1 text-sm text-slate-200 leading-snug">{opt}</div>
                            </label>
                          );
                        })}
                      </div>
                      <div className="flex flex-wrap gap-2">
-                       <button onClick={prevQuestion} disabled={isFirstQuestion} className="px-4 py-2 bg-space-blue/50 text-xs font-black text-slate-900 rounded-lg disabled:opacity-40 disabled:cursor-not-allowed btn-micro">Previous Question</button>
+                       <button onClick={prevQuestion} disabled={isFirstQuestion} className="px-4 py-2 bg-space-blue/50 text-xs font-black text-white rounded-lg disabled:opacity-40 disabled:cursor-not-allowed btn-micro">Previous Question</button>
                        {isLastQuestion ? (
                          <button onClick={finishQuiz} disabled={!allQuestionsAnswered} className="px-4 py-2 bg-electric-blue text-white dark:text-white text-xs font-black rounded-lg disabled:opacity-40 disabled:cursor-not-allowed btn-micro">Finish Quiz & See Results</button>
                        ) : (
@@ -2566,27 +2566,27 @@ return (
                  {quizFinished && (
                    <div className="space-y-4">
                      <div className="p-4 rounded-xl border border-electric-blue/10 bg-space-blue/20">
-                       <p className="text-xs font-black uppercase text-slate-800 dark:text-slate-400">Final Score</p>
-                       <p className="text-3xl font-extrabold text-slate-900 dark:text-white">{quizScore}%</p>
-                       <p className="text-xs text-slate-800 dark:text-slate-400">Best attempt: {bestScore !== null && bestScore !== undefined ? bestScore : quizScore}%</p>
+                       <p className="text-xs font-black uppercase text-slate-400">Final Score</p>
+                       <p className="text-3xl font-extrabold text-white">{quizScore}%</p>
+                       <p className="text-xs text-slate-400">Best attempt: {bestScore !== null && bestScore !== undefined ? bestScore : quizScore}%</p>
                      </div>
                      <div className="space-y-2">
-                       <p className="text-xs font-black uppercase text-slate-800 dark:text-slate-400">Answer Review</p>
+                       <p className="text-xs font-black uppercase text-slate-400">Answer Review</p>
                        {quizQuestions.map((q, i) => {
                          const userAnswer = userAnswers[i];
                          const isCorrect = userAnswer === q.correctIndex;
                          const isAnswered = userAnswer !== undefined;
                          return (
                            <div key={i} className={"p-3 rounded-xl border-2 " + (isCorrect ? 'border-emerald-500 bg-electric-blue/10 dark:bg-emerald-900/30' : 'border-red-500 bg-crimson/10 dark:bg-red-900/30')}>
-                             <p className="text-xs font-semibold text-slate-900 dark:text-slate-100 dark:text-slate-200 mb-1">Q{i + 1}: {q.question}</p>
-                     <p className="text-xs text-slate-900 dark:text-slate-300 dark:text-slate-400">Your answer: {isAnswered ? q.options[userAnswer] : 'Not answered'}</p>
+                             <p className="text-xs font-semibold text-slate-200 mb-1">Q{i + 1}: {q.question}</p>
+                     <p className="text-xs text-slate-300 dark:text-slate-400">Your answer: {isAnswered ? q.options[userAnswer] : 'Not answered'}</p>
                              {!isCorrect && <p className="text-xs text-electric-blue font-black">Correct answer: {q.options[q.correctIndex]}</p>}
                            </div>
                          );
                        })}
                      </div>
                      <div className="flex gap-3">
-                   <button onClick={retakeQuiz} className="px-4 py-2 bg-space-blue/50 text-xs font-black text-slate-900 rounded-lg btn-micro">Retake Quiz</button>
+                   <button onClick={retakeQuiz} className="px-4 py-2 bg-space-blue/50 text-xs font-black text-white rounded-lg btn-micro">Retake Quiz</button>
                        {quizScore >= PASSING_SCORE_THRESHOLD && <button onClick={takeNewQuiz} className="px-4 py-2 bg-electric-blue text-white dark:text-white text-xs font-black rounded-lg btn-micro">Take New Quiz ▶</button>}
                      </div>
                    </div>
@@ -2599,30 +2599,30 @@ return (
                <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
                <div className="glass-card rounded-3xl border border-electric-blue/10 shadow-2xl max-w-2xl w-full p-8 space-y-6">
                  <div className="text-center">
-                   <p className="text-xs font-black uppercase tracking-widest text-slate-800 dark:text-slate-400">Quiz Assessment Report</p>
-                   <h2 className="text-3xl font-extrabold text-slate-900 dark:text-white mt-2">{reportModal.badge}</h2>
-                   <p className="text-sm text-slate-800 dark:text-slate-400 mt-1">Final Score: {quizScore}% | Best: {bestScore !== null && bestScore !== undefined ? bestScore : quizScore}%</p>
+                   <p className="text-xs font-black uppercase tracking-widest text-slate-400">Quiz Assessment Report</p>
+                   <h2 className="text-3xl font-extrabold text-white mt-2">{reportModal.badge}</h2>
+                   <p className="text-sm text-slate-400 mt-1">Final Score: {quizScore}% | Best: {bestScore !== null && bestScore !== undefined ? bestScore : quizScore}%</p>
                  </div>
                  <div className="bg-space-blue/20 rounded-2xl border border-electric-blue/10 p-6 space-y-4">
                    <div>
-                     <h3 className="text-xs font-black uppercase text-slate-800 dark:text-slate-400 mb-2">Key Strengths</h3>
+                     <h3 className="text-xs font-black uppercase text-slate-400 mb-2">Key Strengths</h3>
                      <ul className="space-y-1">
-                       {reportModal.strengths.map((s, i) => (<li key={i} className="text-sm text-slate-900 dark:text-slate-300 flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-electric-blue/100"></span>{s}</li>))}
+                       {reportModal.strengths.map((s, i) => (<li key={i} className="text-sm text-slate-300 flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-electric-blue/100"></span>{s}</li>))}
                      </ul>
                    </div>
                    <div className="border-t border-electric-blue/10 pt-4">
-                     <h3 className="text-xs font-black uppercase text-slate-800 dark:text-slate-400 mb-2">Areas for Improvement</h3>
+                     <h3 className="text-xs font-black uppercase text-slate-400 mb-2">Areas for Improvement</h3>
                      <ul className="space-y-1">
-                       {reportModal.improvements.length ? reportModal.improvements.map((s, i) => (<li key={i} className="text-sm text-slate-900 dark:text-slate-300 flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-crimson/100"></span>{s}</li>)) : <li className="text-sm text-slate-800 dark:text-slate-400">No significant weak areas detected.</li>}
+                       {reportModal.improvements.length ? reportModal.improvements.map((s, i) => (<li key={i} className="text-sm text-slate-300 flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-crimson/100"></span>{s}</li>)) : <li className="text-sm text-slate-400">No significant weak areas detected.</li>}
                      </ul>
                    </div>
                    <div className="border-t border-electric-blue/10 pt-4">
-                     <h3 className="text-xs font-black uppercase text-slate-800 dark:text-slate-400 mb-2">Recommended Next Action</h3>
-                     <p className="text-sm text-slate-900 dark:text-slate-100 dark:text-slate-200 font-semibold">{reportModal.recommendation}</p>
+                     <h3 className="text-xs font-black uppercase text-slate-400 mb-2">Recommended Next Action</h3>
+                     <p className="text-sm text-slate-200 font-semibold">{reportModal.recommendation}</p>
                    </div>
                  </div>
                  <div className="flex justify-end gap-3">
-                   <button onClick={() => setReportModal(null)} className="px-5 py-2 bg-space-blue/50 text-xs font-black text-slate-900 rounded-lg btn-micro">Close Report</button>
+                   <button onClick={() => setReportModal(null)} className="px-5 py-2 bg-space-blue/50 text-xs font-black text-white rounded-lg btn-micro">Close Report</button>
                    {quizScore < PASSING_SCORE_THRESHOLD ? (
                      <button onClick={retakeQuiz} className="px-5 py-2 bg-amber-600 hover:bg-amber-700 text-white dark:text-white text-xs font-black rounded-lg btn-micro">Review & Retake Quiz</button>
                    ) : (
@@ -2991,55 +2991,55 @@ return (
           <div className="flex items-center justify-between pb-6 border-b border-electric-blue/10">
             <div>
               <span className={"px-3 py-1.5 rounded-full text-xs font-black " + (user?.role === 'trainee' ? 'bg-gradient-to-r from-teal-500/20 to-cyan-500/20 text-teal-300 border border-teal-400/30' : 'bg-gradient-to-r from-amber-500/20 to-orange-500/20 text-amber-300 border border-amber-400/30')}>AI Skill Gap Scanner</span>
-               <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white mt-2">Resume / Skill Gap Analysis</h1>
-               <p className="text-xs sm:text-sm text-slate-900 dark:text-slate-300 mt-1">Upload your profile or paste resume text for AI-powered skill gap analysis and personalized pathway recommendations.</p>
+               <h1 className="text-2xl sm:text-3xl font-extrabold text-white mt-2">Resume / Skill Gap Analysis</h1>
+               <p className="text-xs sm:text-sm text-slate-300 mt-1">Upload your profile or paste resume text for AI-powered skill gap analysis and personalized pathway recommendations.</p>
             </div>
             <button onClick={onBack} className="px-4 py-2 bg-space-blue/50 border border-cyan-400/30 text-cyan-300 rounded-xl hover:bg-cyan-500/10 text-xs font-black btn-micro">← Back</button>
           </div>
 
           <div className="glass-card p-6 space-y-4">
             <div className="flex items-center gap-2">
-               <label className="text-sm font-black text-slate-900 dark:text-white">Upload Resume:</label>
+               <label className="text-sm font-black text-white">Upload Resume:</label>
                <input type="file" accept=".txt,.pdf,.doc,.docx" onChange={handleFileChange} className="text-xs file:mr-3 file:py-1.5 file:px-4 file:rounded-lg file:border-0 file:text-xs file:bg-cyan-500/20 file:text-cyan-300 hover:file:bg-cyan-500/30" />
                {fileName && <span className="text-xs text-slate-400">{fileName}</span>}
             </div>
             <div>
-              <label className="block text-sm font-black text-slate-900 dark:text-white mb-1">Or paste resume text:</label>
-               <textarea value={resumeText} onChange={(e) => setResumeText(e.target.value)} placeholder="Paste your resume or profile text here..." className="w-full h-32 px-3.5 py-2.5 rounded-xl border border-cyan-500/30 bg-space-black/50 text-sm text-slate-900 dark:text-white placeholder-slate-500 resize-y focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500" disabled={scanning} />
+              <label className="block text-sm font-black text-white mb-1">Or paste resume text:</label>
+               <textarea value={resumeText} onChange={(e) => setResumeText(e.target.value)} placeholder="Paste your resume or profile text here..." className="w-full h-32 px-3.5 py-2.5 rounded-xl border border-cyan-500/30 bg-space-black/50 text-sm text-white placeholder-slate-500 resize-y focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500" disabled={scanning} />
             </div>
             {error && <p className="text-xs text-red-400 font-black">{error}</p>}
-              <button onClick={handleScan} disabled={scanning || !resumeText.trim()} className={"px-6 py-2.5 rounded-xl text-xs font-black shadow transition " + (scanning || !resumeText.trim() ? 'bg-space-blue/50 text-slate-800 dark:text-slate-400 cursor-not-allowed' : 'btn-accent')}>
+              <button onClick={handleScan} disabled={scanning || !resumeText.trim()} className={"px-6 py-2.5 rounded-xl text-xs font-black shadow transition " + (scanning || !resumeText.trim() ? 'bg-space-blue/50 text-slate-400 cursor-not-allowed' : 'btn-accent')}>
               {scanning ? 'Scanning with AI...' : 'Scan for Skills & Recommend Pathways'}
             </button>
           </div>
 
-           {scanning && (<div className="py-20 text-center"><div className="w-10 h-10 border-4 border-isro-orange border-t-transparent rounded-full animate-spin mx-auto"></div><p className="mt-3 text-sm font-medium text-slate-900 dark:text-slate-300">AI analyzing resume and identifying skill gaps...</p></div>)}
+           {scanning && (<div className="py-20 text-center"><div className="w-10 h-10 border-4 border-isro-orange border-t-transparent rounded-full animate-spin mx-auto"></div><p className="mt-3 text-sm font-medium text-slate-300">AI analyzing resume and identifying skill gaps...</p></div>)}
 
            {!scanning && result && (
              <div className="space-y-6">
                <div className="glass-card p-6">
                  <div className="flex items-center justify-between mb-4">
-                   <h2 className="text-lg font-black text-slate-900 dark:text-white">Scan Results</h2>
+                   <h2 className="text-lg font-black text-white">Scan Results</h2>
                    <span className={"text-xs px-2 py-1 rounded " + (result.source === 'ai' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800')}>{result.source === 'ai' ? 'AI Generated' : 'Sample Data'}</span>
                  </div>
-                 <p className="text-sm text-slate-900 dark:text-slate-300 mb-4">{result.summary}</p>
+                 <p className="text-sm text-slate-300 mb-4">{result.summary}</p>
                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                    <div>
-                     <h3 className="text-sm font-black text-slate-900 dark:text-slate-100 dark:text-slate-200 mb-2">Detected Skills ({result.detectedSkills?.length || 0})</h3>
+                     <h3 className="text-sm font-black text-slate-200 mb-2">Detected Skills ({result.detectedSkills?.length || 0})</h3>
                      <div className="flex flex-wrap gap-1.5">{result.detectedSkills?.map((s, i) => (<span key={i} className="px-2.5 py-1 bg-gradient-to-r from-teal-500/20 to-cyan-500/20 text-teal-300 border border-teal-400/30 text-xs rounded-lg">{s}</span>))}</div>
                      {result.unrecognized_skills && result.unrecognized_skills.length > 0 && (
                        <div className="mt-2 pt-2 border-t border-electric-blue/10">
-                         <h4 className="text-[10px] font-black uppercase text-slate-800 dark:text-slate-400 mb-1">Uncategorized Skills</h4>
-                         <div className="flex flex-wrap gap-1.5">{result.unrecognized_skills.map((s, i) => (<span key={i} className="px-2 py-0.5 bg-space-blue/50 text-slate-900 dark:text-slate-300 text-[10px] font-black rounded">{s}</span>))}</div>
+                         <h4 className="text-[10px] font-black uppercase text-slate-400 mb-1">Uncategorized Skills</h4>
+                         <div className="flex flex-wrap gap-1.5">{result.unrecognized_skills.map((s, i) => (<span key={i} className="px-2 py-0.5 bg-space-blue/50 text-slate-300 text-[10px] font-black rounded">{s}</span>))}</div>
                        </div>
                      )}
                    </div>
                    <div>
-                     <h3 className="text-sm font-black text-slate-900 dark:text-slate-100 dark:text-slate-200 mb-2">Missing Skills ({result.missingSkills?.length || 0})</h3>
+                     <h3 className="text-sm font-black text-slate-200 mb-2">Missing Skills ({result.missingSkills?.length || 0})</h3>
                      <div className="flex flex-wrap gap-1.5">{result.missingSkills?.map((s, i) => (<span key={i} className="px-2.5 py-1 bg-gradient-to-r from-red-500/20 to-rose-500/20 text-red-300 border border-red-400/30 text-xs rounded-lg">{s}</span>))}</div>
                      {result.missing_skills_without_courses && result.missing_skills_without_courses.length > 0 && (
                        <div className="mt-2 pt-2 border-t border-electric-blue/10">
-                         <h4 className="text-[10px] font-black uppercase text-slate-800 dark:text-slate-400 mb-1">No matching course yet</h4>
+                         <h4 className="text-[10px] font-black uppercase text-slate-400 mb-1">No matching course yet</h4>
                          <div className="flex flex-wrap gap-1.5">{result.missing_skills_without_courses.map((s, i) => (<span key={i} className="px-2 py-0.5 bg-amber-100 text-amber-800 text-[10px] font-black rounded">{s}</span>))}</div>
                        </div>
                      )}
@@ -3047,7 +3047,7 @@ return (
                  </div>
                  {result.skill_categories && result.skill_categories.length > 0 && (
                    <div className="mt-4 pt-4 border-t border-electric-blue/10">
-                     <h3 className="text-xs font-black uppercase text-slate-800 dark:text-slate-400 mb-2">Skill Categories Detected</h3>
+                     <h3 className="text-xs font-black uppercase text-slate-400 mb-2">Skill Categories Detected</h3>
                     <div className="flex flex-wrap gap-1.5">
                       {result.skill_categories.map((c, i) => (
                         <span key={i} className="px-2.5 py-1 bg-electric-blue/10 text-electric-blue text-xs rounded-lg">{c}</span>
@@ -3058,20 +3058,20 @@ return (
               </div>
 
                <div className="glass-card rounded-2xl border border-cyan-500/20 shadow-lg p-6 cosmic-card">
-                 <h3 className="text-base font-black text-slate-900 dark:text-white mb-4">Recommended Courses for Auto-Enrollment</h3>
-                 <div className="space-y-3">{result.recommendedCourses?.map((c) => { const isEnrolled = enrolled.includes(c.courseId);                     const priorityColor = c.priority === 'high' ? 'bg-isro-orange text-white dark:text-white' : c.priority === 'medium' ? 'bg-gradient-to-r from-amber-500/20 to-orange-500/20 text-amber-300 border border-amber-400/30' : 'bg-electric-blue/10 text-slate-900 dark:text-slate-300'; return (
+                 <h3 className="text-base font-black text-white mb-4">Recommended Courses for Auto-Enrollment</h3>
+                 <div className="space-y-3">{result.recommendedCourses?.map((c) => { const isEnrolled = enrolled.includes(c.courseId);                     const priorityColor = c.priority === 'high' ? 'bg-isro-orange text-white dark:text-white' : c.priority === 'medium' ? 'bg-gradient-to-r from-amber-500/20 to-orange-500/20 text-amber-300 border border-amber-400/30' : 'bg-electric-blue/10 text-slate-300'; return (
                      <div key={c.courseId} className="p-4 rounded-xl border border-electric-blue/10 hover:bg-space-blue/20">
                        <div className="flex items-center justify-between gap-3">
                          <div className="flex-1">
                            <div className="flex items-center gap-2">
-                             <span className="px-2 py-0.5 bg-space-blue/30 text-slate-900 dark:text-slate-300 text-[10px] font-black rounded">{c.category}</span>
+                             <span className="px-2 py-0.5 bg-space-blue/30 text-slate-300 text-[10px] font-black rounded">{c.category}</span>
                              <span className={"px-2 py-0.5 text-xs font-black rounded " + priorityColor}>{c.priority}</span>
-                             <span className="text-[10px] text-slate-800 dark:text-slate-400">Match: {c.matchScore}%</span>
+                             <span className="text-[10px] text-slate-400">Match: {c.matchScore}%</span>
                            </div>
-                           <h4 className="text-sm font-black text-slate-900 dark:text-white mt-1">{c.title}</h4>
-                           <p className="text-xs text-slate-900 dark:text-slate-300 mt-1">{c.reason}</p>
+                           <h4 className="text-sm font-black text-white mt-1">{c.title}</h4>
+                           <p className="text-xs text-slate-300 mt-1">{c.reason}</p>
                          </div>
-                          <button onClick={() => handleEnroll(c.courseId, c.title)} disabled={isEnrolled} className={"px-3.5 py-1.5 rounded-lg text-xs font-black transition btn-micro " + (isEnrolled ? 'bg-space-blue/30 text-slate-800 dark:text-slate-400 cursor-not-allowed' : 'bg-electric-blue hover:bg-electric-blue-dark text-white dark:text-white')}>
+                          <button onClick={() => handleEnroll(c.courseId, c.title)} disabled={isEnrolled} className={"px-3.5 py-1.5 rounded-lg text-xs font-black transition btn-micro " + (isEnrolled ? 'bg-space-blue/30 text-slate-400 cursor-not-allowed' : 'bg-electric-blue hover:bg-electric-blue-dark text-white dark:text-white')}>
                            {isEnrolled ? 'Enrolled ✓' : 'Auto-Enroll'}
                          </button>
                        </div>
@@ -3081,12 +3081,12 @@ return (
 
                {result.suggestedEnrollments?.length > 0 && (
                  <div className="glass-card rounded-2xl border border-electric-blue/10 shadow-sm p-6">
-                   <h3 className="text-base font-black text-slate-900 dark:text-white mb-3">Suggested Learning Pathways</h3>
+                   <h3 className="text-base font-black text-white mb-3">Suggested Learning Pathways</h3>
                    <div className="space-y-2">
                      {result.suggestedEnrollments.map((e, i) => (
                        <div key={e.courseId + '-' + i} className="flex items-center gap-3 p-2.5 rounded-lg bg-space-blue/30 border border-cyan-500/20">
                           <span className="w-6 h-6 rounded-full bg-electric-blue text-white dark:text-white flex items-center justify-center text-xs font-black">{i + 1}</span>
-                         <div><span className="text-xs uppercase font-black text-slate-800 dark:text-slate-400">{e.pathway}</span><p className="text-sm font-semibold text-slate-900 dark:text-white">{e.title}</p></div>
+                         <div><span className="text-xs uppercase font-black text-slate-400">{e.pathway}</span><p className="text-sm font-semibold text-white">{e.title}</p></div>
                        </div>
                      ))}
                    </div>
@@ -4153,32 +4153,14 @@ return (
     }
 
     // ==========================================
-    // THEME MANAGEMENT
-    // ==========================================
-    const THEME_KEY = 'capacity_connect_theme';
-    function getInitialTheme() { try { const stored = localStorage.getItem(THEME_KEY); if (stored === 'dark' || stored === 'light') return stored; } catch {} return 'light'; }
-    function applyTheme(theme) { const root = document.documentElement; if (theme === 'dark') root.classList.add('dark'); else root.classList.remove('dark'); }
-    applyTheme(getInitialTheme());
-
-    // ==========================================
     // ROOT APP with STRICT ROLE ISOLATION
     // ==========================================
     function App() {
-const [screen, setScreen] = React.useState('0');
+      const [screen, setScreen] = React.useState('0');
       const [courseId, setCourseId] = React.useState(1);
       const [user, setUser] = React.useState(null);
-      const [theme, setTheme] = React.useState(getInitialTheme);
       const [activeAdminTab, setActiveAdminTab] = React.useState('pending');
       const [signupMode, setSignupMode] = React.useState(false);
-
-      const toggleTheme = () => {
-        setTheme(prev => {
-          const next = prev === 'light' ? 'dark' : 'light';
-          try { localStorage.setItem(THEME_KEY, next); } catch {}
-          applyTheme(next);
-          return next;
-        });
-      };
 
       const roleAllowed = (allowedRoles) => !!user && allowedRoles.includes(user.role);
 
@@ -4187,7 +4169,7 @@ const [screen, setScreen] = React.useState('0');
        * is valid for the current user's role. If not, redirect to the
        * user's own default dashboard.
        */
-const navigate = (target, isSignup = false) => {
+      const navigate = (target, isSignup = false) => {
         if (!user && target !== '0') { setScreen('1'); setSignupMode(isSignup); return; }
         const allowed = SCREEN_ROLES[target];
         if (!allowed || !allowed.includes(user.role)) {
@@ -4217,41 +4199,35 @@ const navigate = (target, isSignup = false) => {
 
       const themeClass = user ? ROLE_THEMES[user.role] : '';
 
-return (
-        <div className={"theme-wrapper " + (themeClass) + (theme === 'dark' ? 'dark' : '')}>
+      return (
+        <div className={"theme-wrapper " + themeClass + " dark"}>
           {!user && (
             <header className="glass-card border-b border-purple-500/20 sticky top-0 z-50">
               <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                   <span className="w-8 h-8 rounded-xl bg-gradient-to-r from-purple-500 to-fuchsia-600 text-white dark:text-white flex items-center justify-center font-black text-xs">CC</span>
-                   <div><span className="font-black text-sm text-white dark:text-white">Capacity Connect</span><span className="text-[10px] text-slate-400 dark:text-slate-400 block">Not signed in</span></div>
-                </div>
-                <button onClick={toggleTheme} className={"px-2.5 py-1.5 rounded-lg " + (theme === 'dark' ? 'bg-space-blue/30 text-yellow-300 border border-slate-600' : 'bg-slate-900/90 text-purple-900 shadow-sm border border-purple-200') + "btn-micro"}>
-                  {theme === 'dark' ? '☀️ Light' : '🌙 Dark'}
-                </button>
-              </div>
-            </header>
-          )}
+                 <div className="flex items-center gap-2">
+                    <span className="w-8 h-8 rounded-xl bg-gradient-to-r from-purple-500 to-fuchsia-600 text-white dark:text-white flex items-center justify-center font-black text-xs">CC</span>
+                    <div><span className="font-black text-sm text-white dark:text-white">Capacity Connect</span><span className="text-[10px] text-slate-400 dark:text-slate-400 block">Not signed in</span></div>
+                 </div>
+               </div>
+             </header>
+           )}
 
-          {user && (
-            <header className="glass-card border-b border-purple-500/20 sticky top-0 z-50">
-              <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                   <span className="w-8 h-8 rounded-xl bg-gradient-to-r from-purple-500 to-fuchsia-600 text-white dark:text-white flex items-center justify-center font-black text-xs">CC</span>
-                   <div>
-                     <span className="font-black text-sm text-white dark:text-white">Capacity Connect</span>
-                    <span className="text-[10px] text-slate-400 dark:text-slate-400 block">{user.name} ({user.role})</span>
-                  </div>
-                </div>
-                <div className="flex items-center gap-2">
-                  <NotificationBell user={user} />
-                  <button onClick={toggleTheme} className={"px-2.5 py-1.5 rounded-lg " + (theme === 'dark' ? 'bg-space-blue/30 text-yellow-300 border border-slate-600' : 'bg-slate-900/90 text-purple-900 shadow-sm border border-purple-200') + "btn-micro"}>
-                    {theme === 'dark' ? '☀️ Light' : '🌙 Dark'}
-                  </button>
-                </div>
-              </div>
-            </header>
-          )}
+           {user && (
+             <header className="glass-card border-b border-purple-500/20 sticky top-0 z-50">
+               <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
+                 <div className="flex items-center gap-2">
+                    <span className="w-8 h-8 rounded-xl bg-gradient-to-r from-purple-500 to-fuchsia-600 text-white dark:text-white flex items-center justify-center font-black text-xs">CC</span>
+                    <div>
+                      <span className="font-black text-sm text-white dark:text-white">Capacity Connect</span>
+                     <span className="text-[10px] text-slate-400 dark:text-slate-400 block">{user.name} ({user.role})</span>
+                   </div>
+                 </div>
+                 <div className="flex items-center gap-2">
+                   <NotificationBell user={user} />
+                 </div>
+               </div>
+             </header>
+           )}
 
           <main className="pb-16 min-h-[calc(100vh-88px)]">
             <ToastContainer />

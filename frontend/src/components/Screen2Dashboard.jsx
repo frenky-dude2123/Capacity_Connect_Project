@@ -99,12 +99,12 @@ export default function Screen2Dashboard({ userId = 'u_learner1', onOpenCourse, 
               <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-teal-500/20 text-teal-300 border border-teal-400/30">
                 Topic 2 • Trainee Dashboard
               </span>
-              <span className="text-xs text-slate-900 dark:text-space-400">Live API: http://localhost:5000/api/user/dashboard/{userId}</span>
+              <span className="text-xs text-space-400">Live API: http://localhost:5000/api/user/dashboard/{userId}</span>
             </div>
-            <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white mt-2">
+            <h1 className="text-2xl sm:text-3xl font-extrabold text-white mt-2">
               Welcome back, {data?.userName || 'Jane Doe'}!
             </h1>
-            <p className="text-xs sm:text-sm text-slate-900 dark:text-space-300 mt-1">
+            <p className="text-xs sm:text-sm text-space-300 mt-1">
               Track your enterprise engineering pathways, capacity readiness, and certificates.
             </p>
           </div>
@@ -128,7 +128,7 @@ export default function Screen2Dashboard({ userId = 'u_learner1', onOpenCourse, 
         {loading && (
           <div className="py-20 text-center">
             <div className="w-10 h-10 border-4 border-teal-500 border-t-transparent rounded-full animate-spin mx-auto shadow-lg shadow-teal-500/50"></div>
-            <p className="mt-3 text-sm font-medium text-slate-900 dark:text-space-300">Loading your learner capacity profile...</p>
+            <p className="mt-3 text-sm font-medium text-space-300">Loading your learner capacity profile...</p>
           </div>
         )}
 
@@ -147,7 +147,7 @@ export default function Screen2Dashboard({ userId = 'u_learner1', onOpenCourse, 
             {/* KPI Metrics Strip with stat-card-glow */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
               <div className="glass-card border border-teal-500/20 p-5 rounded-2xl hud-panel stat-card-glow">
-                <span className="text-[11px] font-bold uppercase text-slate-900 dark:text-space-400">Capacity Readiness</span>
+                <span className="text-[11px] font-bold uppercase text-space-400">Capacity Readiness</span>
                 <p className="text-2xl sm:text-3xl font-extrabold text-teal-400 mt-1">
                   {data.metrics?.capacityScore || 94}%
                 </p>
@@ -155,35 +155,35 @@ export default function Screen2Dashboard({ userId = 'u_learner1', onOpenCourse, 
               </div>
 
               <div className="glass-card border border-teal-500/20 p-5 rounded-2xl hud-panel">
-                <span className="text-[11px] font-bold uppercase text-slate-900 dark:text-space-400">Active Courses</span>
-                <p className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white mt-1">
+                <span className="text-[11px] font-bold uppercase text-space-400">Active Courses</span>
+                <p className="text-2xl sm:text-3xl font-extrabold text-white mt-1">
                   {data.metrics?.activeCourses || data.enrolledCourses?.length}
                 </p>
-                <span className="text-[11px] text-slate-900 dark:text-space-400">Curriculums underway</span>
+                <span className="text-[11px] text-space-400">Curriculums underway</span>
               </div>
 
               <div className="glass-card border border-teal-500/20 p-5 rounded-2xl hud-panel">
-                <span className="text-[11px] font-bold uppercase text-slate-900 dark:text-space-400">Training Logged</span>
-                <p className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white mt-1">
-                  {data.metrics?.trainingHours || 42.5} <span className="text-sm font-normal text-slate-900 dark:text-space-400">hrs</span>
+                <span className="text-[11px] font-bold uppercase text-space-400">Training Logged</span>
+                <p className="text-2xl sm:text-3xl font-extrabold text-white mt-1">
+                  {data.metrics?.trainingHours || 42.5} <span className="text-sm font-normal text-space-400">hrs</span>
                 </p>
-                <span className="text-[11px] text-slate-900 dark:text-space-400">Total learning time</span>
+                <span className="text-[11px] text-space-400">Total learning time</span>
               </div>
 
               <div className="glass-card border border-amber-500/20 p-5 rounded-2xl hud-panel stat-card-glow">
-                <span className="text-[11px] font-bold uppercase text-slate-900 dark:text-space-400">Certificates Earned</span>
+                <span className="text-[11px] font-bold uppercase text-space-400">Certificates Earned</span>
                 <p className="text-2xl sm:text-3xl font-extrabold text-amber-400 mt-1">
                   {data.metrics?.completedCertifications || 2}
                 </p>
-                <span className="text-[11px] text-slate-900 dark:text-space-400">Accredited skills</span>
+                <span className="text-[11px] text-space-400">Accredited skills</span>
               </div>
             </div>
 
             {/* Enrolled Courses Section - Course Catalog */}
             <div className="space-y-4">
               <div className="flex items-center justify-between">
-                <h2 className="text-lg font-bold text-slate-900 dark:text-white">Enrolled Engineering Pathways</h2>
-                <span className="text-xs text-slate-900 dark:text-space-400">{data.enrolledCourses?.length} Pathways</span>
+                <h2 className="text-lg font-bold text-white">Enrolled Engineering Pathways</h2>
+                <span className="text-xs text-space-400">{data.enrolledCourses?.length} Pathways</span>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -199,14 +199,14 @@ export default function Screen2Dashboard({ userId = 'u_learner1', onOpenCourse, 
                         </span>
                       </div>
 
-                      <h3 className="text-base font-bold text-slate-900 dark:text-white leading-snug">
+                      <h3 className="text-base font-bold text-white leading-snug">
                         {course.title}
                       </h3>
-                      <p className="text-xs text-slate-900 dark:text-space-400 mt-2">Instructor: {course.instructor}</p>
+                      <p className="text-xs text-space-400 mt-2">Instructor: {course.instructor}</p>
 
                       {/* Progress Bar */}
                       <div className="mt-4">
-                        <div className="flex justify-between text-xs font-semibold text-slate-900 dark:text-space-300 mb-1">
+                        <div className="flex justify-between text-xs font-semibold text-space-300 mb-1">
                           <span>Course Progress</span>
                           <span className="text-teal-400">{course.progressPercent}%</span>
                         </div>
@@ -241,7 +241,7 @@ export default function Screen2Dashboard({ userId = 'u_learner1', onOpenCourse, 
 
             {/* Recommended Courses Strip - Course Catalog */}
             <div className="glass-card border border-teal-500/20 hud-panel rounded-2xl p-6 cosmic-card">
-              <h3 className="text-base font-bold text-slate-900 dark:text-white mb-3">
+              <h3 className="text-base font-bold text-white mb-3">
                 Recommended for Your Growth Path
               </h3>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -251,8 +251,8 @@ export default function Screen2Dashboard({ userId = 'u_learner1', onOpenCourse, 
                       <span className="text-[10px] font-bold text-teal-300 uppercase bg-teal-500/20 px-2 py-0.5 rounded">
                         {rec.category}
                       </span>
-                      <h4 className="text-sm font-bold text-slate-900 dark:text-white mt-2">{rec.title}</h4>
-                      <p className="text-xs text-slate-900 dark:text-space-400 mt-1">Est. Duration: {rec.estimatedHours} hrs</p>
+                      <h4 className="text-sm font-bold text-white mt-2">{rec.title}</h4>
+                      <p className="text-xs text-space-400 mt-1">Est. Duration: {rec.estimatedHours} hrs</p>
                     </div>
                     <button
                       onClick={onOpenCatalog}
@@ -268,7 +268,7 @@ export default function Screen2Dashboard({ userId = 'u_learner1', onOpenCourse, 
             {/* AI Course Recommendations (Topic 9) */}
             <div className="glass-card border border-cyan-500/20 hud-panel rounded-2xl p-6 cosmic-card">
               <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                <h3 className="text-lg font-bold text-white flex items-center gap-2">
                   <span className="text-cyan-400">🤖 AI Recommendations</span>
                 </h3>
                 <button
@@ -287,7 +287,7 @@ export default function Screen2Dashboard({ userId = 'u_learner1', onOpenCourse, 
               {aiLoading && (
                 <div className="py-10 text-center">
                   <div className="w-8 h-8 border-4 border-cyan-500 border-t-transparent rounded-full animate-spin mx-auto mb-3 shadow-lg shadow-cyan-500/50"></div>
-                  <p className="text-sm text-slate-900 dark:text-space-300">AI analyzing weak areas and generating recommendations...</p>
+                  <p className="text-sm text-space-300">AI analyzing weak areas and generating recommendations...</p>
                 </div>
               )}
 
@@ -300,7 +300,7 @@ export default function Screen2Dashboard({ userId = 'u_learner1', onOpenCourse, 
                   <p className={`text-xs font-black font-mono ${aiRecs.source === 'ai' ? 'text-cyan-400' : 'text-amber-400'}`}>
                     {aiRecs.source === 'ai' ? '◆ Powered by Gemini LLM' : '◇ Using sample recommendations'}
                   </p>
-                  <p className="text-xs text-slate-900 dark:text-space-400">{aiRecs.summary}</p>
+                  <p className="text-xs text-space-400">{aiRecs.summary}</p>
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                     {aiRecs.recommendations?.map((rec) => (
                       <div key={rec.courseId} className="p-4 rounded-xl border border-cyan-500/20 bg-slate-900/50 hover:bg-slate-900/80 transition-all">
@@ -308,12 +308,12 @@ export default function Screen2Dashboard({ userId = 'u_learner1', onOpenCourse, 
                           <span className="px-2 py-0.5 bg-teal-500/20 text-teal-300 text-[10px] font-black rounded">
                             {rec.category}
                           </span>
-                          <span className="px-2 py-0.5 bg-slate-800 text-slate-900 dark:text-space-300 text-[10px] font-black rounded">
+                          <span className="px-2 py-0.5 bg-slate-800 text-space-300 text-[10px] font-black rounded">
                             {rec.difficulty}
                           </span>
                         </div>
-                        <h4 className="text-sm font-black text-slate-900 dark:text-white mb-1">{rec.title}</h4>
-                        <p className="text-xs text-slate-900 dark:text-space-400 mb-2 line-clamp-2">{rec.reason}</p>
+                        <h4 className="text-sm font-black text-white mb-1">{rec.title}</h4>
+                        <p className="text-xs text-space-400 mb-2 line-clamp-2">{rec.reason}</p>
                         <button
                           onClick={onOpenCatalog}
                           className="text-xs font-semibold text-cyan-400 hover:underline text-left"
@@ -327,7 +327,7 @@ export default function Screen2Dashboard({ userId = 'u_learner1', onOpenCourse, 
               )}
 
               {!aiLoading && !aiRecs && !aiError && (
-                <p className="text-xs text-slate-900 dark:text-space-400">Click "Generate with AI" to get personalized recommendations based on your weak quiz areas.</p>
+                <p className="text-xs text-space-400">Click "Generate with AI" to get personalized recommendations based on your weak quiz areas.</p>
               )}
             </div>
           </div>

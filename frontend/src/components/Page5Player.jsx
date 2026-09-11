@@ -183,8 +183,8 @@ export default function Page5Player({ courseId = 1, onBackToCatalog, onBackToDet
         {loading && (
           <div className="py-24 flex flex-col items-center justify-center text-center">
             <div className="w-10 h-10 border-4 border-cyan-500 border-t-transparent rounded-full animate-spin shadow-lg shadow-cyan-500/50"></div>
-            <p className="mt-4 text-sm font-medium text-slate-900 dark:text-space-300">Loading lesson and interactive quiz...</p>
-            <span className="text-xs text-slate-900 dark:text-space-500 mt-1">Target: http://localhost:5000/api/courses/player/{courseId}</span>
+            <p className="mt-4 text-sm font-medium text-space-300">Loading lesson and interactive quiz...</p>
+            <span className="text-xs text-space-500 mt-1">Target: http://localhost:5000/api/courses/player/{courseId}</span>
           </div>
         )}
 
@@ -214,11 +214,11 @@ export default function Page5Player({ courseId = 1, onBackToCatalog, onBackToDet
             <div className="glass-card border border-cyan-500/20 hud-panel rounded-2xl p-6 cosmic-card">
               <div className="flex items-center gap-2 mb-2">
                 <span className="w-2.5 h-2.5 rounded-full bg-cyan-400 animate-pulse"></span>
-                <span className="text-xs font-black uppercase tracking-wider text-slate-900 dark:text-space-400">
+                <span className="text-xs font-black uppercase tracking-wider text-space-400">
                   Interactive Lesson Stage
                 </span>
               </div>
-              <h1 className="text-2xl font-extrabold text-slate-900 dark:text-white">
+              <h1 className="text-2xl font-extrabold text-white">
                 {playerData.title}
               </h1>
             </div>
@@ -273,8 +273,8 @@ export default function Page5Player({ courseId = 1, onBackToCatalog, onBackToDet
               {/* Tab 1: Reading Content */}
               {activeTab === 'reading' && (
                 <div className="p-6 sm:p-8 space-y-4">
-                  <h2 className="text-lg font-bold text-slate-900 dark:text-white">Curriculum Study Materials</h2>
-                  <div className="text-sm leading-relaxed text-slate-900 dark:text-space-300 bg-slate-900/40 p-6 rounded-xl border border-cyan-500/10">
+                  <h2 className="text-lg font-bold text-white">Curriculum Study Materials</h2>
+                  <div className="text-sm leading-relaxed text-space-300 bg-slate-900/40 p-6 rounded-xl border border-cyan-500/10">
                     {playerData.readingContent || 'No reading notes available for this lesson.'}
                   </div>
                 </div>
@@ -286,7 +286,7 @@ export default function Page5Player({ courseId = 1, onBackToCatalog, onBackToDet
                   {playerData.quiz ? (
                     <div>
                       <div className="flex items-center justify-between mb-4">
-                        <span className="text-xs font-black uppercase text-slate-900 dark:text-space-400">
+                        <span className="text-xs font-black uppercase text-space-400">
                           Question 1 of 1
                         </span>
                         {quizSubmitted && (
@@ -302,7 +302,7 @@ export default function Page5Player({ courseId = 1, onBackToCatalog, onBackToDet
                         )}
                       </div>
 
-                      <h3 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white mb-6">
+                      <h3 className="text-base sm:text-lg font-bold text-white mb-6">
                         {playerData.quiz.question}
                       </h3>
 
@@ -339,7 +339,7 @@ export default function Page5Player({ courseId = 1, onBackToCatalog, onBackToDet
                                   onChange={() => setSelectedOption(idx)}
                                   className="mt-1 w-4 h-4 text-cyan-500 focus:ring-cyan-500"
                                 />
-                                <div className="flex-1 text-sm text-slate-900 dark:text-space-200 leading-snug">
+                                <div className="flex-1 text-sm text-space-200 leading-snug">
                                   {option}
                                 </div>
                               </label>
@@ -364,7 +364,7 @@ export default function Page5Player({ courseId = 1, onBackToCatalog, onBackToDet
                         ) : (
                           <button
                             onClick={handleQuizReset}
-                            className="px-6 py-2.5 rounded-xl text-xs font-black bg-slate-900/60 hover:bg-teal-500/10 text-slate-900 dark:text-space-300 border border-teal-500/20 transition btn-micro"
+                            className="px-6 py-2.5 rounded-xl text-xs font-black bg-slate-900/60 hover:bg-teal-500/10 text-space-300 border border-teal-500/20 transition btn-micro"
                           >
                             Try Again
                           </button>
@@ -372,13 +372,13 @@ export default function Page5Player({ courseId = 1, onBackToCatalog, onBackToDet
                       </div>
                     </div>
                   ) : (
-                    <p className="text-xs text-slate-900 dark:text-space-400">No quiz attached to this lesson.</p>
+                    <p className="text-xs text-space-400">No quiz attached to this lesson.</p>
                   )}
 
                   {/* AI Quiz Generator (Topic 8) */}
                   <div className="mt-6 pt-6 border-t border-teal-500/20 space-y-4">
                     <div className="flex items-center justify-between">
-                      <h3 className="text-sm font-black text-slate-900 dark:text-white flex items-center gap-2">
+                      <h3 className="text-sm font-black text-white flex items-center gap-2">
                         <span>🤖 AI Quiz Generator</span>
                       </h3>
                       <button
@@ -404,7 +404,7 @@ export default function Page5Player({ courseId = 1, onBackToCatalog, onBackToDet
                       aiQuiz.questions?.map((q, qIdx) => (
                         <div key={qIdx} className="p-4 rounded-xl border border-cyan-500/20 bg-slate-900/40">
                           <div className="flex justify-between items-start mb-3">
-                            <span className="text-xs font-black uppercase text-slate-900 dark:text-space-400">
+                            <span className="text-xs font-black uppercase text-space-400">
                               Question {qIdx + 1} of {aiQuiz.count}
                             </span>
                             {aiSubmitted && (
@@ -420,7 +420,7 @@ export default function Page5Player({ courseId = 1, onBackToCatalog, onBackToDet
                             )}
                           </div>
 
-                          <h4 className="text-sm font-black text-slate-900 dark:text-white mb-3">
+                          <h4 className="text-sm font-black text-white mb-3">
                             {q.question}
                           </h4>
 
@@ -452,7 +452,7 @@ export default function Page5Player({ courseId = 1, onBackToCatalog, onBackToDet
                                     onChange={() => handleAISelect(qIdx, idx)}
                                     className="mt-1 w-4 h-4 text-cyan-500 focus:ring-cyan-500"
                                   />
-                                  <div className="flex-1 text-sm text-slate-900 dark:text-space-200 leading-snug">
+                                  <div className="flex-1 text-sm text-space-200 leading-snug">
                                     {opt}
                                   </div>
                                 </label>
@@ -472,12 +472,12 @@ export default function Page5Player({ courseId = 1, onBackToCatalog, onBackToDet
 
                     {aiQuiz && aiSubmitted && (
                       <div className="mt-4 p-4 bg-cyan-900/20 rounded-xl border border-cyan-500/20">
-                        <p className="text-sm font-black text-slate-900 dark:text-white">
+                        <p className="text-sm font-black text-white">
                           AI Quiz Score:{' '}
                           {aiQuiz.questions.filter((_, i) => aiCorrect(i)).length} /{' '}
                           {aiQuiz.questions.length}
                         </p>
-                        <p className="text-xs text-slate-900 dark:text-space-400 mt-1">
+                        <p className="text-xs text-space-400 mt-1">
                           Source:{' '}
                           {aiQuiz.source === 'ai'
                             ? 'Generated by Gemini LLM'
@@ -487,7 +487,7 @@ export default function Page5Player({ courseId = 1, onBackToCatalog, onBackToDet
                     )}
 
                     {!aiLoading && !aiQuiz && !aiError && (
-                      <p className="text-xs text-slate-900 dark:text-space-400">
+                      <p className="text-xs text-space-400">
                         Click "Generate AI Quiz" to create dynamic questions on this topic.
                       </p>
                     )}
