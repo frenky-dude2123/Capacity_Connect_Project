@@ -146,6 +146,15 @@ authRouter.post('/login', async (req, res) => {
   }
 });
 
+authRouter.get('/me', authMiddleware, async (req, res) => {
+  try {
+    res.status(200).json({ user: req.user || null });
+  } catch (err) {
+    console.error('[Auth] Me error:', err.message);
+    res.status(500).json({ error: 'Failed to fetch user', details: err.message });
+  }
+});
+
 /**
  * POST /api/auth/signup
  */

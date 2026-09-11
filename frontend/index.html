@@ -1857,7 +1857,7 @@ return (
     // ==========================================
     // SCREEN 1: AUTHENTICATION
     // ==========================================
-function Screen1Auth({ onAuthSuccess, onNavigate, initialSignup }) {
+    function Screen1Auth({ onAuthSuccess, onNavigate, initialSignup, user }) {
       const [isLogin, setIsLogin] = React.useState(!initialSignup);
       const [email, setEmail] = React.useState('jane.doe@enterprise.com');
       const [password, setPassword] = React.useState('password123');
@@ -1992,25 +1992,25 @@ return (
                </button>
              </div>
 
-             {authData && (
-               <div className="mt-4 p-4 bg-cyan-500/10 border border-cyan-400/20 rounded-xl text-xs text-cyan-300 space-y-2">
-                 {authData.status === 'pending' ? (
-                   <div>
-                     <p className="font-bold text-amber-300">⏳ {authData.message || 'Your account is awaiting admin approval.'}</p>
-                     <p className="text-[11px] text-slate-400">You will be able to log in once an admin approves your account.</p>
-                   </div>
-                 ) : (
-                   <>
-                    <p className="font-bold text-white dark:text-white">✓ Logged in as {authData.user?.name} ({authData.user?.role})</p>
-                    <div className="flex gap-2 pt-2">
-                      {authData.user?.role === 'trainee' && <button onClick={() => onNavigate('2')} className="flex-1 py-1.5 bg-gradient-to-r from-cyan-500 to-blue-600 text-white dark:text-white rounded-lg font-black btn-micro shadow-lg shadow-cyan-500/30">Trainee Dashboard</button>}
-                      {authData.user?.role === 'trainer' && <button onClick={() => onNavigate('9')} className="flex-1 py-1.5 bg-gradient-to-r from-amber-500 to-orange-600 text-white dark:text-white rounded-lg font-black btn-micro shadow-lg shadow-amber-500/30">Trainer Dashboard</button>}
-                      {authData.user?.role === 'admin' && <button onClick={() => onNavigate('7')} className="flex-1 py-1.5 bg-gradient-to-r from-red-500 to-rose-600 text-white dark:text-white rounded-lg font-black btn-micro shadow-lg shadow-red-500/30">Admin Dashboard</button>}
+              {authData && (
+                <div className="mt-4 p-4 bg-cyan-500/10 border border-cyan-400/20 rounded-xl text-xs text-cyan-300 space-y-2">
+                  {(authData.status === 'pending' || user?.status === 'pending') ? (
+                    <div>
+                      <p className="font-bold text-amber-300">⏳ {authData.message || 'Your account is awaiting admin approval.'}</p>
+                      <p className="text-[11px] text-slate-400">You will be able to log in once an admin approves your account.</p>
                     </div>
-                   </>
-                 )}
-               </div>
-             )}
+                  ) : (
+                    <>
+                     <p className="font-bold text-white dark:text-white">✓ Logged in as {authData.user?.name} ({authData.user?.role})</p>
+                     <div className="flex gap-2 pt-2">
+                       {authData.user?.role === 'trainee' && <button onClick={() => onNavigate('2')} className="flex-1 py-1.5 bg-gradient-to-r from-cyan-500 to-blue-600 text-white dark:text-white rounded-lg font-black btn-micro shadow-lg shadow-cyan-500/30">Trainee Dashboard</button>}
+                       {authData.user?.role === 'trainer' && <button onClick={() => onNavigate('9')} className="flex-1 py-1.5 bg-gradient-to-r from-amber-500 to-orange-600 text-white dark:text-white rounded-lg font-black btn-micro shadow-lg shadow-amber-500/30">Trainer Dashboard</button>}
+                       {authData.user?.role === 'admin' && <button onClick={() => onNavigate('7')} className="flex-1 py-1.5 bg-gradient-to-r from-red-500 to-rose-600 text-white dark:text-white rounded-lg font-black btn-micro shadow-lg shadow-red-500/30">Admin Dashboard</button>}
+                     </div>
+                    </>
+                  )}
+                </div>
+              )}
              </div>
            </div>
          </div>
@@ -4216,6 +4216,27 @@ return (
 
       const roleAllowed = (allowedRoles) => !!user && allowedRoles.includes(user.role);
 
+      React.useEffect(() => {
+        const token = localStorage.getItem('capacity_connect_token');
+        if (!token) return;
+        let cancelled = false;
+        fetchWithToken(`${API_BASE}/auth/me`)
+          .then(r => r.ok ? r.json() : null)
+          .then(data => {
+            if (cancelled || !data?.user) return;
+            const u = data.user;
+            setUser(u);
+            if (u.status === 'pending' || u.status === 'rejected') {
+              setScreen('1');
+            } else {
+              setScreen(getDefaultScreen(u.role));
+            }
+          })
+          .catch(() => { try { localStorage.removeItem('capacity_connect_token'); } catch {} })
+          .finally(() => { if (!cancelled) {} });
+        return () => { cancelled = true; };
+      }, []);
+
       /**
        * STRICT role isolation: navigate() checks whether the target screen
        * is valid for the current user's role. If not, redirect to the
@@ -4285,7 +4306,7 @@ return (
             <ToastContainer />
 {screen === '0' && <PublicHomepage onNavigateToAuth={(target, isSignup) => { setScreen(target); setSignupMode(isSignup); }} />}
 
-            {screen === '1' && <Screen1Auth onAuthSuccess={(d) => { if (d.user) setUser(d.user); setScreen(getDefaultScreen(d.user?.role)); }} onNavigate={navigate} initialSignup={signupMode} />}
+             {screen === '1' && <Screen1Auth onAuthSuccess={(d) => { if (d.user) setUser(d.user); if (d.user && d.user.status === 'pending' || d.user && d.user.status === 'rejected') { setScreen('1'); } else { setScreen(getDefaultScreen(d.user?.role)); } }} onNavigate={navigate} initialSignup={signupMode} user={user} />}
 
             {/* Strict role isolation: each screen is only rendered if the user's role matches */}
             {user && screen === '2' && roleAllowed(['trainee']) && (
