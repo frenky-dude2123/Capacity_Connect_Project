@@ -132,9 +132,9 @@ async function authenticateToken(token) {
   let role = null;
 
   // Pattern 1: mock-jwt-token-{userId}-{role}-{timestamp}
-  const matchWithRole = token.match(/^mock-jwt-token-(.+)-(\w+)-(\d+)$/);
+  const matchWithRole = token.match(/^mock-jwt-token-(.+?)-([a-z]+)-(\d+)$/);
   // Pattern 2: mock-jwt-token-{userId}-{timestamp}
-  const matchSimple = token.match(/^mock-jwt-token-(.+)-(\d+)$/);
+  const matchSimple = token.match(/^mock-jwt-token-(.+?)-(\d+)$/);
 
   if (matchWithRole) {
     userId = matchWithRole[1];

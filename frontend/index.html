@@ -2020,19 +2020,23 @@ return (
     // ==========================================
     // SCREEN 2: TRAINEE DASHBOARD (card-based, emerald theme)
     // ==========================================
-    function Screen2Dashboard({ userId, onOpenCourse, onOpenCert, onOpenCatalog }) {
-      const [dash, setDash] = React.useState(null);
-      const [loading, setLoading] = React.useState(true);
-      const [aiRecs, setAiRecs] = React.useState(null);
-      const [aiLoading, setAiLoading] = React.useState(false);
-      const [aiError, setAiError] = React.useState(null);
+     function Screen2Dashboard({ userId, onOpenCourse, onOpenCert, onOpenCatalog }) {
+       const [dash, setDash] = React.useState(null);
+       const [dashError, setDashError] = React.useState(null);
+       const [loading, setLoading] = React.useState(true);
+       const [aiRecs, setAiRecs] = React.useState(null);
+       const [aiLoading, setAiLoading] = React.useState(false);
+       const [aiError, setAiError] = React.useState(null);
 
-      React.useEffect(() => {
-        fetchWithToken(`${API_BASE}/user/dashboard/${userId}`)
-          .then(r => r.json())
-          .then(setDash)
-          .finally(() => setLoading(false));
-      }, [userId]);
+       React.useEffect(() => {
+         let cancelled = false;
+         setLoading(true); setDashError(null);
+         apiRequest(`${API_BASE}/user/dashboard/${userId}`)
+           .then(data => { if (!cancelled) setDash(data); })
+           .catch(err => { if (!cancelled) { console.error('[Dashboard]', err); setDashError(err.message); }})
+           .finally(() => { if (!cancelled) setLoading(false); });
+         return () => { cancelled = true; };
+       }, [userId]);
 
 const fetchAIRecommendations = async () => {
         setAiLoading(true); setAiError(null);
@@ -2064,6 +2068,16 @@ const fetchAIRecommendations = async () => {
       };
 
       if (loading) return <div className="py-20 text-center text-sm text-slate-400">Loading Learner Dashboard...</div>;
+
+      if (dashError) return (
+        <div className="max-w-7xl mx-auto px-4 py-8 space-y-8 bg-orbital-bg min-h-screen orbital-grid">
+          <div className="p-6 bg-red-900/20 border border-red-800/50 rounded-2xl text-center">
+            <p className="text-sm font-semibold text-red-300">Unable to load dashboard</p>
+            <p className="text-xs text-red-400 mt-1">{dashError}</p>
+            <button onClick={() => { setDashError(null); setLoading(true); apiRequest(`${API_BASE}/user/dashboard/${userId}`).then(setDash).catch(err => setDashError(err.message)).finally(() => setLoading(false)); }} className="mt-3 px-4 py-2 bg-red-600 text-white dark:text-white rounded-lg text-xs font-bold">Retry</button>
+          </div>
+        </div>
+      );
 
       const continueWatching = getContinueWatching();
       const currentCourse = dash?.enrolledCourses?.find(c => c.id === continueWatching?.courseId);

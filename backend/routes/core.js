@@ -60,7 +60,7 @@ authRouter.post('/login', async (req, res) => {
         skills: null,
         subjects: null
       };
-      const token = `mock-jwt-token-${mockUser.id}-${Date.now()}`;
+      const token = `mock-jwt-token-${mockUser.id}-${role}-${Date.now()}`;
       const redirectMap = {
         trainee: '/trainee/dashboard',
         trainer: '/trainer/dashboard',
@@ -1037,7 +1037,11 @@ const publicRouter = express.Router();
 publicRouter.get('/notifications', async (req, res) => {
   try {
     if (!isSupabaseAvailable) {
-      return res.status(500).json({ error: 'Database not configured', details: 'Supabase is not available' });
+      return res.status(200).json([
+        { id: 'mock-1', type: 'announcement', title: 'Welcome to Capacity Connect', message: 'The Ministry of Education & Skills Development is rolling out a new digital capacity building platform for all civil servants.', created_at: new Date().toISOString(), is_active: true },
+        { id: 'mock-2', type: 'course', title: 'New Course: ISO 27001 Lead Auditor', message: 'A comprehensive 6-week pathway on information security management systems is now available in the catalog.', created_at: new Date(Date.now() - 86400000).toISOString(), is_active: true },
+        { id: 'mock-3', type: 'achievement', title: '1,000 Learners Enrolled', message: 'Our community has crossed 1,000 registered learners across all departments and agencies.', created_at: new Date(Date.now() - 172800000).toISOString(), is_active: true }
+      ]);
     }
 
     const { data: notifications, error } = await supabase
