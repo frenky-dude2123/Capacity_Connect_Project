@@ -127,30 +127,30 @@ export default function Screen8SkillGap({ courseId = 1, userId = 'astronaut', on
         {/* Summary / Overview */}
         <div className="mt-6 grid grid-cols-1 lg:grid-cols-4 gap-4">
           <div className="glass-card border border-indigo-500/20 hud-panel cosmic-card rounded-2xl p-5 text-center">
-            <div className="text-3xl font-extrabold text-indigo-400">{overallGap}%</div>
-            <div className="text-[10px] font-black uppercase text-space-400 mt-1">Proficiency Score</div>
+             <div className="text-3xl font-extrabold text-indigo-400">{overallGap}%</div>
+             <div className="text-[10px] font-black uppercase text-slate-900 dark:text-space-400 mt-1">Proficiency Score</div>
           </div>
           <div className="glass-card border border-indigo-500/20 hud-panel cosmic-card rounded-2xl p-5 text-center">
-            <div className="text-3xl font-extrabold text-amber-400">{gapCount}</div>
-            <div className="text-[10px] font-black uppercase text-space-400 mt-1">Skills Needing Work</div>
+             <div className="text-3xl font-extrabold text-amber-400">{gapCount}</div>
+             <div className="text-[10px] font-black uppercase text-slate-900 dark:text-space-400 mt-1">Skills Needing Work</div>
           </div>
           <div className="glass-card border border-indigo-500/20 hud-panel cosmic-card rounded-2xl p-5 text-center">
-            <div className="text-3xl font-extrabold text-emerald-400">{skills.filter((s) => s.level >= s.target).length}</div>
-            <div className="text-[10px] font-black uppercase text-space-400 mt-1">Mastered</div>
-          </div>
-          <div className="glass-card border border-indigo-500/20 hud-panel cosmic-card rounded-2xl p-5 text-center">
-            <div className="text-3xl font-extrabold text-teal-400">{skills.length}</div>
-            <div className="text-[10px] font-black uppercase text-space-400 mt-1">Total Skills Tracked</div>
-          </div>
-        </div>
+             <div className="text-3xl font-extrabold text-emerald-400">{skills.filter((s) => s.level >= s.target).length}</div>
+             <div className="text-[10px] font-black uppercase text-slate-900 dark:text-space-400 mt-1">Mastered</div>
+           </div>
+           <div className="glass-card border border-indigo-500/20 hud-panel cosmic-card rounded-2xl p-5 text-center">
+             <div className="text-3xl font-extrabold text-teal-400">{skills.length}</div>
+             <div className="text-[10px] font-black uppercase text-slate-900 dark:text-space-400 mt-1">Total Skills Tracked</div>
+           </div>
+         </div>
 
-        {/* Loading State */}
+        /* Loading State */
         {loading && (
           <div className="mt-6 py-20 flex items-center justify-center">
             <div className="text-center">
               <div className="w-10 h-10 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin mx-auto"></div>
-              <p className="mt-4 text-sm font-medium text-space-300">Analyzing skill proficiency...</p>
-              <span className="text-xs text-space-500">Target: http://localhost:5000/api/skill-gap/{userId}</span>
+              <p className="mt-4 text-sm font-medium text-slate-900 dark:text-space-300">Analyzing skill proficiency...</p>
+              <span className="text-xs text-slate-900 dark:text-space-500">Target: http://localhost:5000/api/skill-gap/{userId}</span>
             </div>
           </div>
         )}
@@ -167,48 +167,48 @@ export default function Screen8SkillGap({ courseId = 1, userId = 'astronaut', on
           </div>
         )}
 
-        {/* Skill Gap Matrix */}
-        {!loading && (
-          <div className="mt-8 glass-card border border-indigo-500/20 hud-panel cosmic-card rounded-2xl overflow-hidden">
-            <div className="px-6 py-4 border-b border-indigo-500/20 flex items-center justify-between">
-              <h3 className="text-sm font-black uppercase text-space-300">
-                Skill Proficiency Matrix
-              </h3>
-              <button
-                onClick={() => setShowAddForm(true)}
-                className="px-3 py-1.5 rounded-lg text-xs font-black bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-400 hover:to-purple-500 text-white shadow-lg shadow-indigo-500/30 transition btn-micro"
-              >
-                + Add Skill
-              </button>
-            </div>
+         {/* Skill Gap Matrix */}
+         {!loading && (
+           <div className="mt-8 glass-card border border-indigo-500/20 hud-panel cosmic-card rounded-2xl overflow-hidden">
+             <div className="px-6 py-4 border-b border-indigo-500/20 flex items-center justify-between">
+               <h3 className="text-sm font-black uppercase text-slate-900 dark:text-space-300">
+                 Skill Proficiency Matrix
+               </h3>
+               <button
+                 onClick={() => setShowAddForm(true)}
+                 className="px-3 py-1.5 rounded-lg text-xs font-black bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-400 hover:to-purple-500 text-white shadow-lg shadow-indigo-500/30 transition btn-micro"
+               >
+                 + Add Skill
+               </button>
+             </div>
 
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead>
-                  <tr className="bg-slate-900/40 border-b border-indigo-500/10">
-                    <th className="text-left py-3 px-4 text-xs font-black uppercase text-space-400">Skill Name</th>
-                    <th className="text-left py-3 px-4 text-xs font-black uppercase text-space-400">Category</th>
-                    <th className="py-3 px-4 text-xs font-black uppercase text-space-400">Current Level</th>
-                    <th className="py-3 px-4 text-xs font-black uppercase text-space-400">Target Level</th>
-                    <th className="py-3 px-4 text-xs font-black uppercase text-space-400">Gap</th>
-                    <th className="py-3 px-4 text-xs font-black uppercase text-space-400">Recommended Courses</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-indigo-500/10">
-                  {skills.map((skill, idx) => {
-                    const level = skill.level || 0;
-                    const target = skill.target || 5;
-                    const gap = Math.max(0, target - level);
-                    const progress = Math.round((level / target) * 100);
-                    return (
-                      <tr key={idx} className="hover:bg-slate-900/30 transition">
-                        <td className="py-3 px-4">
-                          <div className="flex items-center gap-2">
-                            <div className="w-2 h-2 rounded-full bg-indigo-400"></div>
-                            <span className="text-sm font-bold text-white">{skill.name}</span>
-                          </div>
-                        </td>
-                        <td className="py-3 px-4 text-xs text-space-300">{skill.category}</td>
+             <div className="overflow-x-auto">
+               <table className="w-full">
+                 <thead>
+                   <tr className="bg-slate-900/40 border-b border-indigo-500/10">
+                     <th className="text-left py-3 px-4 text-xs font-black uppercase text-slate-900 dark:text-space-400">Skill Name</th>
+                     <th className="text-left py-3 px-4 text-xs font-black uppercase text-slate-900 dark:text-space-400">Category</th>
+                     <th className="py-3 px-4 text-xs font-black uppercase text-slate-900 dark:text-space-400">Current Level</th>
+                     <th className="py-3 px-4 text-xs font-black uppercase text-slate-900 dark:text-space-400">Target Level</th>
+                     <th className="py-3 px-4 text-xs font-black uppercase text-slate-900 dark:text-space-400">Gap</th>
+                     <th className="py-3 px-4 text-xs font-black uppercase text-slate-900 dark:text-space-400">Recommended Courses</th>
+                   </tr>
+                 </thead>
+                 <tbody className="divide-y divide-indigo-500/10">
+                   {skills.map((skill, idx) => {
+                     const level = skill.level || 0;
+                     const target = skill.target || 5;
+                     const gap = Math.max(0, target - level);
+                     const progress = Math.round((level / target) * 100);
+                     return (
+                       <tr key={idx} className="hover:bg-slate-900/30 transition">
+                         <td className="py-3 px-4">
+                           <div className="flex items-center gap-2">
+                             <div className="w-2 h-2 rounded-full bg-indigo-400"></div>
+                             <span className="text-sm font-bold text-slate-900 dark:text-white">{skill.name}</span>
+                           </div>
+                         </td>
+                         <td className="py-3 px-4 text-xs text-slate-900 dark:text-space-300">{skill.category}</td>
                         <td className="py-3 px-4">
                           <div className="flex items-center gap-2">
                             <span className="text-sm font-black text-indigo-400">{level}/5</span>
@@ -261,10 +261,10 @@ export default function Screen8SkillGap({ courseId = 1, userId = 'astronaut', on
         {showAddForm && (
           <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
             <div className="glass-card border border-indigo-500/30 hud-panel cosmic-card rounded-2xl w-full max-w-md p-6">
-              <h3 className="text-lg font-bold text-white mb-4">Add New Skill</h3>
+              <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-4">Add New Skill</h3>
               <div className="space-y-4">
                 <div>
-                  <label className="block text-xs font-black uppercase text-space-300 mb-1">
+                  <label className="block text-xs font-black uppercase text-slate-900 dark:text-space-300 mb-1">
                     Skill Name
                   </label>
                   <input
@@ -272,17 +272,17 @@ export default function Screen8SkillGap({ courseId = 1, userId = 'astronaut', on
                     value={inputSkill}
                     onChange={(e) => setInputSkill(e.target.value)}
                     placeholder="e.g. Gravitational Wave Analysis"
-                    className="w-full px-3 py-2 bg-slate-900/50 border border-indigo-500/20 rounded-lg text-sm text-white placeholder-space-500 focus:ring-indigo-500 focus:border-indigo-500"
+                    className="w-full px-3 py-2 bg-slate-900/50 border border-indigo-500/20 rounded-lg text-sm text-slate-900 dark:text-white placeholder-space-500 focus:ring-indigo-500 focus:border-indigo-500"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-black uppercase text-space-300 mb-1">
+                  <label className="block text-xs font-black uppercase text-slate-900 dark:text-space-300 mb-1">
                     Current Level
                   </label>
                   <select
                     value={inputGoalLevel}
                     onChange={(e) => setInputGoalLevel(Number(e.target.value))}
-                    className="w-full px-3 py-2 bg-slate-900/50 border border-indigo-500/20 rounded-lg text-sm text-white focus:ring-indigo-500"
+                    className="w-full px-3 py-2 bg-slate-900/50 border border-indigo-500/20 rounded-lg text-sm text-slate-900 dark:text-white focus:ring-indigo-500"
                   >
                     <option value={1}>1 - Novice</option>
                     <option value={2}>2 - Basic</option>
@@ -296,7 +296,7 @@ export default function Screen8SkillGap({ courseId = 1, userId = 'astronaut', on
               <div className="mt-6 flex justify-end gap-3 pt-4 border-t border-indigo-500/20">
                 <button
                   onClick={() => setShowAddForm(false)}
-                  className="px-4 py-2 rounded-lg text-xs font-black bg-slate-800 text-space-300 border border-slate-700 btn-micro"
+                  className="px-4 py-2 rounded-lg text-xs font-black bg-slate-800 text-slate-900 dark:text-space-300 border border-slate-700 btn-micro"
                 >
                   Cancel
                 </button>

@@ -107,6 +107,86 @@ const MOCK_COURSES = [
       options: ['Origin of life', 'Rare Earth hypothesis', 'Missing link in evolution', 'Absence of extraterrestrial civilizations'],
       correctIndex: 3
     }
+  },
+  {
+    id: 6,
+    title: 'Introduction to Java Programming & Object-Oriented Design',
+    category: 'Software Engineering',
+    description: 'A 4-week foundational module covering Java syntax, object-oriented design principles, and building real console/GUI applications. Designed for learners with no prior programming background moving into software development roles.',
+    instructor: 'Ms. Rachel Torres',
+    video_url: 'https://sample-videos.com/video123.mp4',
+    reading_content: 'This course covers the fundamentals of Java programming, including syntax, data types, control structures, object-oriented design principles, and hands-on projects building console and GUI applications.',
+    syllabus: [
+      'Module 1: Java Fundamentals — syntax, data types, control structures',
+      'Module 2: Object-Oriented Programming — classes, inheritance, polymorphism, interfaces',
+      'Module 3: Collections Framework and Exception Handling',
+      'Module 4: Building and Testing a Capstone Java Application'
+    ],
+    quiz: {
+      question: 'Which principle is NOT a core pillar of Object-Oriented Programming?',
+      options: ['Encapsulation', 'Abstraction', 'Compilation', 'Polymorphism'],
+      correctIndex: 2
+    }
+  },
+  {
+    id: 7,
+    title: 'Python for Data Analysis & Automation',
+    category: 'Data Science / Automation',
+    description: 'A 4-week module covering Python fundamentals and practical data analysis skills using pandas and NumPy, plus scripting for task automation. Suited for learners moving toward data-focused or automation-heavy roles.',
+    instructor: 'Dr. Anil Kapoor',
+    video_url: 'https://sample-videos.com/video123.mp4',
+    reading_content: 'Master Python for data analysis and automation. Learn to manipulate data with pandas, compute with NumPy, and write scripts that automate repetitive tasks across enterprise workflows.',
+    syllabus: [
+      'Module 1: Python Fundamentals and Scripting',
+      'Module 2: Data Structures, Functions, and File I/O',
+      'Module 3: Data Analysis with pandas and NumPy',
+      'Module 4: Automation Scripts and Capstone Data Project'
+    ],
+    quiz: {
+      question: 'Which library is primarily used for data manipulation and analysis in Python?',
+      options: ['NumPy', 'pandas', 'matplotlib', 'requests'],
+      correctIndex: 1
+    }
+  },
+  {
+    id: 8,
+    title: 'Introduction to Atmospheric Science & Weather Forecasting',
+    category: 'Earth Sciences',
+    description: 'A foundational 4-week module covering meteorological fundamentals, atmospheric thermodynamics, synoptic chart analysis, and modern numerical weather prediction (NWP) models. Designed to train technical officers in interpreting satellite and radar telemetry.',
+    instructor: 'Dr. Meena Iyer',
+    video_url: 'https://sample-videos.com/video123.mp4',
+    reading_content: 'Target Ministry Division: India Meteorological Department (IMD) / Operational Forecasting Cadre. YouTube Source Reference: NPTEL / IMD Training Wing Public Lecture Series (Atmospheric Science Playlist).',
+    syllabus: [
+      'Module 1: Structure of the Atmosphere and Global Circulation Patterns',
+      'Module 2: Thermodynamic Diagrams and Air Mass Analysis',
+      'Module 3: Radar Meteorology and Satellite Cloud Imagery Interpretation',
+      'Module 4: Issuing Severe Weather Warnings and Cyclone Tracking Protocols'
+    ],
+    quiz: {
+      question: 'Which instrument is primarily used to measure atmospheric pressure?',
+      options: ['Thermometer', 'Barometer', 'Hygrometer', 'Anemometer'],
+      correctIndex: 1
+    }
+  },
+  {
+    id: 9,
+    title: 'Oceanography & Marine Earth Systems',
+    category: 'Earth Sciences',
+    description: 'A comprehensive 6-week professional development course focusing on physical oceanography, marine meteorology, and tsunami early warning systems. Tailored for researchers and marine science officers managing coastal data infrastructure.',
+    instructor: 'Dr. Kiran Nayak',
+    video_url: 'https://sample-videos.com/video123.mp4',
+    reading_content: 'Target Ministry Division: Ministry of Earth Sciences (MoES) / Ocean Science & Services Division. YouTube Source Reference: INCOIS / MoES Academic Outreach Lecture Series (Oceanography & Marine Dynamics).',
+    syllabus: [
+      'Module 1: Ocean-Atmosphere Coupling and El Niño / La Niña Dynamics',
+      'Module 2: Sea Surface Temperature (SST) Monitoring and Oceanic Heat Content',
+      'Module 3: Tsunami Generation Mechanisms and Deep-Ocean Buoy Telemetry',
+      'Module 4: Integrated Coastal Zone Management and Data Modeling'
+    ],
+    quiz: {
+      question: 'What is the primary driver of El Niño events?',
+      options: ['Increased trade winds', 'Weakening of trade winds and warm water shift', 'Decreased sea surface temperature', 'Increased upwelling'],
+      correctIndex: 1
+    }
   }
 ];
 

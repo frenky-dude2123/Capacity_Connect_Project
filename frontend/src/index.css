@@ -258,11 +258,11 @@ body {
 }
 
 /* ===== DARK MODE TEXT OVERRIDES ===== */
-.text-space-100 { color: #f1f5f9 !important; }
-.text-space-200 { color: #e2e8f0 !important; }
-.text-space-300 { color: #cbd5e1 !important; }
-.text-space-400 { color: #94a3b8 !important; }
-.text-space-500 { color: #64748b !important; }
+.dark .text-space-100 { color: #f1f5f9 !important; }
+.dark .text-space-200 { color: #e2e8f0 !important; }
+.dark .text-space-300 { color: #cbd5e1 !important; }
+.dark .text-space-400 { color: #94a3b8 !important; }
+.dark .text-space-500 { color: #64748b !important; }
 
 /* ===== DARK MODE INPUT OVERRIDES ===== */
 input[type="text"],
