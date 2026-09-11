@@ -167,7 +167,7 @@ authRouter.post('/signup', async (req, res) => {
         name: name.trim(),
         email: email.toLowerCase(),
         role: normalizedRole,
-        status: 'pending',
+        status: 'approved',
         department: 'Training',
         qualification: normalizedRole === 'trainee' ? qualification || null : null,
         skills: normalizedRole === 'trainee' ? skills || null : null,
