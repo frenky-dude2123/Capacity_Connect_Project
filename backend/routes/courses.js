@@ -10,6 +10,7 @@ const MOCK_COURSES = [
     description: 'Deep dive into stellar dynamics, black hole mechanics, and relativistic cosmology.',
     instructor: 'Dr. Elena Vasquez',
     video_url: 'https://sample-videos.com/video123.mp4',
+    youtube_embed_id: null,
     reading_content: 'This course covers the fundamentals of modern astrophysics, including gravitational physics, stellar evolution, galaxy formation, and dark matter theory. Students will explore the mathematical foundations underlying cosmic phenomena.',
     syllabus: [
       'Module 1: Gravitational Physics and Relativity',
@@ -155,6 +156,7 @@ const MOCK_COURSES = [
     description: 'A foundational 4-week module covering meteorological fundamentals, atmospheric thermodynamics, synoptic chart analysis, and modern numerical weather prediction (NWP) models. Designed to train technical officers in interpreting satellite and radar telemetry.',
     instructor: 'Dr. Meena Iyer',
     video_url: 'https://sample-videos.com/video123.mp4',
+    youtube_embed_id: 'PLACEHOLDER_YOUTUBE_EMBED_ID',
     reading_content: 'Target Ministry Division: India Meteorological Department (IMD) / Operational Forecasting Cadre. YouTube Source Reference: NPTEL / IMD Training Wing Public Lecture Series (Atmospheric Science Playlist).',
     syllabus: [
       'Module 1: Structure of the Atmosphere and Global Circulation Patterns',
@@ -175,6 +177,7 @@ const MOCK_COURSES = [
     description: 'A comprehensive 6-week professional development course focusing on physical oceanography, marine meteorology, and tsunami early warning systems. Tailored for researchers and marine science officers managing coastal data infrastructure.',
     instructor: 'Dr. Kiran Nayak',
     video_url: 'https://sample-videos.com/video123.mp4',
+    youtube_embed_id: 'PLACEHOLDER_YOUTUBE_EMBED_ID',
     reading_content: 'Target Ministry Division: Ministry of Earth Sciences (MoES) / Ocean Science & Services Division. YouTube Source Reference: INCOIS / MoES Academic Outreach Lecture Series (Oceanography & Marine Dynamics).',
     syllabus: [
       'Module 1: Ocean-Atmosphere Coupling and El Niño / La Niña Dynamics',
