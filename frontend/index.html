@@ -515,16 +515,36 @@ tailwind.config = {
       background-size: 40px 40px;
     }
     .hud-panel {
-      background: rgba(15, 23, 42, 0.6);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border: 1px solid rgba(0, 212, 255, 0.2);
+      background: linear-gradient(180deg, rgba(15, 23, 42, 0.85) 0%, rgba(15, 23, 42, 0.65) 100%);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-width: 1px;
+      border-style: solid;
+      border-color: rgba(0, 212, 255, 0.25);
+      border-top-width: 3px;
+      border-top-color: rgba(0, 212, 255, 0.7);
       border-radius: 16px;
-      box-shadow: 0 0 30px rgba(0,212,255,0.08), inset 0 1px 0 rgba(255,255,255,0.05);
+      box-shadow: 0 0 40px rgba(0,212,255,0.1), inset 0 1px 0 rgba(255,255,255,0.08);
     }
     .hud-panel-purple {
-      border-color: rgba(168,85,247,0.25);
-      box-shadow: 0 0 30px rgba(168,85,247,0.08), inset 0 1px 0 rgba(255,255,255,0.05);
+      border-color: rgba(168,85,247,0.3);
+      border-top-color: rgba(168,85,247,0.7);
+      box-shadow: 0 0 40px rgba(168,85,247,0.1), inset 0 1px 0 rgba(255,255,255,0.08);
+    }
+    .hud-panel-amber {
+      border-color: rgba(245,158,11,0.3);
+      border-top-color: rgba(245,158,11,0.7);
+      box-shadow: 0 0 40px rgba(245,158,11,0.1), inset 0 1px 0 rgba(255,255,255,0.08);
+    }
+    .hud-panel-emerald {
+      border-color: rgba(16,185,129,0.3);
+      border-top-color: rgba(16,185,129,0.7);
+      box-shadow: 0 0 40px rgba(16,185,129,0.1), inset 0 1px 0 rgba(255,255,255,0.08);
+    }
+    .hud-panel-rose {
+      border-color: rgba(244,63,94,0.3);
+      border-top-color: rgba(244,63,94,0.7);
+      box-shadow: 0 0 40px rgba(244,63,94,0.1), inset 0 1px 0 rgba(255,255,255,0.08);
     }
     .laser-bar {
       background: linear-gradient(90deg, #00d4ff 0%, #8338ec 100%);
@@ -1257,34 +1277,36 @@ tailwind.config = {
       const [timeData, setTimeData] = React.useState([]);
       const [barData, setBarData] = React.useState([]);
       const [loadingTime, setLoadingTime] = React.useState(true);
+      const [barReady, setBarReady] = React.useState(false);
+      const [pieReady, setPieReady] = React.useState(false);
 
       React.useEffect(() => {
         let cancelled = false;
         setLoadingTime(true);
         apiRequest(`${API_BASE}/admin/stats`).then(data => {
           if (cancelled) return;
+          console.log('[AdminCharts] raw stats payload:', data);
           setTimeData(data.monthlyEnrollments || []);
           setBarData(data.activeUsersTimeline || data.monthlyEnrollments || []);
           setLoadingTime(false);
-        }).catch(() => { if (!cancelled) setLoadingTime(false); });
+        }).catch(err => { console.error('[AdminCharts] stats fetch error:', err); if (!cancelled) setLoadingTime(false); });
         return () => { cancelled = true; };
       }, []);
 
       React.useEffect(() => {
         if (!barRef.current || !pieRef.current) return;
-        const isDark = document.documentElement.classList.contains('dark');
-        const gridColor = isDark ? 'rgba(148,163,184,0.2)' : 'rgba(15,23,42,0.1)';
-        const textColor = isDark ? '#cbd5e1' : '#334155';
+        const gridColor = 'rgba(148,163,184,0.2)';
+        const textColor = '#cbd5e1';
         if (barRef.current.chart) barRef.current.chart.destroy();
         if (pieRef.current.chart) pieRef.current.chart.destroy();
         if (barData.length) {
           barRef.current.chart = new Chart(barRef.current, {
             type: 'bar',
             data: {
-              labels: barData.map(d => d.month),
-              datasets: [{
-                label: 'Active Operators',
-                data: barData.map(d => d.users),
+               labels: barData.map(d => d.month),
+               datasets: [{
+                 label: 'Active Operators',
+                 data: barData.map(d => d.users ?? d.enrollments ?? d.count ?? 0),
                 backgroundColor: [
                   'rgba(0,212,255,0.85)', 'rgba(0,180,255,0.85)', 'rgba(131,56,236,0.85)',
                   'rgba(168,85,247,0.85)', 'rgba(236,72,153,0.85)', 'rgba(251,191,36,0.85)'
@@ -1309,6 +1331,7 @@ tailwind.config = {
               }
             }
           });
+          setBarReady(true);
         }
         pieRef.current.chart = new Chart(pieRef.current, {
           type: 'doughnut',
@@ -1343,14 +1366,14 @@ tailwind.config = {
             }
           }
         });
+        setPieReady(true);
         return () => { if (barRef.current?.chart) barRef.current.chart.destroy(); if (pieRef.current?.chart) pieRef.current.chart.destroy(); };
       }, []);
 
       React.useEffect(() => {
         if (!lineRef.current || !timeData.length) return;
-        const isDark = document.documentElement.classList.contains('dark');
-        const gridColor = isDark ? 'rgba(148,163,184,0.2)' : 'rgba(15,23,42,0.1)';
-        const textColor = isDark ? '#cbd5e1' : '#334155';
+        const gridColor = 'rgba(148,163,184,0.2)';
+        const textColor = '#cbd5e1';
         if (lineRef.current.chart) lineRef.current.chart.destroy();
 lineRef.current.chart = new Chart(lineRef.current, {
           type: 'line',
@@ -1389,26 +1412,26 @@ lineRef.current.chart = new Chart(lineRef.current, {
 
 return (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="hud-panel rounded-2xl border border-cyan-500/20 p-6">
+          <div className="hud-panel rounded-2xl p-6">
             <h3 className="text-sm font-bold text-white dark:text-white mb-4 flex items-center gap-2 font-mono">
               <span className="w-2 h-2 rounded-full bg-cyan-400 radar-pulse"></span>
               MONTHLY OPERATOR COUNT
             </h3>
-            <div className="h-64"><canvas ref={barRef} /></div>
+            {loadingTime ? (<p className="text-xs text-slate-400 font-mono">Loading operator telemetry...</p>) : barData.length === 0 ? (<p className="text-xs text-slate-400 font-mono">No operator data available yet.</p>) : <div className="h-64"><canvas ref={barRef} /></div>}
           </div>
-          <div className="hud-panel rounded-2xl border border-cyan-500/20 p-6 hud-panel-purple">
+          <div className="hud-panel rounded-2xl p-6 hud-panel-purple">
             <h3 className="text-sm font-bold text-white dark:text-white mb-4 flex items-center gap-2 font-mono">
               <span className="w-2 h-2 rounded-full bg-purple-400 radar-pulse"></span>
               MISSION COMPLETION STATUS
             </h3>
-            <div className="h-64"><canvas ref={pieRef} /></div>
+            {loadingTime ? (<p className="text-xs text-slate-400 font-mono">Loading completion status...</p>) : <div className="h-64"><canvas ref={pieRef} /></div>}
           </div>
-          <div className="hud-panel rounded-2xl border border-cyan-500/20 p-6 md:col-span-2">
+          <div className="hud-panel hud-panel-amber rounded-2xl p-6 md:col-span-2">
             <h3 className="text-sm font-bold text-white dark:text-white mb-4 flex items-center gap-2 font-mono">
               <span className="w-2 h-2 rounded-full bg-amber-400 radar-pulse"></span>
               ENROLLMENT TRAJECTORY
             </h3>
-            {loadingTime ? <p className="text-xs text-slate-400 font-mono">Loading telemetry...</p> : <div className="h-64"><canvas ref={lineRef} /></div>}
+            {loadingTime ? (<p className="text-xs text-slate-400 font-mono">Loading enrollment telemetry...</p>) : timeData.length === 0 ? (<p className="text-xs text-slate-400 font-mono">No enrollment data available yet.</p>) : <div className="h-64"><canvas ref={lineRef} /></div>}
           </div>
         </div>
       );
@@ -2059,15 +2082,15 @@ const fetchAIRecommendations = async () => {
                <p className="text-3xl font-extrabold font-mono text-white mt-1">{dash?.metrics?.activeCourses}</p>
                <p className="text-[10px] text-slate-500 mt-2 font-mono">enrolled pathways</p>
              </div>
-             <div className="hud-panel p-6 rounded-2xl">
-               <div className="flex items-center justify-between mb-3">
-                 <span className="text-xs text-slate-400 font-black uppercase font-mono">Mission Hours</span>
-                 <span className="w-8 h-8 rounded-lg bg-gradient-to-br from-amber-500/20 to-orange-600/20 flex items-center justify-center text-sm">⏱️</span>
-               </div>
-               <p className="text-3xl font-extrabold font-mono text-white mt-1">{dash?.metrics?.trainingHours}h</p>
-               <p className="text-[10px] text-slate-500 mt-2 font-mono">completed this quarter</p>
-             </div>
-             <div className="hud-panel p-6 rounded-2xl hud-panel-purple">
+              <div className="hud-panel hud-panel-amber p-6 rounded-2xl">
+                <div className="flex items-center justify-between mb-3">
+                  <span className="text-xs text-slate-400 font-black uppercase font-mono">Mission Hours</span>
+                  <span className="w-8 h-8 rounded-lg bg-gradient-to-br from-amber-500/20 to-orange-600/20 flex items-center justify-center text-sm">⏱️</span>
+                </div>
+                <p className="text-3xl font-extrabold font-mono text-white mt-1">{dash?.metrics?.trainingHours}h</p>
+                <p className="text-[10px] text-slate-500 mt-2 font-mono">completed this quarter</p>
+              </div>
+              <div className="hud-panel hud-panel-amber p-6 rounded-2xl">
                <div className="flex items-center justify-between mb-3">
                  <span className="text-xs text-slate-400 font-black uppercase font-mono">Clearance Badges</span>
                  <span className="w-8 h-8 rounded-lg bg-gradient-to-br from-amber-500/20 to-yellow-500/20 flex items-center justify-center text-sm">🏆</span>
@@ -2079,7 +2102,7 @@ const fetchAIRecommendations = async () => {
 
 <div className="space-y-4">
              {continueWatching && currentCourse && (
-               <div className="hud-panel rounded-2xl p-6 border border-cyan-500/20">
+               <div className="hud-panel rounded-2xl p-6">
                  <div className="flex items-center gap-2 mb-3">
                    <span className="radar-pulse"></span>
                    <h2 className="text-lg font-black text-white font-mono tracking-wide">ACTIVE ORBITAL MISSIONS</h2>
@@ -2101,7 +2124,7 @@ const fetchAIRecommendations = async () => {
              </h2>
              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
                {dash?.enrolledCourses?.map(c => (
-                 <div key={c.id} className="hud-panel p-4 sm:p-6 flex flex-col justify-between rounded-2xl border border-cyan-500/20">
+                 <div key={c.id} className="hud-panel p-4 sm:p-6 flex flex-col justify-between rounded-2xl">
                    <div>
                       <span className="sector-badge">{c.category}</span>
                       <h3 className="text-base font-black text-white mt-2">{c.title}</h3>
@@ -2224,7 +2247,7 @@ return (
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
             {filtered.map(c => (
-              <div key={c.id} className="hud-panel rounded-2xl border border-cyan-500/20 p-4 sm:p-6 flex flex-col justify-between">
+              <div key={c.id} className="hud-panel rounded-2xl p-4 sm:p-6 flex flex-col justify-between">
                 <div>
                   <span className="sector-badge">{c.category}</span>
                   <h2 className="text-base font-black text-white dark:text-white mt-3">{c.title}</h2>
@@ -2328,7 +2351,7 @@ return (
             </div>
           )}
           {course && (
-            <div className="hud-panel rounded-2xl border border-cyan-500/20 p-6 sm:p-8 space-y-4">
+            <div className="hud-panel rounded-2xl p-6 sm:p-8 space-y-4">
               <span className="sector-badge">{course.category}</span>
               <h1 className="text-2xl font-extrabold text-white dark:text-white mt-2">{course.title}</h1>
               <p className="text-sm text-slate-300">{course.description}</p>
@@ -2342,7 +2365,7 @@ return (
               <button onClick={() => onLaunchPlayer(course.id)} className="px-6 py-2.5 bg-gradient-to-r from-cyan-500 to-blue-600 text-white dark:text-white rounded-xl text-xs font-black shadow-lg shadow-cyan-500/30 neon-glow btn-micro hover:shadow-cyan-500/50">Launch Player ▶</button>
 
               {user && user.role === 'trainee' && (
-                <div className="hud-panel rounded-2xl border border-cyan-500/20 p-6 space-y-4">
+                <div className="hud-panel rounded-2xl p-6 space-y-4">
                   <h3 className="text-sm font-black text-white dark:text-white font-mono tracking-wide">COURSE FEEDBACK</h3>
                   {feedbackLoading ? (
                     <p className="text-xs text-slate-400">Loading feedback...</p>
@@ -2811,10 +2834,10 @@ return (
                  <span className="text-xs text-slate-400 font-black uppercase font-mono">Active Operators</span>
                  <p className="text-3xl font-extrabold font-mono text-cyan-300 mt-2">{stats?.activeLearners}</p>
                </div>
-               <div className="hud-panel p-6 rounded-2xl hud-panel-purple">
-                 <span className="text-xs text-slate-400 font-black uppercase font-mono">Mission Success Rate</span>
-                 <p className="text-3xl font-extrabold font-mono text-amber-400 mt-2">{stats?.completionRatePercent}%</p>
-               </div>
+                <div className="hud-panel hud-panel-amber p-6 rounded-2xl">
+                  <span className="text-xs text-slate-400 font-black uppercase font-mono">Mission Success Rate</span>
+                  <p className="text-3xl font-extrabold font-mono text-amber-400 mt-2">{stats?.completionRatePercent}%</p>
+                </div>
                <div className="hud-panel p-6 rounded-2xl">
                  <span className="text-xs text-slate-400 font-black uppercase font-mono">Active Sectors</span>
                  <p className="text-3xl font-extrabold font-mono text-white dark:text-white mt-2">{stats?.totalCourses}</p>
@@ -2857,7 +2880,7 @@ return (
             )}
 
 {activeTab === 'all' && (
-            <div className="hud-panel rounded-2xl border border-cyan-500/20 p-6">
+            <div className="hud-panel rounded-2xl p-6">
               <h2 className="text-base font-black text-white dark:text-white mb-5 flex items-center gap-2 font-mono">
                 <span className="w-2 h-2 rounded-full bg-cyan-400 radar-pulse"></span>
                 All Personnel ({allUsers.length})
@@ -2888,7 +2911,7 @@ return (
           )}
 
           {activeTab === 'directory' && stats && !loading.stats && (
-            <div className="hud-panel rounded-2xl border border-cyan-500/20 p-6">
+            <div className="hud-panel rounded-2xl p-6">
               <h2 className="text-base font-black text-white dark:text-white mb-5 flex items-center gap-2 font-mono">
                 <span className="w-2 h-2 rounded-full bg-cyan-400 radar-pulse"></span>
                 Enterprise Directory
@@ -2919,7 +2942,7 @@ return (
           )}
 
           {activeTab === 'feedback' && (
-            <div className="hud-panel rounded-2xl border border-cyan-500/20 p-6">
+            <div className="hud-panel rounded-2xl p-6">
               <h2 className="text-base font-black text-white dark:text-white mb-5 flex items-center gap-2 font-mono">
                 <span className="w-2 h-2 rounded-full bg-amber-400 radar-pulse"></span>
                 Course Feedback Summary
