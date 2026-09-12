@@ -148,7 +148,16 @@ authRouter.post('/login', async (req, res) => {
 
 authRouter.get('/me', authMiddleware, async (req, res) => {
   try {
-    res.status(200).json({ user: req.user || null });
+    if (!req.user) {
+      return res.status(401).json({ error: 'Not authenticated' });
+    }
+
+    const freshUser = await getUserById(req.user.id);
+    if (!freshUser) {
+      return res.status(200).json({ user: req.user });
+    }
+
+    res.status(200).json({ user: freshUser });
   } catch (err) {
     console.error('[Auth] Me error:', err.message);
     res.status(500).json({ error: 'Failed to fetch user', details: err.message });
