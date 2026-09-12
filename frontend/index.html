@@ -1878,11 +1878,13 @@ return (
         try {
           const res = await fetch(endpoint, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
           const data = await res.json();
+          console.log('[Auth]', isLogin ? 'login' : 'signup', 'response', data);
           if (!res.ok) throw new Error(data.message || 'Request failed');
           if (data.token) { try { localStorage.setItem('capacity_connect_token', data.token); } catch {} }
           setAuthData(data);
           if (onAuthSuccess) onAuthSuccess(data);
         } catch (err) {
+          console.error('[Auth]', isLogin ? 'login' : 'signup', 'error', err);
           if (err.name === 'TypeError' && err.message.includes('fetch')) {
             setError('Cannot connect to backend: The API server may be offline. Try again later.');
           } else {
@@ -4217,22 +4219,28 @@ return (
       const roleAllowed = (allowedRoles) => !!user && allowedRoles.includes(user.role);
 
       React.useEffect(() => {
+        console.log('[App] mount: checking session');
         const token = localStorage.getItem('capacity_connect_token');
+        console.log('[App] mount: token present?', !!token);
         if (!token) return;
         let cancelled = false;
+        console.log('[App] mount: calling /auth/me');
         fetchWithToken(`${API_BASE}/auth/me`)
-          .then(r => r.ok ? r.json() : null)
+          .then(r => { console.log('[App] /auth/me status', r.status); return r.ok ? r.json() : null; })
           .then(data => {
+            console.log('[App] /auth/me response', data);
             if (cancelled || !data?.user) return;
             const u = data.user;
             setUser(u);
             if (u.status === 'pending' || u.status === 'rejected') {
+              console.log('[App] routing to pending screen because status=', u.status);
               setScreen('1');
             } else {
+              console.log('[App] routing to default screen for role=', u.role);
               setScreen(getDefaultScreen(u.role));
             }
           })
-          .catch(() => { try { localStorage.removeItem('capacity_connect_token'); } catch {} })
+          .catch(err => { console.error('[App] /auth/me error', err); try { localStorage.removeItem('capacity_connect_token'); } catch {} })
           .finally(() => { if (!cancelled) {} });
         return () => { cancelled = true; };
       }, []);
@@ -4243,9 +4251,11 @@ return (
        * user's own default dashboard.
        */
       const navigate = (target, isSignup = false) => {
+        console.log('[App] navigate', { target, isSignup, userRole: user?.role, currentScreen: screen });
         if (!user && target !== '0') { setScreen('1'); setSignupMode(isSignup); return; }
         const allowed = SCREEN_ROLES[target];
         if (!allowed || !allowed.includes(user.role)) {
+          console.log('[App] navigate redirecting to default screen for role', user.role);
           setScreen(getDefaultScreen(user.role));
           return;
         }
@@ -4256,9 +4266,11 @@ return (
       // Enforce strict role isolation on every render:
       // If the current screen is not in the user's allowed set, redirect.
       React.useEffect(() => {
+        console.log('[App] role isolation check', { screen, userRole: user?.role, allowed: user ? SCREEN_ROLES[screen] : null });
         if (!user) return;
         const allowed = SCREEN_ROLES[screen];
         if (!allowed || !allowed.includes(user.role)) {
+          console.log('[App] role isolation redirecting to default for role', user.role);
           setScreen(getDefaultScreen(user.role));
         }
       }, [screen, user]);
@@ -4306,7 +4318,7 @@ return (
             <ToastContainer />
 {screen === '0' && <PublicHomepage onNavigateToAuth={(target, isSignup) => { setScreen(target); setSignupMode(isSignup); }} />}
 
-             {screen === '1' && <Screen1Auth onAuthSuccess={(d) => { if (d.user) setUser(d.user); if (d.user && d.user.status === 'pending' || d.user && d.user.status === 'rejected') { setScreen('1'); } else { setScreen(getDefaultScreen(d.user?.role)); } }} onNavigate={navigate} initialSignup={signupMode} user={user} />}
+             {screen === '1' && <Screen1Auth onAuthSuccess={(d) => { console.log('[App] onAuthSuccess', d); if (d.user) setUser(d.user); if (d.user && d.user.status === 'pending' || d.user && d.user.status === 'rejected') { console.log('[App] onAuthSuccess keeping screen=1 for status', d.user.status); setScreen('1'); } else { console.log('[App] onAuthSuccess routing to default for role', d.user?.role); setScreen(getDefaultScreen(d.user?.role)); } }} onNavigate={navigate} initialSignup={signupMode} user={user} />}
 
             {/* Strict role isolation: each screen is only rendered if the user's role matches */}
             {user && screen === '2' && roleAllowed(['trainee']) && (
