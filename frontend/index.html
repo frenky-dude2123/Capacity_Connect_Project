@@ -1122,12 +1122,126 @@ tailwind.config = {
       border-color: rgba(255,255,255,0.15);
       color: #fbbf24;
     }
+    /* Meadow sidebar — frosted glass over nature photo */
+    .theme-meadow .sidebar-bg {
+      background: rgba(255, 255, 255, 0.12);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border-right: 1px solid rgba(255, 255, 255, 0.18);
+      box-shadow: 4px 0 24px rgba(0, 0, 0, 0.08);
+    }
+    .theme-meadow.dark .sidebar-bg {
+      background: rgba(0, 0, 0, 0.35);
+      border-right: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 4px 0 24px rgba(0, 0, 0, 0.25);
+    }
+    .theme-meadow .sidebar-item { color: #3f5a3f; }
+    .theme-meadow.dark .sidebar-item { color: #cbd5e1; }
+    .theme-meadow .sidebar-item-active {
+      background: linear-gradient(135deg, rgba(74, 222, 128, 0.18) 0%, rgba(34, 197, 94, 0.08) 100%);
+      color: #16a34a;
+      border-left: 3px solid #4ade80;
+      box-shadow: 0 0 20px rgba(74, 222, 128, 0.2), inset 0 0 20px rgba(74, 222, 128, 0.06);
+    }
+    .theme-meadow.dark .sidebar-item-active {
+      color: #4ade80;
+      box-shadow: 0 0 20px rgba(74, 222, 128, 0.25), inset 0 0 20px rgba(74, 222, 128, 0.08);
+    }
+    .theme-meadow .sidebar-item:hover { background: rgba(74, 222, 128, 0.1); color: #1a2e1a; }
+    .theme-meadow.dark .sidebar-item:hover { background: rgba(74, 222, 128, 0.08); color: #f1f5f9; }
+    .theme-meadow .sidebar-icon { filter: drop-shadow(0 0 6px rgba(74, 222, 128, 0.5)); }
+    .theme-meadow .portal-bg { background: transparent; }
+
+    /* Meadow hud-panel override — reuse existing cards with glass style */
+    .theme-meadow .hud-panel,
+    .theme-meadow .meadow-glass {
+      background: var(--meadow-glass-light);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--meadow-border-light);
+      border-radius: 16px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08), 0 2px 8px rgba(0, 0, 0, 0.04);
+      transition: all 300ms ease;
+    }
+    .theme-meadow.dark .hud-panel,
+    .theme-meadow.dark .meadow-glass {
+      background: var(--meadow-glass-dark);
+      border-color: var(--meadow-border-dark);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25), 0 2px 8px rgba(0, 0, 0, 0.15);
+    }
+    .theme-meadow .hud-panel:hover,
+    .theme-meadow .meadow-glass:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12), 0 4px 12px rgba(0, 0, 0, 0.06);
+    }
+    .theme-meadow.dark .hud-panel:hover,
+    .theme-meadow.dark .meadow-glass:hover {
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35), 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Meadow login/homepage background photos */
+    .meadow-bg-login {
+      background-image:
+        linear-gradient(180deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0.05) 100%),
+        url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=1920&q=80');
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+    }
+    .theme-meadow.dark .meadow-bg-login {
+      background-image:
+        linear-gradient(180deg, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.75) 100%),
+        url('https://images.unsplash.com/photo-1419242902214-272b3f66ee7a?w=1920&q=80');
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+    }
+
+    /* Meadow trainer dashboard background photos */
+    .meadow-bg-trainer {
+      background-image:
+        linear-gradient(180deg, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0.04) 100%),
+        url('https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=1920&q=80');
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+    }
+    .theme-meadow.dark .meadow-bg-trainer {
+      background-image:
+        linear-gradient(180deg, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.75) 100%),
+        url('https://images.unsplash.com/photo-1507400492013-162706c8c05e?w=1920&q=80');
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+    }
+
+    /* Meadow admin dashboard background photos */
+    .meadow-bg-admin {
+      background-image:
+        linear-gradient(180deg, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0.04) 100%),
+        url('https://images.unsplash.com/photo-1470252649378-9c29740c9fa8?w=1920&q=80');
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+    }
+    .theme-meadow.dark .meadow-bg-admin {
+      background-image:
+        linear-gradient(180deg, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.75) 100%),
+        url('https://images.unsplash.com/photo-1519681393784-d120267933ba?w=1920&q=80');
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+    }
+
     /* Meadow body override */
     .theme-meadow body,
     .theme-meadow .theme-wrapper {
       background: transparent !important;
     }
-    .theme-meadow .meadow-bg {
+    .theme-meadow .meadow-bg,
+    .theme-meadow .meadow-bg-login,
+    .theme-meadow .meadow-bg-trainer,
+    .theme-meadow .meadow-bg-admin {
       min-height: 100vh;
     }
   </style>
@@ -1648,10 +1762,16 @@ lineRef.current.chart = new Chart(lineRef.current, {
         .map(([screen]) => screen);
     }
 
-    function getDefaultScreen(role) {
-      const map = { trainee: '2', trainer: '9', admin: '7' };
-      return map[role] || '1';
-    }
+     function getDefaultScreen(role) {
+       const map = { trainee: '2', trainer: '9', admin: '7' };
+       return map[role] || '1';
+     }
+
+     function resolveScreenForUser(user) {
+       if (!user) return '1';
+       if (user.status === 'pending' || user.status === 'rejected') return '1';
+       return getDefaultScreen(user.role);
+     }
 
     // Sidebar navigation items per role
     const SIDEBAR_ITEMS = {
@@ -1735,201 +1855,203 @@ const roleLabel = user?.role?.charAt(0).toUpperCase() + user?.role?.slice(1) || 
     // ==========================================
     // ROLE PORTAL LAYOUT WRAPPER
     // ==========================================
-function RolePortal({ user, currentScreen, onNavigate, activeTab, setActiveTab, children }) {
-      const themeClass = ROLE_THEMES[user?.role] || '';
-      const roleLabel = user?.role?.charAt(0).toUpperCase() + user?.role?.slice(1) || '';
+ function RolePortal({ user, currentScreen, onNavigate, activeTab, setActiveTab, children }) {
+       const themeClass = ROLE_THEMES[user?.role] || '';
+       const roleLabel = user?.role?.charAt(0).toUpperCase() + user?.role?.slice(1) || '';
 
-      if (!user) return <div className="pt-16">{children}</div>;
+       if (!user) return <div className="pt-16">{children}</div>;
+
+       const bgClass = user?.role === 'trainer' ? 'meadow-bg-trainer' : user?.role === 'admin' ? 'meadow-bg-admin' : 'meadow-bg';
 
 return (
-        <div className={"theme-wrapper " + (themeClass) + "flex h-screen overflow-hidden cosmic-bg relative"}>
-          <aside className="hidden md:flex">
-            <Sidebar
-              user={user}
-              currentScreen={currentScreen}
-              onNavigate={onNavigate}
-              activeTab={activeTab}
-              setActiveTab={setActiveTab}
-            />
-          </aside>
-          <main className="flex-1 overflow-y-auto portal-bg text-white dark:text-white relative">
-            {/* Mobile top bar */}
-            <div className="md:hidden flex items-center gap-3 px-4 py-3 border-b border-electric-blue/10 glass-card sticky top-0 z-40">
-              <div className="w-9 h-9 rounded-xl glass-card flex items-center justify-center text-lg border border-electric-blue/20">
-                {user?.role === 'trainee' ? '🎓' : user?.role === 'trainer' ? '👩‍🏫' : '🛡️'}
-              </div>
-              <span className="font-bold text-sm text-white dark:text-white">Capacity Connect</span>
-              <span className="text-[10px] text-slate-400 ml-auto">{roleLabel} Portal</span>
-            </div>
-            <div className="pt-14 md:pt-0">
-              {children}
-            </div>
-          </main>
-        </div>
-      );
-    }
+         <div className={"theme-wrapper " + (themeClass) + " theme-meadow " + bgClass + " dark flex h-screen overflow-hidden relative"}>
+           <aside className="hidden md:flex">
+             <Sidebar
+               user={user}
+               currentScreen={currentScreen}
+               onNavigate={onNavigate}
+               activeTab={activeTab}
+               setActiveTab={setActiveTab}
+             />
+           </aside>
+           <main className="flex-1 overflow-y-auto relative">
+             {/* Mobile top bar */}
+             <div className="md:hidden flex items-center gap-3 px-4 py-3 border-b border-white/10 glass-card sticky top-0 z-40">
+               <div className="w-9 h-9 rounded-xl glass-card flex items-center justify-center text-lg border border-white/10">
+                 {user?.role === 'trainee' ? '🎓' : user?.role === 'trainer' ? '👩‍🏫' : '🛡️'}
+               </div>
+               <span className="font-bold text-sm text-white">Capacity Connect</span>
+               <span className="text-[10px] text-meadow-text-secondary ml-auto">{roleLabel} Portal</span>
+             </div>
+             <div className="pt-14 md:pt-0">
+               {children}
+             </div>
+           </main>
+         </div>
+       );
+     }
 
     // ==========================================
     // PUBLIC HOMEPAGE (no auth required)
     // ==========================================
-function PublicHomepage({ onNavigateToAuth }) {
-      const [notifications, setNotifications] = React.useState([]);
-      const [loading, setLoading] = React.useState(true);
-      const [error, setError] = React.useState(null);
+ function PublicHomepage({ onNavigateToAuth }) {
+       const [notifications, setNotifications] = React.useState([]);
+       const [loading, setLoading] = React.useState(true);
+       const [error, setError] = React.useState(null);
 
-      React.useEffect(() => {
-        const fetchNotifications = async () => {
-          setLoading(true);
-          setError(null);
-          try {
-            const res = await fetch(`${API_BASE}/public/notifications`);
-            if (!res.ok) throw new Error(`HTTP ${res.status}: Failed to fetch notifications`);
-            const data = await res.json();
-            setNotifications(Array.isArray(data) ? data : []);
-          } catch (err) {
-            setError(err.message || 'Failed to load notifications');
-          } finally {
-            setLoading(false);
-          }
-        };
-        fetchNotifications();
-      }, []);
+       React.useEffect(() => {
+         const fetchNotifications = async () => {
+           setLoading(true);
+           setError(null);
+           try {
+             const res = await fetch(`${API_BASE}/public/notifications`);
+             if (!res.ok) throw new Error(`HTTP ${res.status}: Failed to fetch notifications`);
+             const data = await res.json();
+             setNotifications(Array.isArray(data) ? data : []);
+           } catch (err) {
+             setError(err.message || 'Failed to load notifications');
+           } finally {
+             setLoading(false);
+           }
+         };
+         fetchNotifications();
+       }, []);
 
-const getTypeColor = (type) => {
-        switch (type) {
-          case 'announcement': return 'bg-purple-500/10 border-purple-400/30 text-purple-300';
-          case 'achievement': return 'bg-fuchsia-500/10 border-fuchsia-400/30 text-fuchsia-300';
-          case 'course': return 'bg-purple-500/10 border-purple-500/20 text-purple-200';
-          default: return 'bg-home-bg/50 border-purple-500/20 text-white dark:text-white';
-        }
-      };
+ const getTypeColor = (type) => {
+         switch (type) {
+           case 'announcement': return 'bg-meadow-green/10 border-meadow-green/30 text-meadow-green';
+           case 'achievement': return 'bg-meadow-amber/10 border-meadow-amber/30 text-meadow-amber';
+           case 'course': return 'bg-meadow-green/10 border-meadow-green/20 text-meadow-green';
+           default: return 'bg-white/10 border-white/20 text-white';
+         }
+       };
 
-      const getTypeIcon = (type) => {
-        switch (type) {
-          case 'announcement': return '📢';
-          case 'achievement': return '🏆';
-          case 'course': return '🎓';
-          default: return '📌';
-        }
-      };
+       const getTypeIcon = (type) => {
+         switch (type) {
+           case 'announcement': return '📢';
+           case 'achievement': return '🏆';
+           case 'course': return '🎓';
+           default: return '📌';
+         }
+       };
 
-      const formatDate = (dateStr) => {
-        if (!dateStr) return '';
-        const d = new Date(dateStr);
-        return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-      };
+       const formatDate = (dateStr) => {
+         if (!dateStr) return '';
+         const d = new Date(dateStr);
+         return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+       };
 
-return (
-        <div className="min-h-screen bg-space-gradient">
-          {/* Hero Section — Purple/Nebula */}
-          <section className="relative bg-home-hero border-b border-purple-500/20">
-            <div className="absolute inset-0 bg-gradient-to-b from-transparent via-purple-900/20 to-space-black/80"></div>
-            <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-32">
-              <div className="max-w-3xl">
-                <span className="px-3 py-1 rounded-full text-xs font-bold bg-purple-500/20 text-purple-300 border border-purple-400/30">
-                  🛰️ Ministry of Earth Sciences & IMD
-                </span>
-                <h1 className="text-5xl sm:text-6xl lg:text-7xl font-extrabold text-white dark:text-white mt-6 tracking-tight drop-shadow-[0_0_30px_rgba(168,85,247,0.4)]">
-                  Capacity <span className="bg-gradient-to-r from-purple-300 via-fuchsia-400 to-pink-400 bg-clip-text text-transparent">Connect</span>
-                </h1>
-                <p className="mt-6 text-lg sm:text-xl text-slate-300 leading-relaxed max-w-2xl">
-                  A digital capacity building and learning management platform for Earth sciences, meteorology, and organizational training. Advance your mission knowledge with structured learning pathways and accredited certifications.
-                </p>
-                <div className="mt-10 flex flex-col sm:flex-row gap-4">
-                  <button
-                    onClick={() => onNavigateToAuth('1', false)}
-                    className="px-8 py-4 bg-gradient-to-r from-purple-500 to-fuchsia-600 hover:from-purple-400 hover:to-fuchsia-500 text-white dark:text-white rounded-xl text-sm font-bold shadow-lg shadow-purple-500/30 btn-micro border border-purple-400/30"
-                  >
-                    🚀 Launch Mission — Sign In
-                  </button>
-                  <button
-                    onClick={() => onNavigateToAuth('1', true)}
-                    className="px-8 py-4 bg-transparent hover:bg-purple-500/10 text-white dark:text-white border-2 border-purple-400/50 rounded-xl text-sm font-bold shadow-sm btn-micro"
-                  >
-                    Join Mission — Create Account
-                  </button>
-                </div>
-              </div>
-            </div>
-          </section>
+ return (
+         <div className={"theme-meadow meadow-bg-login min-h-screen"}>
+           {/* Hero Section */}
+           <section className="relative border-b border-white/10">
+             <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/20 to-black/60"></div>
+             <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-32">
+               <div className="max-w-3xl">
+                 <span className="px-3 py-1 rounded-full text-xs font-bold bg-meadow-green/20 text-meadow-green border border-meadow-green/30">
+                   🛰️ Ministry of Earth Sciences & IMD
+                 </span>
+                 <h1 className="text-5xl sm:text-6xl lg:text-7xl font-extrabold text-white mt-6 tracking-tight drop-shadow-[0_0_30px_rgba(74,222,128,0.3)]">
+                   Capacity <span className="bg-gradient-to-r from-meadow-green via-meadow-amber to-meadow-green bg-clip-text text-transparent">Connect</span>
+                 </h1>
+                 <p className="mt-6 text-lg sm:text-xl text-meadow-text-secondary leading-relaxed max-w-2xl">
+                   A digital capacity building and learning management platform for Earth sciences, meteorology, and organizational training. Advance your mission knowledge with structured learning pathways and accredited certifications.
+                 </p>
+                 <div className="mt-10 flex flex-col sm:flex-row gap-4">
+                   <button
+                     onClick={() => onNavigateToAuth('1', false)}
+                     className="px-8 py-4 meadow-btn-primary text-white rounded-xl text-sm font-bold shadow-lg"
+                   >
+                     🚀 Launch Mission — Sign In
+                   </button>
+                   <button
+                     onClick={() => onNavigateToAuth('1', true)}
+                     className="px-8 py-4 meadow-btn-secondary rounded-xl text-sm font-bold shadow-sm"
+                   >
+                     Join Mission — Create Account
+                   </button>
+                 </div>
+               </div>
+             </div>
+           </section>
 
-          {/* Notifications Feed */}
-          <section className="relative bg-home-section py-12 sm:py-16">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-              <div className="flex items-center justify-between mb-8">
-                <div>
-                  <h2 className="text-2xl sm:text-3xl font-extrabold text-white dark:text-white">
-                    📡 Mission Updates
-                  </h2>
-                  <p className="mt-1 text-sm text-slate-400">
-                    Announcements, achievements, and new courses from Capacity Connect.
-                  </p>
-                </div>
-              </div>
+           {/* Notifications Feed */}
+           <section className="relative py-12 sm:py-16">
+             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+               <div className="flex items-center justify-between mb-8">
+                 <div>
+                   <h2 className="text-2xl sm:text-3xl font-extrabold text-white">
+                     📡 Mission Updates
+                   </h2>
+                   <p className="mt-1 text-sm text-meadow-text-secondary">
+                     Announcements, achievements, and new courses from Capacity Connect.
+                   </p>
+                 </div>
+               </div>
 
-            {loading && (
-              <div className="py-16 text-center">
-                <div className="w-8 h-8 border-4 border-purple-500 border-t-transparent rounded-full animate-spin mx-auto mb-3"></div>
-                <p className="text-sm text-slate-300">Loading updates...</p>
-              </div>
-            )}
+             {loading && (
+               <div className="py-16 text-center">
+                 <div className="w-8 h-8 border-4 border-meadow-green border-t-transparent rounded-full animate-spin mx-auto mb-3"></div>
+                 <p className="text-sm text-meadow-text-secondary">Loading updates...</p>
+               </div>
+             )}
 
-            {error && !loading && (
-              <div className="p-6 bg-red-900/20 border border-red-800/50 rounded-2xl text-center">
-                <p className="text-sm font-semibold text-red-300">Unable to load updates</p>
-                <button onClick={() => window.location.reload()} className="mt-3 px-4 py-2 bg-red-600 text-white dark:text-white rounded-lg text-xs font-bold">Retry</button>
-              </div>
-            )}
+             {error && !loading && (
+               <div className="p-6 bg-red-900/20 border border-red-800/50 rounded-2xl text-center">
+                 <p className="text-sm font-semibold text-red-300">Unable to load updates</p>
+                 <button onClick={() => window.location.reload()} className="mt-3 px-4 py-2 bg-red-600 text-white rounded-lg text-xs font-bold">Retry</button>
+               </div>
+             )}
 
-            {!loading && !error && notifications.length === 0 && (
-              <div className="p-8 glass-card rounded-2xl border border-purple-500/20 text-center">
-                <p className="text-sm text-slate-400">No updates at the moment. Check back soon!</p>
-              </div>
-            )}
+             {!loading && !error && notifications.length === 0 && (
+               <div className="p-8 meadow-glass rounded-2xl border border-white/10 text-center">
+                 <p className="text-sm text-meadow-text-secondary">No updates at the moment. Check back soon!</p>
+               </div>
+             )}
 
-            {!loading && !error && notifications.length > 0 && (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {notifications.map((item) => (
-                  <div key={item.id} className={"rounded-2xl border p-6 shadow-sm " + getTypeColor(item.type)}>
-                    <div className="flex items-start justify-between gap-3">
-                      <div className="flex items-center gap-2">
-                        <span className="text-xl">{getTypeIcon(item.type)}</span>
-                        <span className="text-[10px] font-black uppercase tracking-wider opacity-70">
-                          {item.type}
-                        </span>
-                      </div>
-                      <span className="text-[10px] font-semibold opacity-70 whitespace-nowrap">
-                        {formatDate(item.created_at)}
-                      </span>
-                    </div>
-                    <h3 className="mt-3 text-base font-black leading-snug">
-                      {item.title}
-                    </h3>
-                    <p className="mt-2 text-xs leading-relaxed opacity-90">
-                      {item.message}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            )}
-            </div>
-          </section>
+             {!loading && !error && notifications.length > 0 && (
+               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                 {notifications.map((item) => (
+                   <div key={item.id} className={"meadow-glass rounded-2xl border p-6 shadow-sm " + getTypeColor(item.type)}>
+                     <div className="flex items-start justify-between gap-3">
+                       <div className="flex items-center gap-2">
+                         <span className="text-xl">{getTypeIcon(item.type)}</span>
+                         <span className="text-[10px] font-black uppercase tracking-wider opacity-70">
+                           {item.type}
+                         </span>
+                       </div>
+                       <span className="text-[10px] font-semibold opacity-70 whitespace-nowrap">
+                         {formatDate(item.created_at)}
+                       </span>
+                     </div>
+                     <h3 className="mt-3 text-base font-black leading-snug text-white">
+                       {item.title}
+                     </h3>
+                     <p className="mt-2 text-xs leading-relaxed opacity-90 text-meadow-text-secondary">
+                       {item.message}
+                     </p>
+                   </div>
+                 ))}
+               </div>
+             )}
+             </div>
+           </section>
 
-          {/* Footer */}
-          <footer className="border-t border-purple-500/20 bg-space-black">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col sm:flex-row items-center justify-between gap-4">
-              <div className="flex items-center gap-2">
-                <span className="w-8 h-8 rounded-xl bg-gradient-to-r from-purple-500 to-fuchsia-600 text-white dark:text-white flex items-center justify-center font-black text-xs">CC</span>
-                <span className="text-sm font-bold text-white dark:text-white">Capacity Connect</span>
-              </div>
-              <p className="text-xs text-slate-400">
-                © {new Date().getFullYear()} Ministry of Earth Sciences & India Meteorological Department. All rights reserved.
-              </p>
-            </div>
-          </footer>
-        </div>
-      );
-    }
+           {/* Footer */}
+           <footer className="border-t border-white/10">
+             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+               <div className="flex items-center gap-2">
+                 <span className="w-8 h-8 rounded-xl bg-gradient-to-r from-meadow-green to-meadow-amber text-white flex items-center justify-center font-black text-xs">CC</span>
+                 <span className="text-sm font-bold text-white">Capacity Connect</span>
+               </div>
+               <p className="text-xs text-meadow-text-secondary">
+                 © {new Date().getFullYear()} Ministry of Earth Sciences & India Meteorological Department. All rights reserved.
+               </p>
+             </div>
+           </footer>
+         </div>
+       );
+     }
 
     // ==========================================
     // EDIT PROFILE SCREEN (Trainee + Trainer)
@@ -4417,15 +4539,15 @@ return (
           .then(data => {
             console.log('[App] /auth/me response', data);
             if (cancelled || !data?.user) return;
-            const u = data.user;
-            setUser(u);
-            if (u.status === 'pending' || u.status === 'rejected') {
-              console.log('[App] routing to pending screen because status=', u.status);
-              setScreen('1');
-            } else {
-              console.log('[App] routing to default screen for role=', u.role);
-              setScreen(getDefaultScreen(u.role));
-            }
+             const u = data.user;
+             setUser(u);
+             const targetScreen = resolveScreenForUser(u);
+             if (targetScreen === '1') {
+               console.log('[App] routing to pending/auth screen because status=', u.status);
+             } else {
+               console.log('[App] routing to default screen for role=', u.role);
+             }
+             setScreen(targetScreen);
           })
           .catch(err => { console.error('[App] /auth/me error', err); try { localStorage.removeItem('capacity_connect_token'); } catch {} })
           .finally(() => { if (!cancelled) {} });
@@ -4437,30 +4559,39 @@ return (
        * is valid for the current user's role. If not, redirect to the
        * user's own default dashboard.
        */
-      const navigate = (target, isSignup = false) => {
-        console.log('[App] navigate', { target, isSignup, userRole: user?.role, currentScreen: screen });
-        if (!user && target !== '0') { setScreen('1'); setSignupMode(isSignup); return; }
-        const allowed = SCREEN_ROLES[target];
-        if (!allowed || !allowed.includes(user.role)) {
-          console.log('[App] navigate redirecting to default screen for role', user.role);
-          setScreen(getDefaultScreen(user.role));
-          return;
-        }
-        setScreen(target);
-        setSignupMode(isSignup);
-      };
+       const navigate = (target, isSignup = false) => {
+         console.log('[App] navigate', { target, isSignup, userRole: user?.role, currentScreen: screen, userStatus: user?.status });
+         if (!user && target !== '0') { setScreen('1'); setSignupMode(isSignup); return; }
+         const allowed = SCREEN_ROLES[target];
+         if (!allowed || !allowed.includes(user.role)) {
+           console.log('[App] navigate redirecting to default screen for role', user.role);
+           setScreen(resolveScreenForUser(user));
+           return;
+         }
+         setScreen(target);
+         setSignupMode(isSignup);
+       };
 
-      // Enforce strict role isolation on every render:
-      // If the current screen is not in the user's allowed set, redirect.
-      React.useEffect(() => {
-        console.log('[App] role isolation check', { screen, userRole: user?.role, allowed: user ? SCREEN_ROLES[screen] : null });
-        if (!user) return;
-        const allowed = SCREEN_ROLES[screen];
-        if (!allowed || !allowed.includes(user.role)) {
-          console.log('[App] role isolation redirecting to default for role', user.role);
-          setScreen(getDefaultScreen(user.role));
-        }
-      }, [screen, user]);
+       // Enforce strict role isolation on every render:
+       // If the current screen is not in the user's allowed set, redirect.
+       React.useEffect(() => {
+         console.log('[App] role isolation check', { screen, userRole: user?.role, allowed: user ? SCREEN_ROLES[screen] : null });
+         if (!user) return;
+         const allowed = SCREEN_ROLES[screen];
+         if (!allowed || !allowed.includes(user.role)) {
+           console.log('[App] role isolation redirecting to default for role', user.role);
+           setScreen(resolveScreenForUser(user));
+         }
+       }, [screen, user]);
+
+       // Approval gate: pending/rejected users must stay on auth screen (1)
+       React.useEffect(() => {
+         if (!user) return;
+         if (user.status === 'pending' || user.status === 'rejected') {
+           console.log('[App] approval gate: user status is', user.status, '- redirecting to auth screen');
+           setScreen('1');
+         }
+       }, [user?.status, user?.id]);
 
       // Set default tab per role when user logs in
       React.useEffect(() => {
@@ -4513,7 +4644,7 @@ return (
             <ToastContainer />
 {screen === '0' && <PublicHomepage onNavigateToAuth={(target, isSignup) => { setScreen(target); setSignupMode(isSignup); }} />}
 
-             {screen === '1' && <Screen1Auth onAuthSuccess={(d) => { console.log('[App] onAuthSuccess', d); if (d.user) setUser(d.user); if (d.user && d.user.status === 'pending' || d.user && d.user.status === 'rejected') { console.log('[App] onAuthSuccess keeping screen=1 for status', d.user.status); setScreen('1'); } else { console.log('[App] onAuthSuccess routing to default for role', d.user?.role); setScreen(getDefaultScreen(d.user?.role)); } }} onNavigate={navigate} initialSignup={signupMode} user={user} />}
+             {screen === '1' && <Screen1Auth onAuthSuccess={(d) => { console.log('[App] onAuthSuccess', d); if (d.user) setUser(d.user); const targetScreen = resolveScreenForUser(d.user); if (targetScreen === '1') { console.log('[App] onAuthSuccess keeping screen=1 for status=', d.user?.status); } else { console.log('[App] onAuthSuccess routing to default for role=', d.user?.role); } setScreen(targetScreen); }} onNavigate={navigate} initialSignup={signupMode} user={user} />}
 
             {/* Strict role isolation: each screen is only rendered if the user's role matches */}
             {user && screen === '2' && roleAllowed(['trainee']) && (
