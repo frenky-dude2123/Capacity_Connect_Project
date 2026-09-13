@@ -148,10 +148,10 @@ tailwind.config = {
     }
 
 /* Base backgrounds */
-    body { background-color: var(--space-navy) !important; font-family: 'Inter', system-ui, sans-serif; }
-    .theme-wrapper { background-color: var(--space-navy) !important; }
-    .dark body { background-color: var(--space-black) !important; }
-    .dark .theme-wrapper { background-color: var(--space-black) !important; }
+    body { background-color: var(--space-navy); font-family: 'Inter', system-ui, sans-serif; }
+    .theme-wrapper { background-color: var(--space-navy); }
+    .dark body { background-color: var(--space-black); }
+    .dark .theme-wrapper { background-color: var(--space-black); }
 
     /* Space mission headings */
     h1, h2, h3, .font-space { font-family: 'Orbit', 'Segoe UI', system-ui, sans-serif; }
@@ -365,11 +365,11 @@ tailwind.config = {
     }
 
     /* Dark mode overrides — space theme */
-    .dark body { background-color: var(--space-black) !important; }
-    .dark .theme-wrapper { background-color: var(--space-black) !important; }
-    .dark .dark\:bg-slate-950 { background-color: var(--space-black) !important; }
+    .dark body { background-color: var(--space-black); }
+    .dark .theme-wrapper { background-color: var(--space-black); }
+    .dark .dark\:bg-slate-950 { background-color: var(--space-black); }
     .dark .bg-white/5/90,
-    .dark .dark\:bg-white/5 { background-color: rgba(13, 27, 42, 0.8) !important; backdrop-filter: blur(12px); }
+    .dark .dark\:bg-white/5 { background-color: rgba(13, 27, 42, 0.8); backdrop-filter: blur(12px); }
     .dark .dark\:bg-space-blue/30,
     .dark .bg-space-blue/30 { background-color: rgba(27, 40, 56, 0.8) !important; }
     .dark .dark\:bg-white/5,
@@ -773,18 +773,18 @@ tailwind.config = {
     }
 
 /* Space utility overrides */
-    .dark .dark\:bg-slate-950 { background-color: var(--space-black) !important; }
-    .dark .bg-space-navy { background-color: var(--space-navy) !important; }
-    .dark .bg-space-blue { background-color: var(--space-blue) !important; }
+    .dark .dark\:bg-slate-950 { background-color: var(--space-black); }
+    .dark .bg-space-navy { background-color: var(--space-navy); }
+    .dark .bg-space-blue { background-color: var(--space-blue); }
 
     /* Chart overrides for space theme */
     .dark canvas { filter: invert(0.85) hue-rotate(180deg) !important; }
 
     /* ===== MULTI-COLOR DARK MODE ===== */
     /* Body and main background — deep space */
-    .dark body { background-color: var(--space-black) !important; }
-    .dark .theme-wrapper { background-color: var(--space-black) !important; }
-    .dark .dark\:bg-slate-950 { background-color: var(--space-black) !important; }
+    .dark body { background-color: var(--space-black); }
+    .dark .theme-wrapper { background-color: var(--space-black); }
+    .dark .dark\:bg-slate-950 { background-color: var(--space-black); }
 
     /* Glass cards in dark mode */
     .dark .bg-white/5/90,
@@ -1251,7 +1251,8 @@ tailwind.config = {
 
     /* Meadow body override */
     .theme-meadow body,
-    .theme-meadow .theme-wrapper {
+    .theme-meadow .theme-wrapper,
+    .theme-meadow.theme-wrapper {
       background: transparent !important;
     }
     .theme-meadow .meadow-bg,
