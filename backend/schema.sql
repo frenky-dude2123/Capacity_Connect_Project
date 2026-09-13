@@ -328,29 +328,53 @@ values
     '{"question":"Which library is primarily used for data manipulation and analysis in Python?","options":["NumPy","pandas","matplotlib","requests"],"correctIndex":1}'::jsonb
   ),
   (
-    8,
-    'Introduction to Atmospheric Science & Weather Forecasting',
-    'Earth Sciences',
-    'A foundational 4-week module covering meteorological fundamentals, atmospheric thermodynamics, synoptic chart analysis, and modern numerical weather prediction (NWP) models. Designed to train technical officers in interpreting satellite and radar telemetry.',
-    'Dr. Meena Iyer',
-    'https://sample-videos.com/video123.mp4',
-    'PLACEHOLDER_YOUTUBE_EMBED_ID',
-    'Target Ministry Division: India Meteorological Department (IMD) / Operational Forecasting Cadre. YouTube Source Reference: NPTEL / IMD Training Wing Public Lecture Series (Atmospheric Science Playlist).',
-    '["Module 1: Structure of the Atmosphere and Global Circulation Patterns","Module 2: Thermodynamic Diagrams and Air Mass Analysis","Module 3: Radar Meteorology and Satellite Cloud Imagery Interpretation","Module 4: Issuing Severe Weather Warnings and Cyclone Tracking Protocols"]'::jsonb,
-    '{"question":"Which instrument is primarily used to measure atmospheric pressure?","options":["Thermometer","Barometer","Hygrometer","Anemometer"],"correctIndex":1}'::jsonb
-  ),
-  (
-    9,
-    'Oceanography & Marine Earth Systems',
-    'Earth Sciences',
-    'A comprehensive 6-week professional development course focusing on physical oceanography, marine meteorology, and tsunami early warning systems. Tailored for researchers and marine science officers managing coastal data infrastructure.',
-    'Dr. Kiran Nayak',
-    'https://sample-videos.com/video123.mp4',
-    'PLACEHOLDER_YOUTUBE_EMBED_ID',
-    'Target Ministry Division: Ministry of Earth Sciences (MoES) / Ocean Science & Services Division. YouTube Source Reference: INCOIS / MoES Academic Outreach Lecture Series (Oceanography & Marine Dynamics).',
-    '["Module 1: Ocean-Atmosphere Coupling and El Niño / La Niña Dynamics","Module 2: Sea Surface Temperature (SST) Monitoring and Oceanic Heat Content","Module 3: Tsunami Generation Mechanisms and Deep-Ocean Buoy Telemetry","Module 4: Integrated Coastal Zone Management and Data Modeling"]'::jsonb,
-    '{"question":"What is the primary driver of El Niño events?","options":["Increased trade winds","Weakening of trade winds and warm water shift","Decreased sea surface temperature","Increased upwelling"],"correctIndex":1}'::jsonb
-  )
+     8,
+     'Cloud Infrastructure & High-Availability Scaling',
+     'Cloud & Infrastructure',
+     'A 6-week course covering cloud architecture fundamentals, auto-scaling strategies, load balancing, multi-region deployment, and high-availability design patterns. Built for engineers preparing for production cloud operations and reliability-focused roles.',
+     'Eng. Priya Nair',
+     'https://sample-videos.com/video123.mp4',
+     'PLACEHOLDER_YOUTUBE_EMBED_ID',
+     'Placeholder: add video reference or reading list for Cloud Infrastructure & High-Availability Scaling here.',
+     '["Module 1: Cloud Architecture Fundamentals — compute, storage, and networking","Module 2: Auto-Scaling Strategies and Elastic Workloads","Module 3: Load Balancing, Failover, and Multi-Region Deployment","Module 4: High-Availability Design Patterns and Incident Response"]'::jsonb,
+     '{"question":"Which pattern is commonly used to improve system availability across regions?","options":["Vertical scaling","Multi-region active-active deployment","Single AZ deployment","Manual failover"],"correctIndex":1}'::jsonb
+   ),
+   (
+     9,
+     'Enterprise Data Governance & Security Compliance',
+     'Data & Security',
+     'A 5-week course on data governance frameworks, master data management, compliance standards such as GDPR and SOC 2, and enterprise security best practices. Designed for analysts and engineers working with regulated data environments.',
+     'Dr. Ritesh Menon',
+     'https://sample-videos.com/video123.mp4',
+     'PLACEHOLDER_YOUTUBE_EMBED_ID',
+     'Placeholder: add video reference or reading list for Enterprise Data Governance & Security Compliance here.',
+     '["Module 1: Data Governance Frameworks and Stewardship","Module 2: Compliance Standards — GDPR, SOC 2, and Industry Regulations","Module 3: Data Classification, lineage, and Access Controls","Module 4: Security Best Practices and Incident Response Planning"]'::jsonb,
+     '{"question":"Which of the following is a primary goal of data governance?","options":["Faster hardware","Data quality, trust, and compliance","More dashboards","Larger datasets"],"correctIndex":1}'::jsonb
+   ),
+   (
+     10,
+     'Distributed Systems Design & Microservices Engineering',
+     'Software Architecture',
+     'A 6-week course covering microservices architecture, API design, event-driven systems, service discovery, and resilience patterns. Designed for backend engineers moving from monoliths to distributed platforms.',
+     'Ms. Lena Okafor',
+     'https://sample-videos.com/video123.mp4',
+     'PLACEHOLDER_YOUTUBE_EMBED_ID',
+     'Placeholder: add video reference or reading list for Distributed Systems Design & Microservices Engineering here.',
+     '["Module 1: Distributed Systems Fundamentals and Tradeoffs","Module 2: Microservices Architecture and Bounded Contexts","Module 3: Event-Driven Communication and Message Brokers","Module 4: Resilience, Observability, and System Design Patterns"]'::jsonb,
+     '{"question":"Which pattern helps microservices discover each other dynamically?","options":["Load balancer","Service discovery","Firewall rules","VPN tunnel"],"correctIndex":1}'::jsonb
+   ),
+   (
+     11,
+     'Product Design & User Experience Fundamentals',
+     'Design & UX',
+     'A 4-week course covering UX research methods, design systems, wireframing, prototyping, and usability testing. Ideal for designers and product team members building user-centered digital experiences.',
+     'Mr. Daniel Cho',
+     'https://sample-videos.com/video123.mp4',
+     'PLACEHOLDER_YOUTUBE_EMBED_ID',
+     'Placeholder: add video reference or reading list for Product Design & User Experience Fundamentals here.',
+     '["Module 1: UX Research — user interviews, personas, and journey maps","Module 2: Design Systems, Components, and Visual Consistency","Module 3: Wireframing, Prototyping, and Interaction Design","Module 4: Usability Testing and Iteration Cycles"]'::jsonb,
+     '{"question":"Which UX activity focuses on understanding user needs before designing solutions?","options":["Graphic design","User research","Code review","Performance testing"],"correctIndex":1}'::jsonb
+   )
 on conflict (id) do update set
   title = excluded.title,
   category = excluded.category,
@@ -423,7 +447,7 @@ create policy "Service role can manage notifications" on public.notifications
 -- Seed notifications
 insert into public.notifications (type, title, message, metadata)
 values
-  ('announcement', 'Welcome to Capacity Connect', 'The Ministry of Education & Skills Development is rolling out a new digital capacity building platform for all civil servants.', '{"icon": "📢"}')
+  ('announcement', 'Welcome to Capacity Connect', 'We are rolling out a new digital learning platform for all users.', '{"icon": "📢"}')
 on conflict do nothing;
 
 insert into public.notifications (type, title, message, metadata)

@@ -1949,26 +1949,26 @@ return (
              <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-32">
                <div className="max-w-3xl">
                  <span className="px-3 py-1 rounded-full text-xs font-bold bg-meadow-green/20 text-meadow-green border border-meadow-green/30">
-                   🛰️ Ministry of Earth Sciences & IMD
+                    🛰️ Capacity Connect
                  </span>
                  <h1 className="text-5xl sm:text-6xl lg:text-7xl font-extrabold text-white mt-6 tracking-tight drop-shadow-[0_0_30px_rgba(74,222,128,0.3)]">
                    Capacity <span className="bg-gradient-to-r from-meadow-green via-meadow-amber to-meadow-green bg-clip-text text-transparent">Connect</span>
                  </h1>
                  <p className="mt-6 text-lg sm:text-xl text-meadow-text-secondary leading-relaxed max-w-2xl">
-                   A digital capacity building and learning management platform for Earth sciences, meteorology, and organizational training. Advance your mission knowledge with structured learning pathways and accredited certifications.
+                    A digital learning platform for professional development and structured learning pathways. Advance your skills with accredited certifications and real-world course content.
                  </p>
                  <div className="mt-10 flex flex-col sm:flex-row gap-4">
                    <button
                      onClick={() => onNavigateToAuth('1', false)}
                      className="px-8 py-4 meadow-btn-primary text-white rounded-xl text-sm font-bold shadow-lg"
                    >
-                     🚀 Launch Mission — Sign In
+                      🚀 Sign In
                    </button>
                    <button
                      onClick={() => onNavigateToAuth('1', true)}
                      className="px-8 py-4 meadow-btn-secondary rounded-xl text-sm font-bold shadow-sm"
                    >
-                     Join Mission — Create Account
+                      Create Account
                    </button>
                  </div>
                </div>
@@ -1981,7 +1981,7 @@ return (
                <div className="flex items-center justify-between mb-8">
                  <div>
                    <h2 className="text-2xl sm:text-3xl font-extrabold text-white">
-                     📡 Mission Updates
+                      📢 Announcements
                    </h2>
                    <p className="mt-1 text-sm text-meadow-text-secondary">
                      Announcements, achievements, and new courses from Capacity Connect.
@@ -2045,7 +2045,7 @@ return (
                  <span className="text-sm font-bold text-white">Capacity Connect</span>
                </div>
                <p className="text-xs text-meadow-text-secondary">
-                 © {new Date().getFullYear()} Ministry of Earth Sciences & India Meteorological Department. All rights reserved.
+                  © {new Date().getFullYear()} Capacity Connect
                </p>
              </div>
            </footer>
@@ -2206,11 +2206,11 @@ return (
                 Welcome <span className="bg-gradient-to-r from-meadow-green via-meadow-amber to-meadow-green bg-clip-text text-transparent">Back</span>
               </h2>
               <p className="text-sm text-meadow-text-secondary leading-relaxed">
-                Access your personalized learning dashboard, track capacity readiness, and continue your mission pathways.
+                 Access your personalized learning dashboard, track your progress, and continue your courses.
               </p>
               <div className="mt-6 flex items-center gap-2 text-xs text-meadow-text-secondary">
                 <span className="w-2 h-2 rounded-full bg-meadow-green animate-pulse"></span>
-                Ministry of Earth Sciences & IMD — Secure Portal
+                 Secure Learning Portal
               </div>
             </div>
 
@@ -2384,7 +2384,7 @@ const fetchAIRecommendations = async () => {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               <div className="meadow-glass p-6 rounded-2xl">
                 <div className="flex items-center justify-between mb-3">
-                  <span className="text-xs text-meadow-text-secondary font-black uppercase font-mono">Fleet Readiness</span>
+                   <span className="text-xs text-meadow-text-secondary font-black uppercase font-mono">Progress</span>
                   <span className="w-8 h-8 rounded-lg bg-gradient-to-br from-meadow-green/20 to-meadow-green/40 flex items-center justify-center text-sm">🎯</span>
                 </div>
                 <p className="text-3xl font-extrabold font-mono text-meadow-green mt-1">{dash?.metrics?.capacityScore}%</p>
@@ -2394,7 +2394,7 @@ const fetchAIRecommendations = async () => {
               </div>
               <div className="meadow-glass p-6 rounded-2xl">
                 <div className="flex items-center justify-between mb-3">
-                  <span className="text-xs text-meadow-text-secondary font-black uppercase font-mono">Active Sectors</span>
+                   <span className="text-xs text-meadow-text-secondary font-black uppercase font-mono">Enrolled Courses</span>
                   <span className="w-8 h-8 rounded-lg bg-gradient-to-br from-meadow-green/20 to-meadow-green/40 flex items-center justify-center text-sm">📚</span>
                 </div>
                 <p className="text-3xl font-extrabold font-mono text-white mt-1">{dash?.metrics?.activeCourses}</p>
@@ -2402,7 +2402,7 @@ const fetchAIRecommendations = async () => {
               </div>
                <div className="meadow-glass p-6 rounded-2xl">
                  <div className="flex items-center justify-between mb-3">
-                   <span className="text-xs text-meadow-text-secondary font-black uppercase font-mono">Mission Hours</span>
+                   <span className="text-xs text-meadow-text-secondary font-black uppercase font-mono">Hours Learned</span>
                    <span className="w-8 h-8 rounded-lg bg-gradient-to-br from-meadow-amber/20 to-meadow-amber/40 flex items-center justify-center text-sm">⏱️</span>
                  </div>
                  <p className="text-3xl font-extrabold font-mono text-white mt-1">{dash?.metrics?.trainingHours}h</p>
@@ -2410,7 +2410,7 @@ const fetchAIRecommendations = async () => {
                </div>
                <div className="meadow-glass p-6 rounded-2xl">
                 <div className="flex items-center justify-between mb-3">
-                  <span className="text-xs text-meadow-text-secondary font-black uppercase font-mono">Clearance Badges</span>
+                   <span className="text-xs text-meadow-text-secondary font-black uppercase font-mono">Certificates</span>
                   <span className="w-8 h-8 rounded-lg bg-gradient-to-br from-meadow-amber/20 to-meadow-amber/40 flex items-center justify-center text-sm">🏆</span>
                 </div>
                 <p className="text-3xl font-extrabold font-mono text-meadow-amber mt-1">{dash?.metrics?.completedCertifications}</p>
@@ -3029,8 +3029,8 @@ return (
               <div className="hologram-seal"><span>✓</span></div>
             </div>
             <div className="w-16 h-16 bg-gradient-to-br from-cyan-400 to-blue-600 text-white dark:text-white mx-auto flex items-center justify-center text-2xl rounded-2xl mb-4 shadow-lg shadow-cyan-500/40">🎓</div>
-            <p className="text-xs font-black uppercase tracking-widest text-cyan-400 font-mono">Interstellar Federation</p>
-            <p className="text-[10px] text-slate-500 font-mono">Earth Sciences Clearance Division</p>
+            <p className="text-xs font-black uppercase tracking-widest text-cyan-400 font-mono">Capacity Connect</p>
+            <p className="text-[10px] text-slate-500 font-mono">Learning & Development</p>
             <h1 className="text-3xl font-serif font-bold text-white dark:text-white mt-2">Certificate of Completion</h1>
             <p className="text-xs text-slate-400 mt-2">This is proudly awarded to</p>
             <h2 className="text-2xl font-black text-cyan-300 mt-1 underline decoration-amber-400 underline-offset-4">{cert?.studentName}</h2>
@@ -3157,7 +3157,7 @@ return (
                    <p className="text-3xl font-extrabold font-mono text-meadow-amber mt-2">{stats?.completionRatePercent}%</p>
                  </div>
                 <div className="meadow-glass p-6 rounded-2xl">
-                  <span className="text-xs text-meadow-text-secondary font-black uppercase font-mono">Active Sectors</span>
+                   <span className="text-xs text-meadow-text-secondary font-black uppercase font-mono">Enrolled Courses</span>
                   <p className="text-3xl font-extrabold font-mono text-white dark:text-white mt-2">{stats?.totalCourses}</p>
                 </div>
               </div>

@@ -250,7 +250,7 @@ export default function Screen1Auth({ onLogin, switchMode = 'login' }) {
                   ) : mode === 'register' ? (
                     'Create Account'
                   ) : (
-                    'Launch Mission →'
+                     'Sign In →'
                   )}
                 </button>
               </div>

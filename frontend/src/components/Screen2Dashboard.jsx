@@ -105,7 +105,7 @@ export default function Screen2Dashboard({ userId = 'u_learner1', onOpenCourse, 
               Welcome back, {data?.userName || 'Jane Doe'}!
             </h1>
             <p className="text-xs sm:text-sm text-space-300 mt-1">
-              Track your enterprise engineering pathways, capacity readiness, and certificates.
+              Track your learning progress and certificates.
             </p>
           </div>
 
@@ -147,7 +147,7 @@ export default function Screen2Dashboard({ userId = 'u_learner1', onOpenCourse, 
             {/* KPI Metrics Strip with stat-card-glow */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
               <div className="glass-card border border-teal-500/20 p-5 rounded-2xl hud-panel stat-card-glow">
-                <span className="text-[11px] font-bold uppercase text-space-400">Capacity Readiness</span>
+                 <span className="text-[11px] font-bold uppercase text-space-400">Progress</span>
                 <p className="text-2xl sm:text-3xl font-extrabold text-teal-400 mt-1">
                   {data.metrics?.capacityScore || 94}%
                 </p>
