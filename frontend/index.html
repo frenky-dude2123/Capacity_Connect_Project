@@ -92,904 +92,7 @@ tailwind.config = {
     .btn-micro:hover { transform: scale(1.05); box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -4px rgba(0,0,0,0.1); }
     .btn-micro:active { transform: scale(0.95); }
 
-/* ===== MULTI-COLOR SPACE / EARTH THEME ===== */
-    :root {
-      --space-black: #05070a;
-      --space-navy: #0a0e27;
-      --space-deep: #0d1b2a;
-      --space-blue: #1b2838;
-
-      /* Homepage — Purple/Nebula */
-      --home-bg: #0f0a1f;
-      --home-bg2: #1a0b2e;
-      --home-accent: #c084fc;
-      --home-accent2: #a855f7;
-      --home-glow: rgba(168, 85, 247, 0.25);
-
-      /* Trainee — Teal/Ocean */
-      --trainee-bg: #0a1f1f;
-      --trainee-bg2: #0d2a2a;
-      --trainee-accent: #2dd4bf;
-      --trainee-accent2: #14b8a6;
-      --trainee-glow: rgba(45, 212, 191, 0.25);
-
-      /* Trainer — Amber/Sunset */
-      --trainer-bg: #1a0f05;
-      --trainer-bg2: #2a1508;
-      --trainer-accent: #f59e0b;
-      --trainer-accent2: #ff6b35;
-      --trainer-glow: rgba(245, 158, 11, 0.25);
-
-      /* Admin — Crimson/Deep Red */
-      --admin-bg: #1a0505;
-      --admin-bg2: #2a0808;
-      --admin-accent: #ef4444;
-      --admin-accent2: #dc2626;
-      --admin-glow: rgba(239, 68, 68, 0.25);
-
-      /* Earth/Nature — Green */
-      --earth-accent: #22c55e;
-      --earth-accent2: #16a34a;
-      --earth-glow: rgba(34, 197, 94, 0.25);
-
-      /* Gold/Yellow — Stars/Sun */
-      --gold-accent: #fbbf24;
-      --gold-accent2: #f59e0b;
-      --gold-glow: rgba(251, 191, 36, 0.25);
-
-      /* Shared */
-      --white: #ffffff;
-      --star-white: #f8fafc;
-      --text-primary: #e2e8f0;
-      --text-secondary: #94a3b8;
-      --border-subtle: rgba(148, 163, 184, 0.15);
-      --glass-bg: rgba(13, 27, 42, 0.7);
-      --glass-border: rgba(0, 212, 255, 0.15);
-    }
-
-/* Base backgrounds */
-    body { background-color: var(--space-navy); font-family: 'Inter', system-ui, sans-serif; }
-    .theme-wrapper { background-color: var(--space-navy); }
-    .dark body { background-color: var(--space-black); }
-    .dark .theme-wrapper { background-color: var(--space-black); }
-
-    /* Space mission headings */
-    h1, h2, h3, .font-space { font-family: 'Orbit', 'Segoe UI', system-ui, sans-serif; }
-
-/* Typography */
-    .text-space-title {
-      font-family: '"Orbit", "Segoe UI", system-ui, sans-serif';
-      font-weight: 800;
-      letter-spacing: -0.02em;
-    }
-    .text-home-title {
-      background: linear-gradient(135deg, #ffffff 0%, #c084fc 40%, #e879f9 70%, #f0abfc 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-    .text-trainee-title {
-      background: linear-gradient(135deg, #ffffff 0%, #2dd4bf 40%, #5eeccb 70%, #ccfbf1 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-    .text-trainer-title {
-      background: linear-gradient(135deg, #fffbeb 0%, #fbbf24 40%, #f59e0b 70%, #ff6b35 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-    .text-admin-title {
-      background: linear-gradient(135deg, #ffffff 0%, #f87171 40%, #ef4444 70%, #fca5a5 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-
-    /* Glassmorphism cards */
-    .meadow-glass {
-      background: var(--glass-bg);
-      border: 1px solid var(--glass-border);
-      border-radius: 1rem;
-    }
-
-    /* Role accent colors */
-    .accent-trainee { --accent: var(--trainee-accent); --accent-dim: var(--trainee-glow); --accent-hover: #0d9488; }
-    .accent-trainer { --accent: var(--trainer-accent); --accent-dim: var(--trainer-glow); --accent-hover: #d97706; }
-    .accent-admin { --accent: var(--admin-accent); --accent-dim: var(--admin-glow); --accent-hover: #b91c1c; }
-
-    .btn-accent {
-      background: linear-gradient(135deg, var(--accent) 0%, color-mix(in srgb, var(--accent) 85%, black) 100%);
-      color: #fff;
-      border: none;
-      box-shadow: 0 0 20px var(--accent-dim), 0 4px 12px rgba(0,0,0,0.3);
-    }
-    .btn-accent:hover {
-      background: linear-gradient(135deg, var(--accent-hover) 0%, color-mix(in srgb, var(--accent-hover) 85%, black) 100%);
-      box-shadow: 0 0 30px var(--accent-dim), 0 6px 16px rgba(0,0,0,0.4);
-    }
-
-/* Space backgrounds */
-    .bg-space-gradient {
-      background: linear-gradient(180deg, var(--space-black) 0%, var(--space-navy) 40%, var(--space-deep) 100%);
-    }
-    /* Homepage — Purple/Nebula hero */
-    .bg-home-hero {
-      background-image:
-        linear-gradient(180deg, rgba(5,7,10,0.2) 0%, rgba(15,10,31,0.85) 50%, var(--home-bg) 100%),
-        url('https://images.nasa.gov/images/GSFC_20171208_Archive_e18453/GSFC_20171208_Archive_e18453~small.jpg');
-      background-size: cover;
-      background-position: center 30%;
-    }
-    .bg-home-section {
-      background: linear-gradient(135deg, var(--home-bg) 0%, var(--home-bg2) 100%);
-    }
-    /* Auth — Purple/Nebula space */
-    .bg-auth-space {
-      background-image:
-        linear-gradient(135deg, rgba(5,7,10,0.88) 0%, rgba(15,10,31,0.92) 100%),
-        url('https://images.nasa.gov/images/GSFC_20171208_Archive_e18453/GSFC_20171208_Archive_e18453~small.jpg');
-      background-size: cover;
-      background-position: center;
-    }
-    /* Trainee — Teal/Ocean */
-    .bg-trainee-hero {
-      background-image:
-        linear-gradient(180deg, rgba(5,7,10,0.2) 0%, rgba(10,31,31,0.85) 50%, var(--trainee-bg) 100%),
-        url('https://images.nasa.gov/images/GSFC_20171208_Archive_e18453/GSFC_20171208_Archive_e18453~small.jpg');
-      background-size: cover;
-      background-position: center 30%;
-    }
-    .bg-trainee-section {
-      background: linear-gradient(135deg, var(--trainee-bg) 0%, var(--trainee-bg2) 100%);
-    }
-    /* Trainer — Amber/Sunset */
-    .bg-trainer-hero {
-      background-image:
-        linear-gradient(180deg, rgba(5,7,10,0.2) 0%, rgba(26,15,5,0.85) 50%, var(--trainer-bg) 100%),
-        url('https://images.nasa.gov/images/GSFC_20171208_Archive_e18453/GSFC_20171208_Archive_e18453~small.jpg');
-      background-size: cover;
-      background-position: center 30%;
-    }
-    .bg-trainer-section {
-      background: linear-gradient(135deg, var(--trainer-bg) 0%, var(--trainer-bg2) 100%);
-    }
-    /* Admin — Crimson/Deep Red */
-    .bg-admin-hero {
-      background-image:
-        linear-gradient(180deg, rgba(5,7,10,0.2) 0%, rgba(26,5,5,0.85) 50%, var(--admin-bg) 100%),
-        url('https://images.nasa.gov/images/GSFC_20171208_Archive_e18453/GSFC_20171208_Archive_e18453~small.jpg');
-      background-size: cover;
-      background-position: center 30%;
-    }
-    .bg-admin-section {
-      background: linear-gradient(135deg, var(--admin-bg) 0%, var(--admin-bg2) 100%);
-    }
-    /* Earth — Green */
-    .bg-earth-section {
-      background: linear-gradient(135deg, #0a1f0a 0%, #0d2a0d 100%);
-    }
-
-    .bg-starfield {
-      background-image:
-        radial-gradient(1px 1px at 20px 30px, rgba(255,255,255,0.8), transparent),
-        radial-gradient(1px 1px at 100px 50px, rgba(255,255,255,0.5), transparent),
-        radial-gradient(1px 1px at 200px 150px, rgba(255,255,255,0.6), transparent),
-        radial-gradient(1px 1px at 300px 250px, rgba(255,255,255,0.4), transparent),
-        radial-gradient(2px 2px at 400px 100px, rgba(168,85,247,0.8), transparent),
-        radial-gradient(1px 1px at 500px 300px, rgba(255,255,255,0.5), transparent),
-        radial-gradient(1px 1px at 50px 400px, rgba(255,255,255,0.3), transparent),
-        radial-gradient(2px 2px at 150px 500px, rgba(45,212,191,0.6), transparent);
-      background-size: 550px 550px;
-    }
-
-/* Sidebar themes — cosmic glassmorphism with neon accents */
-    /* Trainee — Teal/Ocean */
-    .theme-trainee .sidebar-bg {
-      background: linear-gradient(180deg, rgba(10,31,31,0.85) 0%, rgba(13,42,42,0.92) 100%);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border-right: 1px solid rgba(45,212,191,0.3);
-      box-shadow: inset 0 0 60px rgba(45,212,191,0.08), 4px 0 24px rgba(0,0,0,0.3);
-    }
-    .theme-trainee .sidebar-item { color: #94a3b8; }
-    .theme-trainee .sidebar-item-active {
-      background: linear-gradient(135deg, rgba(45,212,191,0.18) 0%, rgba(6,182,212,0.1) 100%);
-      color: #2dd4bf;
-      border-left: 3px solid #2dd4bf;
-      box-shadow: 0 0 20px rgba(45,212,191,0.25), inset 0 0 20px rgba(45,212,191,0.08);
-    }
-    .theme-trainee .sidebar-item:hover { background: rgba(45,212,191,0.08); color: #e2e8f0; }
-    .theme-trainee .sidebar-icon { filter: drop-shadow(0 0 6px rgba(45,212,191,0.6)); }
-    .theme-trainee .portal-bg { background: linear-gradient(135deg, var(--trainee-bg) 0%, var(--trainee-bg2) 100%); }
-
-    /* Trainer — Amber/Sunset */
-    .theme-trainer .sidebar-bg {
-      background: linear-gradient(180deg, rgba(26,15,5,0.85) 0%, rgba(42,21,8,0.92) 100%);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border-right: 1px solid rgba(245,158,11,0.3);
-      box-shadow: inset 0 0 60px rgba(245,158,11,0.08), 4px 0 24px rgba(0,0,0,0.3);
-    }
-    .theme-trainer .sidebar-item { color: #94a3b8; }
-    .theme-trainer .sidebar-item-active {
-      background: linear-gradient(135deg, rgba(245,158,11,0.18) 0%, rgba(239,68,68,0.08) 100%);
-      color: #f59e0b;
-      border-left: 3px solid #f59e0b;
-      box-shadow: 0 0 20px rgba(245,158,11,0.25), inset 0 0 20px rgba(245,158,11,0.08);
-    }
-    .theme-trainer .sidebar-item:hover { background: rgba(245,158,11,0.08); color: #e2e8f0; }
-    .theme-trainer .sidebar-icon { filter: drop-shadow(0 0 6px rgba(245,158,0.6)); }
-    .theme-trainer .portal-bg { background: linear-gradient(135deg, var(--trainer-bg) 0%, var(--trainer-bg2) 100%); }
-
-    /* Admin — Crimson/Deep Red */
-    .theme-admin .sidebar-bg {
-      background: linear-gradient(180deg, rgba(26,5,5,0.85) 0%, rgba(42,8,8,0.92) 100%);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border-right: 1px solid rgba(239,68,68,0.3);
-      box-shadow: inset 0 0 60px rgba(239,68,68,0.08), 4px 0 24px rgba(0,0,0,0.3);
-    }
-    .theme-admin .sidebar-item { color: #94a3b8; }
-    .theme-admin .sidebar-item-active {
-      background: linear-gradient(135deg, rgba(239,68,68,0.18) 0%, rgba(185,28,28,0.08) 100%);
-      color: #ef4444;
-      border-left: 3px solid #ef4444;
-      box-shadow: 0 0 20px rgba(239,68,68,0.25), inset 0 0 20px rgba(239,68,68,0.08);
-    }
-    .theme-admin .sidebar-item:hover { background: rgba(239,68,68,0.08); color: #e2e8f0; }
-    .theme-admin .sidebar-icon { filter: drop-shadow(0 0 6px rgba(239,68,68,0.6)); }
-    .theme-admin .portal-bg { background: linear-gradient(135deg, var(--admin-bg) 0%, var(--admin-bg2) 100%); }
-
-    /* Homepage — Purple/Nebula */
-    .theme-home .sidebar-bg {
-      background: linear-gradient(180deg, rgba(15,10,31,0.85) 0%, rgba(26,11,46,0.92) 100%);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border-right: 1px solid rgba(168,85,247,0.3);
-      box-shadow: inset 0 0 60px rgba(168,85,247,0.08), 4px 0 24px rgba(0,0,0,0.3);
-    }
-    .theme-home .sidebar-item-active {
-      background: linear-gradient(135deg, rgba(168,85,247,0.18) 0%, rgba(236,72,153,0.08) 100%);
-      color: #c084fc;
-      border-left: 3px solid #c084fc;
-      box-shadow: 0 0 20px rgba(168,85,247,0.25), inset 0 0 20px rgba(168,85,247,0.08);
-    }
-    .theme-home .sidebar-icon { filter: drop-shadow(0 0 6px rgba(168,85,247,0.6)); }
-
-    /* Universal neon icon glow for sidebar items */
-    .sidebar-item .sidebar-icon-span,
-    .sidebar-item span[class*="material"] {
-      filter: drop-shadow(0 0 4px currentColor);
-    }
-
-    /* Dark mode overrides — space theme */
-    .dark body { background-color: var(--space-black); }
-    .dark .theme-wrapper { background-color: var(--space-black); }
-    .dark .dark\:bg-slate-950 { background-color: var(--space-black); }
-    .dark .bg-white/5/90,
-    .dark .dark\:bg-white/5 { background-color: rgba(13, 27, 42, 0.8); backdrop-filter: blur(12px); }
-    .dark .dark\:bg-space-blue/30,
-    .dark .bg-space-blue/30 { background-color: rgba(27, 40, 56, 0.8) !important; }
-    .dark .dark\:bg-white/5,
-    .dark .bg-white/5 { background-color: rgba(30, 41, 59, 0.8) !important; }
-    .dark .bg-space-blue/30 { background-color: rgba(30, 41, 59, 0.6) !important; }
-
-    .dark .dark\:text-slate-100 dark:text-slate-100,
-    .dark .dark\:text-slate-700 dark:text-slate-200,
-    .dark .dark\:text-secondary,
-    .dark .text-slate-100 dark:text-slate-100,
-    .dark .text-slate-700 dark:text-slate-200,
-    .dark .text-secondary { color: #f1f5f9 !important; }
-    .dark .dark\:text-secondary,
-    .dark .text-secondary { color: #cbd5e1 !important; }
-    .dark .dark\:text-secondary,
-    .dark .text-secondary { color: #94a3b8 !important; }
-    .dark .dark\:border-white/10,
-    .dark .border-white/10,
-    .dark .dark\:border-white/10,
-    .dark .border-white/10 { border-color: rgba(148,163,184,0.15) !important; }
-
-    /* Inputs in dark mode */
-    .dark input[type="email"],
-    .dark input[type="password"],
-    .dark input[type="text"],
-    .dark textarea {
-      color: #f1f5f9 !important;
-      background-color: rgba(15, 23, 42, 0.8) !important;
-      border-color: rgba(0, 212, 255, 0.2) !important;
-    }
-    .dark input::placeholder,
-    .dark textarea::placeholder { color: #64748b !important; }
-
-/* ===== DECORATIVE SPACE / EARTH VISUAL ELEMENTS ===== */
-    /* Nebula glow — Homepage */
-    .nebula-glow {
-      background: radial-gradient(ellipse at 30% 20%, rgba(168,85,247,0.25) 0%, transparent 60%),
-                  radial-gradient(ellipse at 70% 80%, rgba(236,72,153,0.15) 0%, transparent 55%);
-    }
-    /* Ocean glow — Trainee */
-    .ocean-glow {
-      background: radial-gradient(ellipse at 30% 20%, rgba(45,212,191,0.25) 0%, transparent 60%),
-                  radial-gradient(ellipse at 70% 80%, rgba(6,182,212,0.15) 0%, transparent 55%);
-    }
-    /* Sunset glow — Trainer */
-    .sunset-glow {
-      background: radial-gradient(ellipse at 30% 20%, rgba(245,158,11,0.25) 0%, transparent 60%),
-                  radial-gradient(ellipse at 70% 80%, rgba(239,68,68,0.15) 0%, transparent 55%);
-    }
-    /* Crimson glow — Admin */
-    .crimson-glow {
-      background: radial-gradient(ellipse at 30% 20%, rgba(239,68,68,0.25) 0%, transparent 60%),
-                  radial-gradient(ellipse at 70% 80%, rgba(185,28,28,0.15) 0%, transparent 55%);
-    }
-    /* Earth glow — shared nature */
-    .earth-glow {
-      background: radial-gradient(ellipse at 50% 50%, rgba(34,197,94,0.2) 0%, transparent 70%);
-    }
-    /* Star glow — Gold */
-    .star-glow {
-      background: radial-gradient(ellipse at 50% 50%, rgba(251,191,36,0.2) 0%, transparent 70%);
-    }
-
-    /* Orbit ring decoration */
-    .orbit-ring {
-      position: relative;
-    }
-    .orbit-ring::before {
-      content: '';
-      position: absolute;
-      top: 50%; left: 50%;
-      width: 200%; height: 200%;
-      transform: translate(-50%, -50%);
-      border: 1px solid rgba(255,255,255,0.04);
-      border-radius: 50%;
-      pointer-events: none;
-    }
-    .orbit-ring::after {
-      content: '';
-      position: absolute;
-      top: 50%; left: 50%;
-      width: 140%; height: 140%;
-      transform: translate(-50%, -50%);
-      border: 1px solid rgba(255,255,255,0.03);
-      border-radius: 50%;
-      animation: orbit-rotate 30s linear infinite;
-      pointer-events: none;
-    }
-    @keyframes orbit-rotate {
-      from { transform: translate(-50%, -50%) rotate(0deg); }
-      to { transform: translate(-50%, -50%) rotate(360deg); }
-    }
-
-    /* Cosmic card — glowing border on hover */
-    . {
-      transition: all 300ms ease;
-      position: relative;
-      overflow: hidden;
-    }
-    .::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      border-radius: inherit;
-      padding: 1px;
-      background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 50%, rgba(255,255,255,0.05) 100%);
-      -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-      -webkit-composite: xor;
-      mask-composite: exclude;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 300ms ease;
-    }
-    .:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 12px 40px rgba(0,0,0,0.4);
-    }
-
-    /* Cosmic background for portal shells */
-    .cosmic-bg {
-      background:
-        radial-gradient(ellipse at 20% 10%, rgba(168,85,247,0.08) 0%, transparent 50%),
-        radial-gradient(ellipse at 80% 90%, rgba(239,68,68,0.06) 0%, transparent 50%),
-        radial-gradient(ellipse at 50% 50%, rgba(45,212,191,0.04) 0%, transparent 60%),
-        linear-gradient(180deg, #05070a 0%, #0a0e27 100%);
-    }
-
-    /* Planet accent dot */
-    .planet-dot {
-      width: 8px; height: 8px;
-      border-radius: 50%;
-      box-shadow: 0 0 12px currentColor;
-    }
-
-    /* Gold stat highlight */
-    .stat-gold {
-      background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-
-    /* Section divider — wave */
-    .wave-divider {
-      height: 40px;
-      background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120' preserveAspectRatio='none'%3E%3Cpath d='M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z' opacity='.5'/%3E%3Cpath d='M0,0V15.81C13,36.92,27.64,56.86,47.69,72.05,99.41,111.27,165,111,224.58,91.58c31.15-10.15,60.09-26.07,89.67-39.8,40.92-19,84.73-46,130.83-49.67,36.26-2.85,70.9,9.42,98.6,31.56,31.77,25.39,62.32,62,103.63,73,40.44,10.79,81.35-6.69,119.13-24.28s75.16-39,116.92-30.03c59.5,11.64,114.49,63.57,120,114.08V0Z' opacity='.7'/%3E%3C/svg%3E");
-      background-size: 120px 40px;
-      background-repeat: repeat-x;
-    }
-
-/* Scrollbar */
-    ::-webkit-scrollbar { width: 6px; }
-
-    /* ===== DEEP SPACE & ORBITAL COMMAND THEME ===== */
-    .orbital-bg {
-      background:
-        radial-gradient(ellipse at 20% 10%, rgba(0,212,255,0.06) 0%, transparent 50%),
-        radial-gradient(ellipse at 80% 90%, rgba(168,85,247,0.06) 0%, transparent 50%),
-        linear-gradient(180deg, #020617 0%, #0a0e27 100%);
-    }
-    .orbital-grid {
-      background-image:
-        linear-gradient(rgba(0,212,255,0.04) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(0,212,255,0.04) 1px, transparent 1px);
-      background-size: 40px 40px;
-    }
-    .hud-panel {
-      background: linear-gradient(180deg, rgba(15, 23, 42, 0.85) 0%, rgba(15, 23, 42, 0.65) 100%);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border-width: 1px;
-      border-style: solid;
-      border-color: rgba(0, 212, 255, 0.25);
-      border-top-width: 3px;
-      border-top-color: rgba(0, 212, 255, 0.7);
-      border-radius: 16px;
-      box-shadow: 0 0 40px rgba(0,212,255,0.1), inset 0 1px 0 rgba(255,255,255,0.08);
-    }
-    .hud-panel-purple {
-      border-color: rgba(168,85,247,0.3);
-      border-top-color: rgba(168,85,247,0.7);
-      box-shadow: 0 0 40px rgba(168,85,247,0.1), inset 0 1px 0 rgba(255,255,255,0.08);
-    }
-    .hud-panel-amber {
-      border-color: rgba(245,158,11,0.3);
-      border-top-color: rgba(245,158,11,0.7);
-      box-shadow: 0 0 40px rgba(245,158,11,0.1), inset 0 1px 0 rgba(255,255,255,0.08);
-    }
-    .hud-panel-emerald {
-      border-color: rgba(16,185,129,0.3);
-      border-top-color: rgba(16,185,129,0.7);
-      box-shadow: 0 0 40px rgba(16,185,129,0.1), inset 0 1px 0 rgba(255,255,255,0.08);
-    }
-    .hud-panel-rose {
-      border-color: rgba(244,63,94,0.3);
-      border-top-color: rgba(244,63,94,0.7);
-      box-shadow: 0 0 40px rgba(244,63,94,0.1), inset 0 1px 0 rgba(255,255,255,0.08);
-    }
-    .laser-bar {
-      background: linear-gradient(90deg, #00d4ff 0%, #8338ec 100%);
-      border-radius: 4px;
-      box-shadow: 0 0 12px rgba(0,212,255,0.4);
-    }
-    .radar-pulse {
-      width: 10px; height: 10px;
-      border-radius: 50%;
-      background: #00d4ff;
-      box-shadow: 0 0 0 0 rgba(0,212,255,0.7);
-      animation: radar-ping 2s cubic-bezier(0, 0, 0.2, 1) infinite;
-    }
-    @keyframes radar-ping {
-      75%, 100% { width: 24px; height: 24px; opacity: 0; }
-    }
-    .neon-glow {
-      box-shadow: 0 0 15px rgba(6,182,212,0.3);
-    }
-    .neon-glow-purple {
-      box-shadow: 0 0 15px rgba(168,85,247,0.3);
-    }
-    .neon-gold {
-      box-shadow: 0 0 15px rgba(251,191,36,0.3);
-    }
-    .sector-badge {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 10px;
-      letter-spacing: 0.05em;
-      color: #00d4ff;
-      background: rgba(0,212,255,0.08);
-      border: 1px solid rgba(0,212,255,0.2);
-      padding: 2px 8px;
-      border-radius: 4px;
-    }
-    .mission-badge {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 9px;
-      letter-spacing: 0.08em;
-      color: #fbbf24;
-      background: rgba(251,191,36,0.1);
-      border: 1px solid rgba(251,191,36,0.25);
-      padding: 2px 8px;
-      border-radius: 4px;
-    }
-    .hologram-seal {
-      width: 56px; height: 56px;
-      border-radius: 50%;
-      background: conic-gradient(from 0deg, #fbbf24, #f59e0b, #d97706, #fbbf24);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 0 20px rgba(251,191,36,0.4);
-      position: relative;
-    }
-    .hologram-seal::before {
-      content: '';
-      position: absolute;
-      inset: 4px;
-      border-radius: 50%;
-      background: #0a0e27;
-      pointer-events: none;
-    }
-    .hologram-seal span {
-      position: relative;
-      z-index: 1;
-      font-size: 20px;
-    }
-    .spaceship-frame {
-      border: 2px solid rgba(0,212,255,0.25);
-      border-radius: 12px;
-      background: rgba(2,6,16,0.8);
-      box-shadow: inset 0 0 40px rgba(0,212,255,0.05), 0 0 20px rgba(0,212,255,0.1);
-      position: relative;
-    }
-    .spaceship-frame::before {
-      content: '';
-      position: absolute;
-      top: -2px; left: 16px; right: 16px;
-      height: 2px;
-      background: linear-gradient(90deg, transparent, #00d4ff, transparent);
-      pointer-events: none;
-    }
-    .spaceship-frame::after {
-      content: '';
-      position: absolute;
-      bottom: -2px; left: 16px; right: 16px;
-      height: 2px;
-      background: linear-gradient(90deg, transparent, #00d4ff, transparent);
-      pointer-events: none;
-    }
-    .corner-tick {
-      position: absolute;
-      width: 12px; height: 12px;
-      border: 2px solid rgba(0,212,255,0.5);
-    }
-    .corner-tick.tl { top: -1px; left: -1px; border-right: none; border-bottom: none; }
-    .corner-tick.tr { top: -1px; right: -1px; border-left: none; border-bottom: none; }
-    .corner-tick.bl { bottom: -1px; left: -1px; border-right: none; border-top: none; }
-    .corner-tick.br { bottom: -1px; right: -1px; border-left: none; border-top: none; }
-    ::-webkit-scrollbar-track { background: transparent; }
-    ::-webkit-scrollbar-thumb { background: #475569; border-radius: 3px; }
-    ::-webkit-scrollbar-thumb:hover { background: #64748b; }
-
-    /* ===== LOGIN PAGE — FLOATING ORBS ===== */
-    .login-orb {
-      position: absolute;
-      border-radius: 50%;
-      filter: blur(60px);
-      opacity: 0.7;
-      animation: float-orb 12s ease-in-out infinite;
-      pointer-events: none;
-      z-index: 0;
-    }
-    .login-orb.orb-1 {
-      width: 380px; height: 380px;
-      background: radial-gradient(circle at 30% 30%, #00d4ff, #0066ff 70%, transparent);
-      top: -100px; left: -80px;
-      animation-delay: 0s;
-    }
-    .login-orb.orb-2 {
-      width: 320px; height: 320px;
-      background: radial-gradient(circle at 70% 30%, #ff006e, #8338ec 70%, transparent);
-      bottom: -120px; right: -60px;
-      animation-delay: -4s;
-    }
-    .login-orb.orb-3 {
-      width: 240px; height: 240px;
-      background: radial-gradient(circle at 50% 50%, #ffbe0b, #fb5607 70%, transparent);
-      top: 40%; right: 20%;
-      animation-delay: -8s;
-    }
-    .login-orb.orb-4 {
-      width: 200px; height: 200px;
-      background: radial-gradient(circle at 50% 50%, #06ffa5, #00d4ff 70%, transparent);
-      bottom: 20%; left: 30%;
-      animation-delay: -6s;
-    }
-    @keyframes float-orb {
-      0%, 100% { transform: translate(0, 0) scale(1); }
-      33% { transform: translate(40px, -30px) scale(1.15); }
-      66% { transform: translate(-30px, 25px) scale(0.9); }
-    }
-
-    /* ===== LOGIN GLASS CARD ===== */
-    .login-meadow-glass {
-      background: rgba(10, 14, 39, 0.55);
-      backdrop-filter: blur(24px);
-      -webkit-backdrop-filter: blur(24px);
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      border-radius: 28px;
-      box-shadow:
-        0 25px 80px rgba(0, 0, 0, 0.5),
-        inset 0 1px 0 rgba(255, 255, 255, 0.15),
-        inset 0 0 60px rgba(0, 212, 255, 0.05);
-      position: relative;
-      z-index: 1;
-    }
-
-    /* ===== LOGIN INPUT FIELDS ===== */
-    .login-input {
-      background: rgba(5, 7, 10, 0.5);
-      border: 1px solid rgba(0, 212, 255, 0.2);
-      border-radius: 50px;
-      color: #f1f5f9;
-      transition: all 300ms ease;
-    }
-    .login-input::placeholder { color: #64748b; }
-    .login-input:focus {
-      outline: none;
-      border-color: #00d4ff;
-      box-shadow: 0 0 0 4px rgba(0, 212, 255, 0.15), 0 0 30px rgba(0, 212, 255, 0.2);
-      background: rgba(5, 7, 10, 0.7);
-    }
-
-    /* ===== LOGIN PRIMARY BUTTON ===== */
-    .login-btn-primary {
-      background: linear-gradient(135deg, #00d4ff 0%, #0066ff 50%, #8338ec 100%);
-      background-size: 200% 200%;
-      border: none;
-      border-radius: 50px;
-      color: #fff;
-      font-weight: 700;
-      box-shadow: 0 8px 32px rgba(0, 212, 255, 0.35), 0 2px 8px rgba(0, 0, 0, 0.3);
-      transition: all 300ms ease;
-      animation: gradient-shift 4s ease infinite;
-    }
-    .login-btn-primary:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 12px 40px rgba(0, 212, 255, 0.5), 0 4px 12px rgba(0, 0, 0, 0.4);
-    }
-    .login-btn-primary:active { transform: translateY(0); }
-    @keyframes gradient-shift {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
-
-    /* Mission badge / certificate style */
-    .mission-badge {
-      background: linear-gradient(135deg, rgba(0,212,255,0.05) 0%, rgba(255,107,53,0.05) 100%);
-      border: 2px solid rgba(0,212,255,0.3);
-      box-shadow: 0 0 40px rgba(0,212,255,0.1), inset 0 0 40px rgba(0,212,255,0.05);
-    }
-
-/* Space utility overrides */
-    .dark .dark\:bg-slate-950 { background-color: var(--space-black); }
-    .dark .bg-space-navy { background-color: var(--space-navy); }
-    .dark .bg-space-blue { background-color: var(--space-blue); }
-
-    /* Chart overrides for space theme */
-    .dark canvas { filter: invert(0.85) hue-rotate(180deg) !important; }
-
-    /* ===== MULTI-COLOR DARK MODE ===== */
-    /* Body and main background — deep space */
-    .dark body { background-color: var(--space-black); }
-    .dark .theme-wrapper { background-color: var(--space-black); }
-    .dark .dark\:bg-slate-950 { background-color: var(--space-black); }
-
-    /* Glass cards in dark mode */
-    .dark .bg-white/5/90,
-    .dark .dark\:bg-white/5 { background-color: rgba(13, 27, 42, 0.85) !important; backdrop-filter: blur(12px); }
-    .dark .dark\:bg-space-blue/30,
-    .dark .bg-space-blue/30 { background-color: rgba(27, 40, 56, 0.8) !important; }
-    .dark .dark\:bg-white/5,
-    .dark .bg-white/5 { background-color: rgba(30, 41, 59, 0.8) !important; }
-    .dark .bg-space-blue/30 { background-color: rgba(30, 41, 59, 0.6) !important; }
-
-    /* Text colors in dark mode */
-    .dark .dark\:text-slate-100 dark:text-slate-100,
-    .dark .dark\:text-slate-700 dark:text-slate-200,
-    .dark .dark\:text-secondary,
-    .dark .text-slate-100 dark:text-slate-100,
-    .dark .text-slate-700 dark:text-slate-200,
-    .dark .text-secondary { color: #f1f5f9 !important; }
-    .dark .dark\:text-secondary,
-    .dark .text-secondary { color: #cbd5e1 !important; }
-    .dark .dark\:border-white/10,
-    .dark .border-white/10,
-    .dark .dark\:border-white/10,
-    .dark .border-white/10 { border-color: rgba(148,163,184,0.15) !important; }
-
-    /* Multi-color text accents in dark mode */
-    .dark .text-home-accent { color: #c084fc !important; }
-    .dark .text-trainee-accent { color: #2dd4bf !important; }
-    .dark .text-trainer-accent { color: #f59e0b !important; }
-    .dark .text-admin-accent { color: #ef4444 !important; }
-    .dark .text-earth-accent { color: #22c55e !important; }
-    .dark .text-gold-accent { color: #fbbf24 !important; }
-
-    /* Multi-color backgrounds in dark mode */
-    .dark .bg-home-accent/10 { background-color: rgba(168,85,247,0.15) !important; }
-    .dark .bg-trainee-accent/10 { background-color: rgba(45,212,191,0.15) !important; }
-    .dark .bg-trainer-accent/10 { background-color: rgba(245,158,11,0.15) !important; }
-    .dark .bg-admin-accent/10 { background-color: rgba(239,68,68,0.15) !important; }
-    .dark .bg-earth-accent/10 { background-color: rgba(34,197,94,0.15) !important; }
-    .dark .bg-gold-accent/10 { background-color: rgba(251,191,36,0.15) !important; }
-
-    /* Inputs in dark mode */
-    .dark input[type="email"],
-    .dark input[type="password"],
-    .dark input[type="text"],
-    .dark input[type="name"],
-    .dark input[type="qualification"],
-    .dark textarea {
-      color: #f1f5f9 !important;
-      background-color: rgba(15, 23, 42, 0.8) !important;
-      border-color: rgba(148,163,184,0.2) !important;
-    }
-    .dark input::placeholder,
-    .dark textarea::placeholder { color: #64748b !important; }
-
-    /* Toast notifications */
-    .dark .dark\:bg-emerald-900 { background-color: #143d30 !important; }
-    .dark .dark\:bg-red-900 { background-color: #451a1a !important; }
-    .dark .dark\:bg-amber-900 { background-color: #42210b !important; }
-    .dark .dark\:bg-indigo-900 { background-color: #2e1e5e !important; }
-    .dark .dark\:bg-blue-900 { background-color: #1e2a5a !important; }
-
-    /* Additional text colors lacking dark variants */
-    .dark .text-blue-900,
-    .dark .dark\:text-blue-900 { color: #d8d0ff !important; }
-    .dark .text-blue-950 { color: #e0d6ff !important; }
-    .dark .text-crimson,
-    .dark .dark\:text-crimson { color: #fca5a5 !important; }
-    .dark .text-emerald-900 { color: #a7f3d0 !important; }
-    .dark .text-emerald-800 { color: #6ee7b7 !important; }
-    .dark .text-meadow-green { color: #34d399 !important; }
-    .dark .text-purple-800,
-    .dark .dark\:text-purple-800 { color: #c4b5ff !important; }
-    .dark .text-amber-700 { color: #fcd34d !important; }
-    .dark .text-indigo-900 { color: #a78bfa !important; }
-    .dark .text-teal-900 { color: #99f6e4 !important; }
-    .dark .text-teal-800 { color: #5eeccb !important; }
-    .dark .text-primary { color: #f8fafc !important; }
-
-    /* Additional background colors lacking dark variants */
-    .dark .bg-blue-900,
-    .dark .dark\:bg-blue-900 { background-color: #1e2a5a !important; }
-    .dark .bg-blue-950 { background-color: #171f3b !important; }
-    .dark .bg-electric-blue/10 { background-color: #202d20 !important; }
-    .dark .bg-emerald-100 { background-color: #143d30 !important; }
-    .dark .bg-crimson/10,
-    .dark .dark\:bg-crimson/10 { background-color: #451a1a !important; }
-    .dark .bg-amber-100 { background-color: #42210b !important; }
-    .dark .bg-white/5 { background-color: #2a1b3d !important; }
-    .dark .bg-indigo-100 { background-color: #2e1e5e !important; }
-    .dark .bg-indigo-900 { background-color: #2e1e5e !important; }
-    .dark .bg-indigo-50 { background-color: #322549 !important; }
-    .dark .bg-teal-50 { background-color: #202d20 !important; }
-    .dark .bg-teal-900 { background-color: #143d30 !important; }
-    .dark .bg-purple-800 { background-color: #3a2a54 !important; }
-
-    /* Additional text colors lacking dark variants */
-    .dark .text-blue-900,
-    .dark .dark\:text-blue-900 { color: #d8d0ff !important; }
-    .dark .text-blue-950 { color: #e0d6ff !important; }
-    .dark .text-crimson,
-    .dark .dark\:text-crimson { color: #fca5a5 !important; }
-    .dark .text-emerald-900 { color: #a7f3d0 !important; }
-    .dark .text-emerald-800 { color: #6ee7b7 !important; }
-    .dark .text-meadow-green { color: #34d399 !important; }
-    .dark .text-purple-800,
-    .dark .dark\:text-purple-800 { color: #c4b5ff !important; }
-    .dark .text-amber-700 { color: #fcd34d !important; }
-    .dark .text-indigo-900 { color: #a78bfa !important; }
-    .dark .text-teal-900 { color: #99f6e4 !important; }
-    .dark .text-teal-800 { color: #5eeccb !important; }
-    .dark .text-primary { color: #f8fafc !important; }
-
-    /* Additional background colors lacking dark variants */
-    .dark .bg-blue-900,
-    .dark .dark\:bg-blue-900 { background-color: #1e2a5a !important; }
-    .dark .bg-blue-950 { background-color: #171f3b !important; }
-    .dark .bg-electric-blue/10 { background-color: #202d20 !important; }
-    .dark .bg-emerald-100 { background-color: #143d30 !important; }
-    .dark .bg-crimson/10,
-    .dark .dark\:bg-crimson/10 { background-color: #451a1a !important; }
-    .dark .bg-amber-100 { background-color: #42210b !important; }
-    .dark .bg-white/5 { background-color: #2a1b3d !important; }
-    .dark .bg-indigo-100 { background-color: #2e1e5e !important; }
-    .dark .bg-indigo-900 { background-color: #2e1e5e !important; }
-    .dark .bg-indigo-50 { background-color: #322549 !important; }
-    .dark .bg-teal-50 { background-color: #202d20 !important; }
-    .dark .bg-teal-900 { background-color: #143d30 !important; }
-    .dark .bg-purple-800 { background-color: #3a2a54 !important; }
-
-/* Chart canvas text in dark mode */
-    .dark canvas { filter: invert(1) hue-rotate(180deg) !important; }
-
-    /* Fix placeholder text in dark mode for all inputs */
-    .dark ::placeholder { color: #b8adff !important; opacity: 0.7; }
-
-    /*Scrollbar*/
-    ::-webkit-scrollbar { width: 6px; }
-    ::-webkit-scrollbar-track { background: transparent; }
-    ::-webkit-scrollbar-thumb { background: #475569; border-radius: 3px; }
-    ::-webkit-scrollbar-thumb:hover { background: #64748b; }
-
-    /* ===== COLOR REMAP: old blue → new multi-color palette ===== */
-    /* These remaps keep existing class names working while changing the actual colors */
-    .bg-electric-blue { background-color: #2dd4bf !important; }
-    .bg-electric-blue\/10 { background-color: rgba(45, 212, 191, 0.1) !important; }
-    .bg-electric-blue\/20 { background-color: rgba(45, 212, 191, 0.2) !important; }
-    .bg-electric-blue\/30 { background-color: rgba(45, 212, 191, 0.3) !important; }
-    .bg-electric-blue-dark { background-color: #0d9488 !important; }
-    .bg-electric-blue-light { background-color: rgba(45, 212, 191, 0.15) !important; }
-    .text-electric-blue { color: #2dd4bf !important; }
-    .text-electric-blue-dark { color: #0d9488 !important; }
-    .border-electric-blue\/10 { border-color: rgba(45, 212, 191, 0.15) !important; }
-    .border-electric-blue\/20 { border-color: rgba(45, 212, 191, 0.25) !important; }
-    .border-electric-blue\/30 { border-color: rgba(45, 212, 191, 0.35) !important; }
-
-    .bg-isro-orange { background-color: #f59e0b !important; }
-    .bg-isro-orange\/10 { background-color: rgba(245, 158, 11, 0.1) !important; }
-    .bg-isro-orange\/20 { background-color: rgba(245, 158, 11, 0.2) !important; }
-    .bg-isro-orange\/30 { background-color: rgba(245, 158, 11, 0.3) !important; }
-    .bg-isro-orange-hover { background-color: #d97706 !important; }
-    .bg-isro-orange-dark { background-color: #b45309 !important; }
-    .text-amber-300 { color: #f59e0b !important; }
-
-    .bg-crimson { background-color: #ef4444 !important; }
-    .bg-crimson\/10 { background-color: rgba(239, 68, 68, 0.1) !important; }
-    .bg-crimson\/20 { background-color: rgba(239, 68, 68, 0.2) !important; }
-    .bg-crimson-dark { background-color: #dc2626 !important; }
-    .text-crimson { color: #ef4444 !important; }
-    .text-crimson-dark { color: #dc2626 !important; }
-
-    /* Homepage — Purple/Nebula overrides */
-    .theme-home .bg-electric-blue { background-color: #a855f7 !important; }
-    .theme-home .bg-electric-blue\/10 { background-color: rgba(168, 85, 247, 0.1) !important; }
-    .theme-home .bg-electric-blue\/20 { background-color: rgba(168, 85, 247, 0.2) !important; }
-    .theme-home .text-electric-blue { color: #c084fc !important; }
-    .theme-home .border-electric-blue\/10 { border-color: rgba(168, 85, 247, 0.15) !important; }
-    .theme-home .border-electric-blue\/20 { border-color: rgba(168, 85, 247, 0.25) !important; }
-    .theme-home .border-electric-blue\/30 { border-color: rgba(168, 85, 247, 0.35) !important; }
-
-    /* Trainee — Teal/Ocean overrides */
-    .theme-trainee .bg-electric-blue { background-color: #2dd4bf !important; }
-    .theme-trainee .bg-electric-blue\/10 { background-color: rgba(45, 212, 191, 0.1) !important; }
-    .theme-trainee .bg-electric-blue\/20 { background-color: rgba(45, 212, 191, 0.2) !important; }
-    .theme-trainee .text-electric-blue { color: #2dd4bf !important; }
-    .theme-trainee .border-electric-blue\/10 { border-color: rgba(45, 212, 191, 0.15) !important; }
-    .theme-trainee .border-electric-blue\/20 { border-color: rgba(45, 212, 191, 0.25) !important; }
-    .theme-trainee .border-electric-blue\/30 { border-color: rgba(45, 212, 191, 0.35) !important; }
-
-    /* Trainer — Amber/Sunset overrides */
-    .theme-trainer .bg-isro-orange { background-color: #f59e0b !important; }
-    .theme-trainer .bg-isro-orange\/10 { background-color: rgba(245, 158, 11, 0.1) !important; }
-    .theme-trainer .bg-isro-orange\/20 { background-color: rgba(245, 158, 11, 0.2) !important; }
-    .theme-trainer .text-isro-orange { color: #f59e0b !important; }
-    .theme-trainer .border-isro-orange\/20 { border-color: rgba(245, 158, 11, 0.25) !important; }
-    .theme-trainer .border-isro-orange\/30 { border-color: rgba(245, 158, 11, 0.35) !important; }
-
-    /* Admin — Crimson/Deep Red overrides */
-    .theme-admin .bg-crimson { background-color: #ef4444 !important; }
-    .theme-admin .bg-crimson\/10 { background-color: rgba(239, 68, 68, 0.1) !important; }
-    .theme-admin .bg-crimson\/20 { background-color: rgba(239, 68, 68, 0.2) !important; }
-    .theme-admin .text-crimson { color: #ef4444 !important; }
-    .theme-admin .border-crimson\/20 { border-color: rgba(239, 68, 68, 0.25) !important; }
-    .theme-admin .border-crimson\/30 { border-color: rgba(239, 68, 68, 0.35) !important; }
-
-    /* ===== MEADOW DESIGN SYSTEM ===== */
+/* ===== MEADOW DESIGN SYSTEM ===== */
     /* Nature-photography-backed theme with glassmorphism */
 
     /* Meadow theme variables */
@@ -1168,8 +271,8 @@ tailwind.config = {
     .theme-meadow .sidebar-icon { filter: drop-shadow(0 0 6px rgba(74, 222, 128, 0.5)); }
     .theme-meadow .portal-bg { background: transparent; }
 
-    /* Meadow hud-panel override — reuse existing cards with glass style */
-    .theme-meadow .hud-panel,
+    /* Meadow meadow-glass override — reuse existing cards with glass style */
+    .theme-meadow .meadow-glass,
     .theme-meadow .meadow-glass {
       background: var(--meadow-glass-light);
       backdrop-filter: blur(16px);
@@ -1179,18 +282,18 @@ tailwind.config = {
       box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08), 0 2px 8px rgba(0, 0, 0, 0.04);
       transition: all 300ms ease;
     }
-    .theme-meadow.dark .hud-panel,
+    .theme-meadow.dark .meadow-glass,
     .theme-meadow.dark .meadow-glass {
       background: var(--meadow-glass-dark);
       border-color: var(--meadow-border-dark);
       box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25), 0 2px 8px rgba(0, 0, 0, 0.15);
     }
-    .theme-meadow .hud-panel:hover,
+    .theme-meadow .meadow-glass:hover,
     .theme-meadow .meadow-glass:hover {
       transform: translateY(-2px);
       box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12), 0 4px 12px rgba(0, 0, 0, 0.06);
     }
-    .theme-meadow.dark .hud-panel:hover,
+    .theme-meadow.dark .meadow-glass:hover,
     .theme-meadow.dark .meadow-glass:hover {
       box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35), 0 4px 12px rgba(0, 0, 0, 0.2);
     }
@@ -1722,23 +825,23 @@ lineRef.current.chart = new Chart(lineRef.current, {
 
       return (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="hud-panel rounded-2xl p-6">
+          <div className="meadow-glass rounded-2xl p-6">
             <h3 className="text-sm font-bold text-primary mb-4 flex items-center gap-2 font-mono">
-              <span className="w-2 h-2 rounded-full bg-cyan-400 radar-pulse"></span>
+              <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
               MONTHLY OPERATOR COUNT
             </h3>
             {barChartContent}
           </div>
-          <div className="hud-panel rounded-2xl p-6 hud-panel-purple">
+          <div className="meadow-glass rounded-2xl p-6 meadow-glass-purple">
             <h3 className="text-sm font-bold text-primary mb-4 flex items-center gap-2 font-mono">
-              <span className="w-2 h-2 rounded-full bg-purple-400 radar-pulse"></span>
+              <span className="w-2 h-2 rounded-full bg-purple-400 animate-pulse"></span>
               MISSION COMPLETION STATUS
             </h3>
             {pieChartContent}
           </div>
-          <div className="hud-panel hud-panel-amber rounded-2xl p-6 md:col-span-2">
+          <div className="meadow-glass meadow-glass-amber rounded-2xl p-6 md:col-span-2">
             <h3 className="text-sm font-bold text-primary mb-4 flex items-center gap-2 font-mono">
-              <span className="w-2 h-2 rounded-full bg-amber-400 radar-pulse"></span>
+              <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
               ENROLLMENT TRAJECTORY
             </h3>
             {lineChartContent}
@@ -2244,10 +1347,10 @@ lineRef.current.chart = new Chart(lineRef.current, {
 return (
         <div className={"theme-meadow meadow-bg-login min-h-screen flex items-center justify-center p-4 overflow-hidden relative"}>
           {/* Floating glowing orbs */}
-          <div className="login-orb orb-1"></div>
-          <div className="login-orb orb-2"></div>
-          <div className="login-orb orb-3"></div>
-          <div className="login-orb orb-4"></div>
+          <div className=" orb-1"></div>
+          <div className=" orb-2"></div>
+          <div className=" orb-3"></div>
+          <div className=" orb-4"></div>
 
           <div className="meadow-glass w-full max-w-4xl p-8 sm:p-12 flex flex-col md:flex-row items-stretch gap-8 md:gap-0 relative">
             {/* Left branding panel */}
@@ -2619,7 +1722,7 @@ const fetchAIRecommendations = async () => {
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
             {filtered.map(c => (
-              <div key={c.id} className="hud-panel rounded-2xl p-4 sm:p-6 flex flex-col justify-between">
+              <div key={c.id} className="meadow-glass rounded-2xl p-4 sm:p-6 flex flex-col justify-between">
                 <div>
                   <span className="sector-badge">{c.category}</span>
                   <h2 className="text-base font-black text-primary mt-3">{c.title}</h2>
@@ -2630,7 +1733,7 @@ const fetchAIRecommendations = async () => {
                         <span>PROGRESS</span><span className="text-meadow-green">{c.progressPercent}%</span>
                       </div>
                       <div className="w-full bg-slate-800 rounded-full h-2 overflow-hidden">
-                        <div className="laser-bar h-2 rounded-full transition-all duration-500" style={{ width: c.progressPercent + '%' }}></div>
+                        <div className="bg-gradient-to-r from-meadow-green to-meadow-amber h-2 rounded-full transition-all duration-500" style={{ width: c.progressPercent + '%' }}></div>
                       </div>
                     </div>
                   )}
@@ -2723,7 +1826,7 @@ const fetchAIRecommendations = async () => {
             </div>
           )}
           {course && (
-            <div className="hud-panel rounded-2xl p-6 sm:p-8 space-y-4">
+            <div className="meadow-glass rounded-2xl p-6 sm:p-8 space-y-4">
               <span className="sector-badge">{course.category}</span>
               <h1 className="text-2xl font-extrabold text-primary mt-2">{course.title}</h1>
               <p className="text-sm text-secondary">{course.description}</p>
@@ -2737,7 +1840,7 @@ const fetchAIRecommendations = async () => {
               <button onClick={() => onLaunchPlayer(course.id)} className="px-6 py-2.5 bg-gradient-to-r from-meadow-green to-meadow-green/70 text-primary rounded-xl text-xs font-black shadow-lg shadow-meadow-green/30 neon-glow btn-micro hover:shadow-meadow-green/50">Launch Player ▶</button>
 
               {user && user.role === 'trainee' && (
-                <div className="hud-panel rounded-2xl p-6 space-y-4">
+                <div className="meadow-glass rounded-2xl p-6 space-y-4">
                   <h3 className="text-sm font-black text-primary font-mono tracking-wide">COURSE FEEDBACK</h3>
                   {feedbackLoading ? (
                     <p className="text-xs text-secondary">Loading feedback...</p>
@@ -3077,10 +2180,10 @@ const fetchAIRecommendations = async () => {
   return (
           <div className="space-y-6 min-h-screen">
            <button onClick={onBack} className="text-xs font-black bg-white/5 border border-white/10 px-3 py-1.5 rounded-lg text-primary hover:bg-meadow-green/10 btn-micro transition-all">← Back to Dashboard</button>
-          <div className="mission-badge rounded-3xl p-8 sm:p-12 text-center bg-white/5/60 border-2 border-amber-500/30 backdrop-blur-md relative overflow-hidden" style={{boxShadow: '0 0 60px rgba(251,191,36,0.1), inset 0 0 60px rgba(251,191,36,0.05)'}}>
+          <div className="meadow-glass rounded-3xl p-8 sm:p-12 text-center bg-white/5/60 border-2 border-amber-500/30 backdrop-blur-md relative overflow-hidden" style={{boxShadow: '0 0 60px rgba(251,191,36,0.1), inset 0 0 60px rgba(251,191,36,0.05)'}}>
             {/* Holographic seal */}
             <div className="absolute top-6 right-6">
-              <div className="hologram-seal"><span>✓</span></div>
+              <div className="meadow-glass"><span>✓</span></div>
             </div>
             <div className="w-16 h-16 bg-gradient-to-br from-cyan-400 to-meadow-green/70 text-primary mx-auto flex items-center justify-center text-2xl rounded-2xl mb-4 shadow-lg shadow-meadow-green/40">🎓</div>
             <p className="text-xs font-black uppercase tracking-widest text-meadow-green font-mono">Capacity Connect</p>
@@ -3254,7 +2357,7 @@ const fetchAIRecommendations = async () => {
 {activeTab === 'all' && (
             <div className="meadow-glass rounded-2xl p-6">
               <h2 className="text-base font-black text-primary mb-5 flex items-center gap-2 font-mono">
-                <span className="w-2 h-2 rounded-full bg-meadow-green radar-pulse"></span>
+                <span className="w-2 h-2 rounded-full bg-meadow-green animate-pulse"></span>
                 All Personnel ({allUsers.length})
               </h2>
               {loading.all ? (<div className="py-10 text-center text-sm text-meadow-text-secondary">Loading...</div>) : allUsers.length === 0 ? (<div className="py-10 text-center text-sm text-meadow-text-secondary">No personnel found.</div>) : (
@@ -3285,7 +2388,7 @@ const fetchAIRecommendations = async () => {
            {activeTab === 'directory' && stats && !loading.stats && (
              <div className="meadow-glass rounded-2xl p-6">
                <h2 className="text-base font-black text-primary mb-5 flex items-center gap-2 font-mono">
-                 <span className="w-2 h-2 rounded-full bg-meadow-green radar-pulse"></span>
+                 <span className="w-2 h-2 rounded-full bg-meadow-green animate-pulse"></span>
                  Enterprise Directory
                </h2>
                <div className="overflow-x-auto">
@@ -3316,7 +2419,7 @@ const fetchAIRecommendations = async () => {
            {activeTab === 'feedback' && (
              <div className="meadow-glass rounded-2xl p-6">
                <h2 className="text-base font-black text-primary mb-5 flex items-center gap-2 font-mono">
-                 <span className="w-2 h-2 rounded-full bg-meadow-amber radar-pulse"></span>
+                 <span className="w-2 h-2 rounded-full bg-meadow-amber animate-pulse"></span>
                  Course Feedback Summary
                </h2>
                {feedbackLoading ? (<div className="py-10 text-center text-sm text-meadow-text-secondary">Loading feedback...</div>) : !feedbackSummary || feedbackSummary.length === 0 ? (<div className="py-10 text-center text-sm text-meadow-text-secondary">No feedback yet.</div>) : (
