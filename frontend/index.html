@@ -2272,6 +2272,15 @@ return (
                 </button>
               </div>
 
+              <div className="mt-4 pt-4 border-t border-white/10">
+                <p className="text-[10px] font-black text-meadow-text-secondary mb-2 text-center uppercase tracking-wide">Try a Demo</p>
+                <div className="flex gap-2">
+                  <button onClick={() => { setEmail('jane.doe@enterprise.com'); setPassword('password123'); setIsLogin(true); }} className="flex-1 py-2 rounded-xl text-xs font-black bg-white/5 border border-white/10 text-meadow-text-secondary hover:bg-meadow-green/10 hover:text-meadow-green hover:border-meadow-green/30 btn-micro transition-all">👤 Trainee Demo</button>
+                  <button onClick={() => { setEmail('elena.rostova@enterprise.com'); setPassword('trainer123'); setIsLogin(true); }} className="flex-1 py-2 rounded-xl text-xs font-black bg-white/5 border border-white/10 text-meadow-text-secondary hover:bg-meadow-green/10 hover:text-meadow-green hover:border-meadow-green/30 btn-micro transition-all">🎓 Trainer Demo</button>
+                  <button onClick={() => { setEmail('admin@capacityconnect.io'); setPassword('admin123'); setIsLogin(true); }} className="flex-1 py-2 rounded-xl text-xs font-black bg-white/5 border border-white/10 text-meadow-text-secondary hover:bg-meadow-green/10 hover:text-meadow-green hover:border-meadow-green/30 btn-micro transition-all">🛡️ Admin Demo</button>
+                </div>
+              </div>
+
                {authData && (
                  <div className="mt-4 p-4 bg-meadow-green/10 border border-meadow-green/20 rounded-xl text-xs text-meadow-green space-y-2">
                    {(authData.status === 'pending' || user?.status === 'pending') ? (
