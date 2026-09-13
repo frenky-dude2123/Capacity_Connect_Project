@@ -1002,10 +1002,10 @@ tailwind.config = {
       --meadow-glass-dark: rgba(0, 0, 0, 0.35);
       --meadow-border-light: rgba(255, 255, 255, 0.25);
       --meadow-border-dark: rgba(255, 255, 255, 0.1);
-      --meadow-text-light: #1a2e1a;
-      --meadow-text-dark: #f1f5f9;
-      --meadow-text-secondary-light: #3f5a3f;
-      --meadow-text-secondary-dark: #cbd5e1;
+      --text-primary: #111827;
+      --text-secondary: #374151;
+      --text-primary-dark: #f8fafc;
+      --text-secondary-dark: #cbd5e1;
     }
 
     /* Light mode: bright daytime nature photo */
@@ -1055,10 +1055,26 @@ tailwind.config = {
     }
 
     /* Meadow text colors */
-    .theme-meadow .meadow-text-primary { color: var(--meadow-text-light); }
-    .theme-meadow.dark .meadow-text-primary { color: var(--meadow-text-dark); }
-    .theme-meadow .meadow-text-secondary { color: var(--meadow-text-secondary-light); }
-    .theme-meadow.dark .meadow-text-secondary { color: var(--meadow-text-secondary-dark); }
+    .theme-meadow .meadow-text-primary,
+    .theme-meadow .text-primary {
+      color: var(--text-primary);
+      font-weight: 500;
+    }
+    .theme-meadow.dark .meadow-text-primary,
+    .theme-meadow.dark .text-primary {
+      color: var(--text-primary-dark);
+      font-weight: 500;
+    }
+    .theme-meadow .meadow-text-secondary,
+    .theme-meadow .text-secondary {
+      color: var(--text-secondary);
+      font-weight: 500;
+    }
+    .theme-meadow.dark .meadow-text-secondary,
+    .theme-meadow.dark .text-secondary {
+      color: var(--text-secondary-dark);
+      font-weight: 500;
+    }
 
     /* Meadow accent buttons */
     .meadow-btn-primary {
@@ -1803,93 +1819,92 @@ lineRef.current.chart = new Chart(lineRef.current, {
     // ==========================================
     // SIDEBAR COMPONENT
     // ==========================================
-    function Sidebar({ user, currentScreen, onNavigate, activeTab, setActiveTab }) {
-      const items = SIDEBAR_ITEMS[user?.role] || [];
-const roleLabel = user?.role?.charAt(0).toUpperCase() + user?.role?.slice(1) || '';
-      return (
-        <div className="sidebar-bg flex flex-col h-full w-64 overflow-y-auto">
-          <div className="p-5 border-b border-electric-blue/10 flex items-center gap-3">
-            <div className="w-12 h-12 rounded-2xl glass-card flex items-center justify-center text-2xl border border-electric-blue/20 shadow-lg" style={{boxShadow: '0 0 30px var(--accent-dim)'}}>
-              {user?.role === 'trainee' ? '🎓' : user?.role === 'trainer' ? '👩‍🏫' : '🛡️'}
-            </div>
-            <div>
-              <p className="font-bold text-sm text-white dark:text-white">{user?.name || 'Unknown'}</p>
-              <p className="text-[10px] text-slate-400">{roleLabel} Portal</p>
-            </div>
-          </div>
-          <nav className="flex-1 py-3 space-y-1">
-            {items.map((item) => {
-                const isActive = user?.role === 'admin'
-                  ? (activeTab === item.tab)
-                  : (currentScreen === item.screen && (!item.tab || activeTab === item.tab));
-              return (
-                <button
-                  key={user?.role + '-' + item.label}
-                  onClick={() => {
-                    if (item.tab) {
-                      setActiveTab(item.tab);
-                    }
-                    onNavigate(item.screen);
-                  }}
-                  className={"sidebar-item flex items-center gap-3 px-4 py-3 text-xs rounded-xl mx-2 transition-all btn-micro " + (isActive ? 'sidebar-item-active font-semibold' : '')}
-                >
-                  <span className={"text-lg sidebar-icon-span " + (isActive ? 'sidebar-icon' : '')}>{item.icon}</span>
-                  <span className={isActive ? 'font-bold' : ''}>{item.label}</span>
-                  {isActive && <span className="ml-auto w-1.5 h-6 rounded-full bg-current opacity-60"></span>}
-                </button>
-              );
-            })}
-          </nav>
-          <div className="p-4 border-t border-electric-blue/10">
-            <button
-              onClick={() => { try { localStorage.removeItem('capacity_connect_token'); } catch {} window.location.reload(); }}
-              className="sidebar-item w-full flex items-center justify-center gap-2 px-4 py-3 text-xs font-bold rounded-xl btn-micro border border-electric-blue/10"
-            >
-              <span className="sidebar-icon-span">🚪</span> Sign Out
-            </button>
-          </div>
-        </div>
-      );
-    }
+     function Sidebar({ user, currentScreen, onNavigate, activeTab, setActiveTab }) {
+       const items = SIDEBAR_ITEMS[user?.role] || [];
+ const roleLabel = user?.role?.charAt(0).toUpperCase() + user?.role?.slice(1) || '';
+       return (
+         <div className="sidebar-bg flex flex-col h-full w-64 overflow-y-auto">
+           <div className="p-5 border-b border-white/10 flex items-center gap-3">
+             <div className="w-12 h-12 rounded-2xl meadow-glass flex items-center justify-center text-2xl border border-white/10 shadow-lg" style={{boxShadow: '0 0 30px rgba(74,222,128,0.25)'}}>
+               {user?.role === 'trainee' ? '🎓' : user?.role === 'trainer' ? '👩‍🏫' : '🛡️'}
+             </div>
+             <div>
+               <p className="font-bold text-sm text-primary">{user?.name || 'Unknown'}</p>
+               <p className="text-[10px] text-secondary">{roleLabel} Portal</p>
+             </div>
+           </div>
+           <nav className="flex-1 py-3 space-y-1">
+             {items.map((item) => {
+                 const isActive = user?.role === 'admin'
+                   ? (activeTab === item.tab)
+                   : (currentScreen === item.screen && (!item.tab || activeTab === item.tab));
+               return (
+                 <button
+                   key={user?.role + '-' + item.label}
+                   onClick={() => {
+                     if (item.tab) {
+                       setActiveTab(item.tab);
+                     }
+                     onNavigate(item.screen);
+                   }}
+                   className={"sidebar-item flex items-center gap-3 px-4 py-3 text-xs rounded-xl mx-2 transition-all btn-micro " + (isActive ? 'sidebar-item-active font-semibold' : '')}
+                 >
+                   <span className={"text-lg sidebar-icon-span " + (isActive ? 'sidebar-icon' : '')}>{item.icon}</span>
+                   <span className={isActive ? 'font-bold' : ''}>{item.label}</span>
+                   {isActive && <span className="ml-auto w-1.5 h-6 rounded-full bg-current opacity-60"></span>}
+                 </button>
+               );
+             })}
+           </nav>
+           <div className="p-4 border-t border-white/10">
+             <button
+               onClick={() => { try { localStorage.removeItem('capacity_connect_token'); } catch {} window.location.reload(); }}
+               className="sidebar-item w-full flex items-center justify-center gap-2 px-4 py-3 text-xs font-bold rounded-xl btn-micro border border-white/10"
+             >
+               <span className="sidebar-icon-span">🚪</span> Sign Out
+             </button>
+           </div>
+         </div>
+       );
+     }
 
     // ==========================================
     // ROLE PORTAL LAYOUT WRAPPER
     // ==========================================
- function RolePortal({ user, currentScreen, onNavigate, activeTab, setActiveTab, children }) {
-       const themeClass = ROLE_THEMES[user?.role] || '';
+     function RolePortal({ user, currentScreen, onNavigate, activeTab, setActiveTab, children }) {
        const roleLabel = user?.role?.charAt(0).toUpperCase() + user?.role?.slice(1) || '';
 
        if (!user) return <div className="pt-16">{children}</div>;
 
        const bgClass = user?.role === 'trainer' ? 'meadow-bg-trainer' : user?.role === 'admin' ? 'meadow-bg-admin' : 'meadow-bg';
 
-return (
-         <div className={"theme-wrapper " + (themeClass) + " theme-meadow " + bgClass + " dark flex h-screen overflow-hidden relative"}>
-           <aside className="hidden md:flex">
-             <Sidebar
-               user={user}
-               currentScreen={currentScreen}
-               onNavigate={onNavigate}
-               activeTab={activeTab}
-               setActiveTab={setActiveTab}
-             />
-           </aside>
-           <main className="flex-1 overflow-y-auto relative">
-             {/* Mobile top bar */}
-             <div className="md:hidden flex items-center gap-3 px-4 py-3 border-b border-white/10 glass-card sticky top-0 z-40">
-               <div className="w-9 h-9 rounded-xl glass-card flex items-center justify-center text-lg border border-white/10">
-                 {user?.role === 'trainee' ? '🎓' : user?.role === 'trainer' ? '👩‍🏫' : '🛡️'}
-               </div>
-               <span className="font-bold text-sm text-white">Capacity Connect</span>
-               <span className="text-[10px] text-meadow-text-secondary ml-auto">{roleLabel} Portal</span>
-             </div>
-             <div className="pt-14 md:pt-0">
-               {children}
-             </div>
-           </main>
-         </div>
-       );
-     }
+ return (
+        <div className={"theme-wrapper theme-meadow " + bgClass + " dark flex h-screen overflow-hidden relative"}>
+          <aside className="hidden md:flex">
+            <Sidebar
+              user={user}
+              currentScreen={currentScreen}
+              onNavigate={onNavigate}
+              activeTab={activeTab}
+              setActiveTab={setActiveTab}
+            />
+          </aside>
+            <main className="flex-1 overflow-y-auto relative">
+            {/* Mobile top bar */}
+            <div className="md:hidden flex items-center gap-3 px-4 py-3 border-b border-white/10 meadow-glass sticky top-0 z-40">
+              <div className="w-9 h-9 rounded-xl meadow-glass flex items-center justify-center text-lg border border-white/10">
+                {user?.role === 'trainee' ? '🎓' : user?.role === 'trainer' ? '👩‍🏫' : '🛡️'}
+              </div>
+              <span className="font-bold text-sm text-primary">Capacity Connect</span>
+              <span className="text-[10px] text-secondary ml-auto">{roleLabel} Portal</span>
+            </div>
+            <div className="pt-14 md:pt-0">
+              {children}
+            </div>
+          </main>
+        </div>
+      );
+    }
 
     // ==========================================
     // PUBLIC HOMEPAGE (no auth required)
@@ -2358,8 +2373,8 @@ const fetchAIRecommendations = async () => {
 
       if (loading) return <div className="py-20 text-center text-sm text-slate-400">Loading Learner Dashboard...</div>;
 
-      if (dashError) return (
-        <div className="max-w-7xl mx-auto px-4 py-8 space-y-8 bg-orbital-bg min-h-screen orbital-grid">
+       if (dashError) return (
+         <div className="max-w-7xl mx-auto px-4 py-8 space-y-8 min-h-screen">
           <div className="p-6 bg-red-900/20 border border-red-800/50 rounded-2xl text-center">
             <p className="text-sm font-semibold text-red-300">Unable to load dashboard</p>
             <p className="text-xs text-red-400 mt-1">{dashError}</p>
@@ -2371,8 +2386,8 @@ const fetchAIRecommendations = async () => {
       const continueWatching = getContinueWatching();
       const currentCourse = dash?.enrolledCourses?.find(c => c.id === continueWatching?.courseId);
 
-      return (
-<div className="max-w-7xl mx-auto px-4 py-8 space-y-8 meadow-bg min-h-screen">
+       return (
+ <div className="max-w-7xl mx-auto px-4 py-8 space-y-8 min-h-screen">
             <div className="flex justify-between items-center pb-6 border-b border-meadow-green/20">
               <div>
                 <span className="px-2.5 py-0.5 rounded-full text-xs font-black font-mono bg-meadow-green/20 text-meadow-green border border-meadow-green/30">TRAINEE PORTAL • DASHBOARD</span>
@@ -2537,8 +2552,8 @@ const fetchAIRecommendations = async () => {
         return matchesSearch && matchesCategory;
       });
 
-return (
-        <div className="max-w-7xl mx-auto px-4 py-6 md:py-8 space-y-6 bg-orbital-bg min-h-screen orbital-grid">
+ return (
+         <div className="max-w-7xl mx-auto px-4 py-6 md:py-8 space-y-6 min-h-screen">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div>
               <h1 className="text-2xl sm:text-3xl font-extrabold text-white dark:text-white flex items-center gap-3">
@@ -2649,8 +2664,8 @@ return (
         return stars;
       };
 
-return (
-        <div className="max-w-4xl mx-auto px-4 py-6 md:py-8 space-y-6 bg-orbital-bg min-h-screen orbital-grid">
+ return (
+         <div className="max-w-4xl mx-auto px-4 py-6 md:py-8 space-y-6 min-h-screen">
           <button onClick={onBack} className="text-xs font-black bg-cyan-500/10 border border-cyan-400/30 px-3 py-1.5 rounded-lg text-cyan-300 hover:bg-cyan-500/20 btn-micro transition-all">← Back to Catalog</button>
           {!course && !courseError && (
             <div className="py-20 flex items-center justify-center text-center">
@@ -3020,8 +3035,8 @@ return (
 
       if (loading) return <div className="py-20 text-center text-sm text-slate-400">Generating digital certificate...</div>;
 
-return (
-        <div className="max-w-3xl mx-auto px-4 py-6 md:py-8 space-y-6 bg-orbital-bg min-h-screen orbital-grid">
+ return (
+         <div className="max-w-3xl mx-auto px-4 py-6 md:py-8 space-y-6 min-h-screen">
           <button onClick={onBack} className="text-xs font-black bg-cyan-500/10 border border-cyan-400/30 px-3 py-1.5 rounded-lg text-cyan-300 hover:bg-cyan-500/20 btn-micro transition-all">← Back to Dashboard</button>
           <div className="mission-badge rounded-3xl p-8 sm:p-12 text-center bg-slate-900/60 border-2 border-amber-500/30 backdrop-blur-md relative overflow-hidden" style={{boxShadow: '0 0 60px rgba(251,191,36,0.1), inset 0 0 60px rgba(251,191,36,0.05)'}}>
             {/* Holographic seal */}
@@ -3126,8 +3141,8 @@ return (
       const statusBadge = (s) => `<span className="px-2 py-0.5 rounded text-[10px] font-black ${s === 'pending' ? 'bg-amber-100 text-amber-800' : s === 'approved' ? 'bg-emerald-100 text-emerald-800' : 'bg-red-100 text-red-800'}">${s}</span>`;
       const userDetail = (u) => { const parts = []; if (u.department) parts.push(`Dept: ${u.department}`); if (u.qualification) parts.push(u.qualification); if (u.skills) parts.push(`Skills: ${u.skills}`); if (u.subjects) parts.push(`Subjects: ${u.subjects}`); return parts.length ? parts.join(' • ') : '—'; };
 
-return (
-        <div className={"theme-meadow meadow-bg-admin max-w-7xl mx-auto px-4 py-8 space-y-8 min-h-screen"}>
+ return (
+        <div className={"theme-meadow max-w-7xl mx-auto px-4 py-8 space-y-8 min-h-screen"}>
            <div className="flex justify-between items-center pb-6 border-b border-meadow-green/20">
              <div>
                <span className="px-2.5 py-0.5 rounded-full text-xs font-black font-mono bg-meadow-green/20 text-meadow-green border border-meadow-green/30">COMMAND CENTER • ADMIN</span>
@@ -3535,8 +3550,8 @@ return (
         return '📝';
       };
 
-return (
-        <div className={"theme-meadow meadow-bg-trainer max-w-7xl mx-auto px-4 py-8 space-y-8 min-h-screen"}>
+ return (
+        <div className={"theme-meadow max-w-7xl mx-auto px-4 py-8 space-y-8 min-h-screen"}>
            <div className="flex justify-between items-center pb-6 border-b border-meadow-green/20">
              <div>
                <span className="px-2.5 py-0.5 rounded-full text-xs font-black bg-meadow-green/20 text-meadow-green border border-meadow-green/30">Trainer Portal • Dashboard</span>
@@ -4438,60 +4453,60 @@ return (
         }
       };
 
-      return (
-        <div className="relative" ref={dropdownRef}>
-          <button
-            onClick={handleBellClick}
-            className="relative p-2 rounded-lg text-slate-400 hover:text-cyan-300 hover:bg-cyan-500/10 border border-transparent hover:border-cyan-400/30 btn-micro transition-all"
-          >
-            <span className="text-xl">🔔</span>
-            {unreadCount > 0 && (
-              <span className="absolute -top-1 -right-1 w-5 h-5 bg-cyan-500 rounded-full flex items-center justify-center text-[10px] font-black text-white dark:text-white">
-                {unreadCount > 9 ? '9+' : unreadCount}
-              </span>
-            )}
-          </button>
-          {open && (
-            <div className="absolute right-0 mt-2 w-80 max-h-96 overflow-y-auto bg-slate-900 border border-cyan-500/30 rounded-xl shadow-xl z-50">
-              <div className="p-3 border-b border-cyan-500/20 flex items-center justify-between">
-                <span className="text-xs font-black text-cyan-300">Notifications</span>
-                {notifications.length > 0 && (
-                  <button onClick={() => { notifications.forEach(n => markAsRead(n.id)); setOpen(false); }} className="text-[10px] text-slate-400 hover:text-cyan-300">
-                    Mark all read
-                  </button>
-                )}
-              </div>
-              {loading ? (
-                <div className="p-6 text-center text-xs text-slate-400">Loading...</div>
-              ) : notifications.length === 0 ? (
-                <div className="p-6 text-center text-xs text-slate-400">No notifications</div>
-              ) : (
-                notifications.map(n => (
-                  <div
-                    key={n.id}
-                    onClick={() => { if (!n.read) markAsRead(n.id); if (n.action) n.action(); }}
-                    className={"p-3 border-b border-cyan-500/10 cursor-pointer transition-all " + (n.read ? 'opacity-60' : 'bg-cyan-500/5')}
-                  >
-                    <div className="flex items-start gap-2">
-                      <span className={`text-xs mt-0.5 ${!n.read ? 'text-cyan-400' : 'text-slate-500'}`}>
-                        {!n.read ? '●' : '○'}
-                      </span>
-                      <div className="flex-1">
-                        <p className="text-xs font-black text-white dark:text-white">{n.title || n.message}</p>
-                        <p className="text-[10px] text-slate-400 mt-0.5">{n.message}</p>
-                        <p className="text-[9px] text-slate-500 mt-0.5">
-                          {new Date(n.created_at || n.timestamp).toLocaleString()}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                ))
-              )}
-            </div>
-          )}
-        </div>
-      );
-    }
+       return (
+         <div className="relative" ref={dropdownRef}>
+           <button
+             onClick={handleBellClick}
+             className="relative p-2 rounded-lg text-secondary hover:text-meadow-green hover:bg-meadow-green/10 border border-transparent hover:border-meadow-green/30 btn-micro transition-all"
+           >
+             <span className="text-xl">🔔</span>
+             {unreadCount > 0 && (
+               <span className="absolute -top-1 -right-1 w-5 h-5 bg-meadow-green rounded-full flex items-center justify-center text-[10px] font-black text-white dark:text-white">
+                 {unreadCount > 9 ? '9+' : unreadCount}
+               </span>
+             )}
+           </button>
+           {open && (
+             <div className="absolute right-0 mt-2 w-80 max-h-96 overflow-y-auto meadow-glass rounded-xl shadow-xl z-50">
+               <div className="p-3 border-b border-white/10 flex items-center justify-between">
+                 <span className="text-xs font-black text-meadow-green">Notifications</span>
+                 {notifications.length > 0 && (
+                   <button onClick={() => { notifications.forEach(n => markAsRead(n.id)); setOpen(false); }} className="text-[10px] text-secondary hover:text-meadow-green">
+                     Mark all read
+                   </button>
+                 )}
+               </div>
+               {loading ? (
+                 <div className="p-6 text-center text-xs text-secondary">Loading...</div>
+               ) : notifications.length === 0 ? (
+                 <div className="p-6 text-center text-xs text-secondary">No notifications</div>
+               ) : (
+                 notifications.map(n => (
+                   <div
+                     key={n.id}
+                     onClick={() => { if (!n.read) markAsRead(n.id); if (n.action) n.action(); }}
+                     className={"p-3 border-b border-white/10 cursor-pointer transition-all " + (n.read ? 'opacity-60' : 'bg-meadow-green/5')}
+                   >
+                     <div className="flex items-start gap-2">
+                       <span className={`text-xs mt-0.5 ${!n.read ? 'text-meadow-green' : 'text-secondary'}`}>
+                         {!n.read ? '●' : '○'}
+                       </span>
+                       <div className="flex-1">
+                         <p className="text-xs font-black text-primary">{n.title || n.message}</p>
+                         <p className="text-[10px] text-secondary mt-0.5">{n.message}</p>
+                         <p className="text-[9px] text-secondary mt-0.5">
+                           {new Date(n.created_at || n.timestamp).toLocaleString()}
+                         </p>
+                       </div>
+                     </div>
+                   </div>
+                 ))
+               )}
+             </div>
+           )}
+         </div>
+       );
+     }
 
     // ==========================================
     // ROOT APP with STRICT ROLE ISOLATION
@@ -4601,45 +4616,43 @@ return (
         if (user.role === 'trainer') setActiveAdminTab('roster');
       }, [user]);
 
-      const themeClass = user ? ROLE_THEMES[user.role] : '';
-
-      return (
-        <div className={"theme-wrapper " + themeClass + (meadowTheme === 'dark' ? ' dark' : '') + " theme-meadow meadow-bg"}>
-          {!user && (
-            <header className="glass-card border-b border-purple-500/20 sticky top-0 z-50">
-              <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
-                 <div className="flex items-center gap-2">
-                    <span className="w-8 h-8 rounded-xl bg-gradient-to-r from-purple-500 to-fuchsia-600 text-white dark:text-white flex items-center justify-center font-black text-xs">CC</span>
-                    <div><span className="font-black text-sm text-white dark:text-white">Capacity Connect</span><span className="text-[10px] text-slate-400 dark:text-slate-400 block">Not signed in</span></div>
-                 </div>
-                 <div className="flex items-center gap-2">
-                   <button onClick={toggleMeadowTheme} className="theme-toggle-btn" title={`Switch to ${meadowTheme === 'dark' ? 'light' : 'dark'} mode`}>
-                     {meadowTheme === 'dark' ? '☀️' : '🌙'}
-                   </button>
-                 </div>
-               </div>
-             </header>
-           )}
-
-           {user && (
-             <header className="glass-card border-b border-purple-500/20 sticky top-0 z-50">
+       return (
+         <div className={"theme-wrapper " + (meadowTheme === 'dark' ? ' dark' : '') + " theme-meadow meadow-bg"}>
+           {!user && (
+             <header className="meadow-glass border-b border-white/10 sticky top-0 z-50">
                <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
-                 <div className="flex items-center gap-2">
-                    <span className="w-8 h-8 rounded-xl bg-gradient-to-r from-purple-500 to-fuchsia-600 text-white dark:text-white flex items-center justify-center font-black text-xs">CC</span>
-                    <div>
-                      <span className="font-black text-sm text-white dark:text-white">Capacity Connect</span>
-                     <span className="text-[10px] text-slate-400 dark:text-slate-400 block">{user.name} ({user.role})</span>
-                   </div>
-                 </div>
-                 <div className="flex items-center gap-2">
-                   <NotificationBell user={user} />
-                   <button onClick={toggleMeadowTheme} className="theme-toggle-btn" title={`Switch to ${meadowTheme === 'dark' ? 'light' : 'dark'} mode`}>
-                     {meadowTheme === 'dark' ? '☀️' : '🌙'}
-                   </button>
-                 </div>
-               </div>
-             </header>
-           )}
+                  <div className="flex items-center gap-2">
+                     <span className="w-8 h-8 rounded-xl bg-gradient-to-r from-meadow-green to-meadow-green/80 text-white dark:text-white flex items-center justify-center font-black text-xs">CC</span>
+                     <div><span className="font-black text-sm text-primary">Capacity Connect</span><span className="text-[10px] text-secondary block">Not signed in</span></div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <button onClick={toggleMeadowTheme} className="theme-toggle-btn" title={`Switch to ${meadowTheme === 'dark' ? 'light' : 'dark'} mode`}>
+                      {meadowTheme === 'dark' ? '☀️' : '🌙'}
+                    </button>
+                  </div>
+                </div>
+              </header>
+            )}
+
+            {user && (
+              <header className="meadow-glass border-b border-white/10 sticky top-0 z-50">
+                <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                     <span className="w-8 h-8 rounded-xl bg-gradient-to-r from-meadow-green to-meadow-green/80 text-white dark:text-white flex items-center justify-center font-black text-xs">CC</span>
+                     <div>
+                       <span className="font-black text-sm text-primary">Capacity Connect</span>
+                      <span className="text-[10px] text-secondary block">{user.name} ({user.role})</span>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <NotificationBell user={user} />
+                    <button onClick={toggleMeadowTheme} className="theme-toggle-btn" title={`Switch to ${meadowTheme === 'dark' ? 'light' : 'dark'} mode`}>
+                      {meadowTheme === 'dark' ? '☀️' : '🌙'}
+                    </button>
+                  </div>
+                </div>
+              </header>
+            )}
 
           <main className="pb-16 min-h-[calc(100vh-88px)]">
             <ToastContainer />
@@ -4648,137 +4661,82 @@ return (
              {screen === '1' && <Screen1Auth onAuthSuccess={(d) => { console.log('[App] onAuthSuccess', d); if (d.user) setUser(d.user); const targetScreen = resolveScreenForUser(d.user); if (targetScreen === '1') { console.log('[App] onAuthSuccess keeping screen=1 for status=', d.user?.status); } else { console.log('[App] onAuthSuccess routing to default for role=', d.user?.role); } setScreen(targetScreen); }} onNavigate={navigate} initialSignup={signupMode} user={user} />}
 
             {/* Strict role isolation: each screen is only rendered if the user's role matches */}
-            {user && screen === '2' && roleAllowed(['trainee']) && (
-              <div className="flex">
-                <aside className="hidden md:block w-64 border-r border-electric-blue/10">
-                  <Sidebar user={user} currentScreen={screen} onNavigate={navigate} activeTab={activeAdminTab} setActiveTab={setActiveAdminTab} />
-                </aside>
-                <div className="flex-1 overflow-y-auto">
-                  <Screen2Dashboard userId={user.id} onOpenCourse={(id) => { setCourseId(id); navigate('5'); }} onOpenCert={(id) => { setCourseId(id); navigate('6'); }} onOpenCatalog={() => navigate('3')} />
-                </div>
-              </div>
-            )}
+             {user && screen === '2' && roleAllowed(['trainee']) && (
+               <RolePortal user={user} currentScreen={screen} onNavigate={navigate} activeTab={activeAdminTab} setActiveTab={setActiveAdminTab}>
+                 <Screen2Dashboard userId={user.id} onOpenCourse={(id) => { setCourseId(id); navigate('5'); }} onOpenCert={(id) => { setCourseId(id); navigate('6'); }} onOpenCatalog={() => navigate('3')} />
+               </RolePortal>
+             )}
 
-            {user && screen === '3' && roleAllowed(['trainee', 'trainer']) && (
-              <div className="flex">
-                <aside className="hidden md:block w-64 border-r border-electric-blue/10">
-                  <Sidebar user={user} currentScreen={screen} onNavigate={navigate} activeTab={activeAdminTab} setActiveTab={setActiveAdminTab} />
-                </aside>
-                <div className="flex-1 overflow-y-auto">
-                  <Page3Catalog user={user} onSelectCourse={(id) => { setCourseId(id); navigate('4'); }} onLaunchPlayer={(id) => { setCourseId(id); navigate('5'); }} />
-                </div>
-              </div>
-            )}
+             {user && screen === '3' && roleAllowed(['trainee', 'trainer']) && (
+               <RolePortal user={user} currentScreen={screen} onNavigate={navigate} activeTab={activeAdminTab} setActiveTab={setActiveAdminTab}>
+                 <Page3Catalog user={user} onSelectCourse={(id) => { setCourseId(id); navigate('4'); }} onLaunchPlayer={(id) => { setCourseId(id); navigate('5'); }} />
+               </RolePortal>
+             )}
 
-            {user && screen === '4' && roleAllowed(['trainee', 'trainer']) && (
-              <div className="flex">
-                <aside className="hidden md:block w-64 border-r border-electric-blue/10">
-                  <Sidebar user={user} currentScreen={screen} onNavigate={navigate} activeTab={activeAdminTab} setActiveTab={setActiveAdminTab} />
-                </aside>
-                <div className="flex-1 overflow-y-auto">
-                  <Page4Detail user={user} courseId={courseId} onBack={() => navigate('3')} onLaunchPlayer={(id) => { setCourseId(id); navigate('5'); }} />
-                </div>
-              </div>
-            )}
+             {user && screen === '4' && roleAllowed(['trainee', 'trainer']) && (
+               <RolePortal user={user} currentScreen={screen} onNavigate={navigate} activeTab={activeAdminTab} setActiveTab={setActiveAdminTab}>
+                 <Page4Detail user={user} courseId={courseId} onBack={() => navigate('3')} onLaunchPlayer={(id) => { setCourseId(id); navigate('5'); }} />
+               </RolePortal>
+             )}
 
-            {user && screen === '5' && roleAllowed(['trainee', 'trainer']) && (
-              <div className="flex">
-                <aside className="hidden md:block w-64 border-r border-electric-blue/10">
-                  <Sidebar user={user} currentScreen={screen} onNavigate={navigate} activeTab={activeAdminTab} setActiveTab={setActiveAdminTab} />
-                </aside>
-                <div className="flex-1 overflow-y-auto">
-                  <Page5Player user={user} courseId={courseId} onBack={() => navigate('2')} />
-                </div>
-              </div>
-            )}
+             {user && screen === '5' && roleAllowed(['trainee', 'trainer']) && (
+               <RolePortal user={user} currentScreen={screen} onNavigate={navigate} activeTab={activeAdminTab} setActiveTab={setActiveAdminTab}>
+                 <Page5Player user={user} courseId={courseId} onBack={() => navigate('2')} />
+               </RolePortal>
+             )}
 
-            {user && screen === '6' && roleAllowed(['trainee', 'trainer']) && (
-              <div className="flex">
-                <aside className="hidden md:block w-64 border-r border-electric-blue/10">
-                  <Sidebar user={user} currentScreen={screen} onNavigate={navigate} activeTab={activeAdminTab} setActiveTab={setActiveAdminTab} />
-                </aside>
-                <div className="flex-1 overflow-y-auto">
-                  <Screen6Certificate user={user} userId={user.id} courseId={courseId} onBack={() => navigate('2')} />
-                </div>
-              </div>
-            )}
+             {user && screen === '6' && roleAllowed(['trainee', 'trainer']) && (
+               <RolePortal user={user} currentScreen={screen} onNavigate={navigate} activeTab={activeAdminTab} setActiveTab={setActiveAdminTab}>
+                 <Screen6Certificate user={user} userId={user.id} courseId={courseId} onBack={() => navigate('2')} />
+               </RolePortal>
+             )}
 
-            {user && screen === '7' && roleAllowed(['admin']) && (
-              <div className="flex">
-                <aside className="hidden md:block w-64 border-r border-electric-blue/10">
-                  <Sidebar user={user} currentScreen={screen} onNavigate={navigate} activeTab={activeAdminTab} setActiveTab={setActiveAdminTab} />
-                </aside>
-                <div className="flex-1 overflow-y-auto">
-                  <Screen7Admin user={user} onBack={() => navigate('2')} activeTab={activeAdminTab} setActiveTab={setActiveAdminTab} />
-                </div>
-              </div>
-            )}
+             {user && screen === '7' && roleAllowed(['admin']) && (
+               <RolePortal user={user} currentScreen={screen} onNavigate={navigate} activeTab={activeAdminTab} setActiveTab={setActiveAdminTab}>
+                 <Screen7Admin user={user} onBack={() => navigate('2')} activeTab={activeAdminTab} setActiveTab={setActiveAdminTab} />
+               </RolePortal>
+             )}
 
-            {user && screen === '8' && roleAllowed(['trainee', 'trainer']) && (
-              <div className="flex">
-                <aside className="hidden md:block w-64 border-r border-electric-blue/10">
-                  <Sidebar user={user} currentScreen={screen} onNavigate={navigate} activeTab={activeAdminTab} setActiveTab={setActiveAdminTab} />
-                </aside>
-                <div className="flex-1 overflow-y-auto">
-                  <Screen8SkillGap user={user} userId={user.id} onBack={() => navigate('2')} />
-                </div>
-              </div>
-            )}
+             {user && screen === '8' && roleAllowed(['trainee', 'trainer']) && (
+               <RolePortal user={user} currentScreen={screen} onNavigate={navigate} activeTab={activeAdminTab} setActiveTab={setActiveAdminTab}>
+                 <Screen8SkillGap user={user} userId={user.id} onBack={() => navigate('2')} />
+               </RolePortal>
+             )}
 
-            {user && screen === '9' && roleAllowed(['trainer']) && (
-              <div className="flex">
-                <aside className="hidden md:block w-64 border-r border-electric-blue/10">
-                  <Sidebar user={user} currentScreen={screen} onNavigate={navigate} activeTab={activeAdminTab} setActiveTab={setActiveAdminTab} />
-                </aside>
-                <div className="flex-1 overflow-y-auto">
-                  <Screen9Trainer userId={user.id} user={user} onNavigate={navigate} activeTab={activeAdminTab} setActiveTab={setActiveAdminTab} />
-                </div>
-              </div>
-            )}
+             {user && screen === '9' && roleAllowed(['trainer']) && (
+               <RolePortal user={user} currentScreen={screen} onNavigate={navigate} activeTab={activeAdminTab} setActiveTab={setActiveAdminTab}>
+                 <Screen9Trainer userId={user.id} user={user} onNavigate={navigate} activeTab={activeAdminTab} setActiveTab={setActiveAdminTab} />
+               </RolePortal>
+             )}
 
-            {user && screen === '10' && roleAllowed(['trainee', 'trainer']) && (
-              <div className="flex">
-                <aside className="hidden md:block w-64 border-r border-electric-blue/10">
-                  <Sidebar user={user} currentScreen={screen} onNavigate={navigate} activeTab={activeAdminTab} setActiveTab={setActiveAdminTab} />
-                </aside>
-                <div className="flex-1 overflow-y-auto">
-                  <Screen10CourseMaterials
-                    user={user}
-                    userId={user.id}
-                    courseId={courseId}
-                    onBack={() => navigate(user?.role === 'trainer' ? '9' : '2')}
-                    onOpenQuiz={() => {
-                      if (user?.role === 'trainee') {
-                        setCourseId(courseId);
-                        navigate('5');
-                      }
-                    }}
-                  />
-                </div>
-              </div>
-            )}
+             {user && screen === '10' && roleAllowed(['trainee', 'trainer']) && (
+               <RolePortal user={user} currentScreen={screen} onNavigate={navigate} activeTab={activeAdminTab} setActiveTab={setActiveAdminTab}>
+                 <Screen10CourseMaterials
+                   user={user}
+                   userId={user.id}
+                   courseId={courseId}
+                   onBack={() => navigate(user?.role === 'trainer' ? '9' : '2')}
+                   onOpenQuiz={() => {
+                     if (user?.role === 'trainee') {
+                       setCourseId(courseId);
+                       navigate('5');
+                     }
+                   }}
+                 />
+               </RolePortal>
+             )}
 
-            {user && screen === '11' && roleAllowed(['trainee', 'trainer']) && (
-              <div className="flex">
-                <aside className="hidden md:block w-64 border-r border-electric-blue/10">
-                  <Sidebar user={user} currentScreen={screen} onNavigate={navigate} activeTab={activeAdminTab} setActiveTab={setActiveAdminTab} />
-                </aside>
-                <div className="flex-1 overflow-y-auto">
-                  <EditProfile user={user} onBack={() => navigate(user?.role === 'trainer' ? '9' : '2')} />
-                </div>
-              </div>
-            )}
+             {user && screen === '11' && roleAllowed(['trainee', 'trainer']) && (
+               <RolePortal user={user} currentScreen={screen} onNavigate={navigate} activeTab={activeAdminTab} setActiveTab={setActiveAdminTab}>
+                 <EditProfile user={user} onBack={() => navigate(user?.role === 'trainer' ? '9' : '2')} />
+               </RolePortal>
+             )}
 
-            {user && screen === '12' && roleAllowed(['trainee']) && (
-              <div className="flex">
-                <aside className="hidden md:block w-64 border-r border-electric-blue/10">
-                  <Sidebar user={user} currentScreen={screen} onNavigate={navigate} activeTab={activeAdminTab} setActiveTab={setActiveAdminTab} />
-                </aside>
-                <div className="flex-1 overflow-y-auto">
-                  <Screen12Quiz user={user} onBack={() => navigate('2')} />
-                </div>
-              </div>
-            )}
+             {user && screen === '12' && roleAllowed(['trainee']) && (
+               <RolePortal user={user} currentScreen={screen} onNavigate={navigate} activeTab={activeAdminTab} setActiveTab={setActiveAdminTab}>
+                 <Screen12Quiz user={user} onBack={() => navigate('2')} />
+               </RolePortal>
+             )}
 
             {!user && screen !== '0' && screen !== '1' && (
               <div className="max-w-xl mx-auto px-4 py-20 text-center">
