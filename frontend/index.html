@@ -1871,15 +1871,15 @@ lineRef.current.chart = new Chart(lineRef.current, {
     // ==========================================
     // ROLE PORTAL LAYOUT WRAPPER
     // ==========================================
-     function RolePortal({ user, currentScreen, onNavigate, activeTab, setActiveTab, children }) {
-       const roleLabel = user?.role?.charAt(0).toUpperCase() + user?.role?.slice(1) || '';
+      function RolePortal({ user, currentScreen, onNavigate, activeTab, setActiveTab, children, meadowTheme }) {
+        const roleLabel = user?.role?.charAt(0).toUpperCase() + user?.role?.slice(1) || '';
 
-       if (!user) return <div className="pt-16">{children}</div>;
+        if (!user) return <div className="pt-16">{children}</div>;
 
-       const bgClass = user?.role === 'trainer' ? 'meadow-bg-trainer' : user?.role === 'admin' ? 'meadow-bg-admin' : 'meadow-bg';
+        const bgClass = user?.role === 'trainer' ? 'meadow-bg-trainer' : user?.role === 'admin' ? 'meadow-bg-admin' : 'meadow-bg';
 
  return (
-        <div className={"theme-wrapper theme-meadow " + bgClass + " dark flex h-screen overflow-hidden relative"}>
+        <div className={"theme-wrapper theme-meadow " + bgClass + (meadowTheme === 'dark' ? ' dark' : '') + " flex h-screen overflow-hidden relative"}>
           <aside className="hidden md:flex">
             <Sidebar
               user={user}
@@ -4662,55 +4662,55 @@ const fetchAIRecommendations = async () => {
 
             {/* Strict role isolation: each screen is only rendered if the user's role matches */}
              {user && screen === '2' && roleAllowed(['trainee']) && (
-               <RolePortal user={user} currentScreen={screen} onNavigate={navigate} activeTab={activeAdminTab} setActiveTab={setActiveAdminTab}>
+               <RolePortal user={user} currentScreen={screen} onNavigate={navigate} activeTab={activeAdminTab} setActiveTab={setActiveAdminTab} meadowTheme={meadowTheme}>
                  <Screen2Dashboard userId={user.id} onOpenCourse={(id) => { setCourseId(id); navigate('5'); }} onOpenCert={(id) => { setCourseId(id); navigate('6'); }} onOpenCatalog={() => navigate('3')} />
                </RolePortal>
              )}
 
              {user && screen === '3' && roleAllowed(['trainee', 'trainer']) && (
-               <RolePortal user={user} currentScreen={screen} onNavigate={navigate} activeTab={activeAdminTab} setActiveTab={setActiveAdminTab}>
+               <RolePortal user={user} currentScreen={screen} onNavigate={navigate} activeTab={activeAdminTab} setActiveTab={setActiveAdminTab} meadowTheme={meadowTheme}>
                  <Page3Catalog user={user} onSelectCourse={(id) => { setCourseId(id); navigate('4'); }} onLaunchPlayer={(id) => { setCourseId(id); navigate('5'); }} />
                </RolePortal>
              )}
 
              {user && screen === '4' && roleAllowed(['trainee', 'trainer']) && (
-               <RolePortal user={user} currentScreen={screen} onNavigate={navigate} activeTab={activeAdminTab} setActiveTab={setActiveAdminTab}>
+               <RolePortal user={user} currentScreen={screen} onNavigate={navigate} activeTab={activeAdminTab} setActiveTab={setActiveAdminTab} meadowTheme={meadowTheme}>
                  <Page4Detail user={user} courseId={courseId} onBack={() => navigate('3')} onLaunchPlayer={(id) => { setCourseId(id); navigate('5'); }} />
                </RolePortal>
              )}
 
              {user && screen === '5' && roleAllowed(['trainee', 'trainer']) && (
-               <RolePortal user={user} currentScreen={screen} onNavigate={navigate} activeTab={activeAdminTab} setActiveTab={setActiveAdminTab}>
+               <RolePortal user={user} currentScreen={screen} onNavigate={navigate} activeTab={activeAdminTab} setActiveTab={setActiveAdminTab} meadowTheme={meadowTheme}>
                  <Page5Player user={user} courseId={courseId} onBack={() => navigate('2')} />
                </RolePortal>
              )}
 
              {user && screen === '6' && roleAllowed(['trainee', 'trainer']) && (
-               <RolePortal user={user} currentScreen={screen} onNavigate={navigate} activeTab={activeAdminTab} setActiveTab={setActiveAdminTab}>
+               <RolePortal user={user} currentScreen={screen} onNavigate={navigate} activeTab={activeAdminTab} setActiveTab={setActiveAdminTab} meadowTheme={meadowTheme}>
                  <Screen6Certificate user={user} userId={user.id} courseId={courseId} onBack={() => navigate('2')} />
                </RolePortal>
              )}
 
              {user && screen === '7' && roleAllowed(['admin']) && (
-               <RolePortal user={user} currentScreen={screen} onNavigate={navigate} activeTab={activeAdminTab} setActiveTab={setActiveAdminTab}>
+               <RolePortal user={user} currentScreen={screen} onNavigate={navigate} activeTab={activeAdminTab} setActiveTab={setActiveAdminTab} meadowTheme={meadowTheme}>
                  <Screen7Admin user={user} onBack={() => navigate('2')} activeTab={activeAdminTab} setActiveTab={setActiveAdminTab} />
                </RolePortal>
              )}
 
              {user && screen === '8' && roleAllowed(['trainee', 'trainer']) && (
-               <RolePortal user={user} currentScreen={screen} onNavigate={navigate} activeTab={activeAdminTab} setActiveTab={setActiveAdminTab}>
+               <RolePortal user={user} currentScreen={screen} onNavigate={navigate} activeTab={activeAdminTab} setActiveTab={setActiveAdminTab} meadowTheme={meadowTheme}>
                  <Screen8SkillGap user={user} userId={user.id} onBack={() => navigate('2')} />
                </RolePortal>
              )}
 
              {user && screen === '9' && roleAllowed(['trainer']) && (
-               <RolePortal user={user} currentScreen={screen} onNavigate={navigate} activeTab={activeAdminTab} setActiveTab={setActiveAdminTab}>
+               <RolePortal user={user} currentScreen={screen} onNavigate={navigate} activeTab={activeAdminTab} setActiveTab={setActiveAdminTab} meadowTheme={meadowTheme}>
                  <Screen9Trainer userId={user.id} user={user} onNavigate={navigate} activeTab={activeAdminTab} setActiveTab={setActiveAdminTab} />
                </RolePortal>
              )}
 
              {user && screen === '10' && roleAllowed(['trainee', 'trainer']) && (
-               <RolePortal user={user} currentScreen={screen} onNavigate={navigate} activeTab={activeAdminTab} setActiveTab={setActiveAdminTab}>
+               <RolePortal user={user} currentScreen={screen} onNavigate={navigate} activeTab={activeAdminTab} setActiveTab={setActiveAdminTab} meadowTheme={meadowTheme}>
                  <Screen10CourseMaterials
                    user={user}
                    userId={user.id}
@@ -4727,13 +4727,13 @@ const fetchAIRecommendations = async () => {
              )}
 
              {user && screen === '11' && roleAllowed(['trainee', 'trainer']) && (
-               <RolePortal user={user} currentScreen={screen} onNavigate={navigate} activeTab={activeAdminTab} setActiveTab={setActiveAdminTab}>
+               <RolePortal user={user} currentScreen={screen} onNavigate={navigate} activeTab={activeAdminTab} setActiveTab={setActiveAdminTab} meadowTheme={meadowTheme}>
                  <EditProfile user={user} onBack={() => navigate(user?.role === 'trainer' ? '9' : '2')} />
                </RolePortal>
              )}
 
              {user && screen === '12' && roleAllowed(['trainee']) && (
-               <RolePortal user={user} currentScreen={screen} onNavigate={navigate} activeTab={activeAdminTab} setActiveTab={setActiveAdminTab}>
+               <RolePortal user={user} currentScreen={screen} onNavigate={navigate} activeTab={activeAdminTab} setActiveTab={setActiveAdminTab} meadowTheme={meadowTheme}>
                  <Screen12Quiz user={user} onBack={() => navigate('2')} />
                </RolePortal>
              )}
