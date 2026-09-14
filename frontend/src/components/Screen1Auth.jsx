@@ -1,8 +1,12 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
 
 const API_BASE_URL = (import.meta.env?.VITE_API_URL || 'http://localhost:5000').replace(/\/$/, '') + '/api';
 
 export default function Screen1Auth({ onLogin }) {
+  const navigate = useNavigate();
+  const { setUser: setAuthUser } = useAuth();
   const [mode, setMode] = useState('login');
   const [formData, setFormData] = useState({
     email: '',
@@ -19,6 +23,16 @@ export default function Screen1Auth({ onLogin }) {
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const completeDemoLogin = (email, role, name) => {
+    const demoUser = { id: `demo-${Date.now()}`, email, role, name };
+    const demoToken = `mock-jwt-token-${demoUser.id}-${role}-${Date.now()}`;
+    localStorage.setItem('capacity_connect_token', demoToken);
+    localStorage.setItem('capacity_connect_user', JSON.stringify(demoUser));
+    setAuthUser(demoUser);
+    onLogin && onLogin(demoUser);
+    navigate(role === 'admin' ? '/admin' : '/dashboard');
   };
 
   const handleSubmit = async (e) => {
@@ -61,14 +75,11 @@ export default function Screen1Auth({ onLogin }) {
       const data = await response.json();
       const userSession = data.user || data.session || { email: formData.email, role: formData.role || 'trainee', name: formData.fullName };
       onLogin && onLogin(userSession);
+      navigate(userSession.role === 'admin' ? '/admin' : '/dashboard');
     } catch (err) {
       const isNetwork = err.message.includes('Failed to fetch') || err.message.includes('NetworkError') || err.message.includes('fetch');
       if (isNetwork && mode === 'login') {
-        setAuthData({
-          status: 'demo',
-          message: 'Backend unreachable — using demo mode',
-          user: { email: formData.email, role: formData.role || 'trainee', name: formData.fullName || 'Demo User' }
-        });
+        completeDemoLogin(formData.email, formData.role || 'trainee', formData.fullName || 'Demo User');
       } else {
         setLoginError(err.message || 'Error connecting to auth service');
       }
@@ -81,6 +92,7 @@ export default function Screen1Auth({ onLogin }) {
     setFormData({ email, password, fullName: role === 'trainee' ? 'Jane Doe' : role === 'trainer' ? 'Elena Rostova' : 'Admin User', role });
     setMode('login');
     setAuthData(null);
+    completeDemoLogin(email, role, formData.fullName || role === 'trainee' ? 'Jane Doe' : role === 'trainer' ? 'Elena Rostova' : 'Admin User');
   };
 
   return (

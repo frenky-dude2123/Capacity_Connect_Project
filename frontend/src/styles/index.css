@@ -1162,7 +1162,8 @@ h4 { font-size: 1.1rem; }
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: calc(var(--nav-height) + 2rem) 1.5rem 2rem;
+  min-height: calc(100vh - 4rem);
+  padding: 1.5rem;
   position: relative;
   z-index: 2;
 }
@@ -1170,14 +1171,18 @@ h4 { font-size: 1.1rem; }
 /* ---------- Auth Form ---------- */
 .auth-card {
   width: 100%;
-  max-width: 440px;
-  padding: 2.5rem;
-  background: rgba(255, 255, 255, 0.88);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  border: 1px solid rgba(255, 255, 255, 0.4);
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
-  border-radius: 12px;
+  max-width: 28rem;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: auto;
+  margin-bottom: 2rem;
+  padding: 2rem;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+  border-radius: 20px;
 }
 .auth-card .auth-logo {
   width: 56px;
