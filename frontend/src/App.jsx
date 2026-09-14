@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from './contexts/AuthContext';
+import { AuthProvider } from './contexts/AuthContext';
 import Layout from './components/Layout';
 import Screen1Auth from './components/Screen1Auth';
 import Screen2Dashboard from './components/Screen2Dashboard';
@@ -14,7 +15,7 @@ import Screen9Trainer from './components/Screen9Trainer';
 import Screen10CourseMaterials from './components/Screen10CourseMaterials';
 import EditProfile from './components/EditProfile';
 import Screen12Quiz from './components/Screen12Quiz';
-
+import ProtectedRoute from './components/ProtectedRoute';
 import PublicHomepage from './components/PublicHomepage';
 
 export default function App() {
@@ -40,14 +41,16 @@ export default function App() {
 
   if (!user) {
     return (
-      <Routes>
-        <Route path="/" element={<PublicHomepage onNavigateToAuth={() => navigate('/login')} />} />
-        <Route path="/login" element={<Screen1Auth onLogin={(u) => {
-          if (u?.role === 'admin') navigate('/admin');
-          else navigate('/dashboard');
-        }} />} />
-        <Route path="*" element={<Navigate to="/login" replace />} />
-      </Routes>
+      <AuthProvider>
+        <Routes>
+          <Route path="/" element={<PublicHomepage onNavigateToAuth={() => navigate('/login')} />} />
+          <Route path="/login" element={<Screen1Auth onLogin={(u) => {
+            if (u?.role === 'admin') navigate('/admin');
+            else navigate('/dashboard');
+          }} />} />
+          <Route path="*" element={<Navigate to="/login" replace />} />
+        </Routes>
+      </AuthProvider>
     );
   }
 
@@ -56,84 +59,96 @@ export default function App() {
       <Route path="/" element={<Layout user={user} onLogout={logout} />}>
         <Route index element={<Navigate to="/dashboard" replace />} />
         <Route path="dashboard" element={
-          user?.role === 'admin' ? <Navigate to="/admin" replace /> :
-          user?.role === 'trainer' ? <Screen9Trainer userId={user?.id} onNavigate={(screen) => navigate(screen)} /> :
-          <Screen2Dashboard
-            userId={user?.id}
-            onOpenCourse={(id) => { setSelectedCourseId(id); navigate('/player'); }}
-            onOpenCertificate={(uId, cId) => { setSelectedCourseId(cId); navigate('/certificates'); }}
-            onOpenCatalog={() => navigate('/catalog')}
-          />
-        } />
-        <Route path="admin" element={
-          user?.role === 'admin' ? <Screen7Admin onBackToDashboard={() => navigate('/dashboard')} /> : <Navigate to="/dashboard" replace />
-        } />
-        <Route path="trainer" element={
-          user?.role === 'trainer' ? <Screen9Trainer userId={user?.id} onNavigate={(screen) => navigate(screen)} /> : <Navigate to="/dashboard" replace />
+          <ProtectedRoute allowedRoles={['trainee', 'trainer', 'admin']}>
+            <Screen2Dashboard
+              userId={user?.id}
+              onOpenCourse={(id) => { setSelectedCourseId(id); navigate('/player'); }}
+              onOpenCertificate={(uId, cId) => { setSelectedCourseId(cId); navigate('/certificates'); }}
+              onOpenCatalog={() => navigate('/catalog')}
+            />
+          </ProtectedRoute>
         } />
         <Route path="catalog" element={
-          <Page3Catalog
-            onSelectCourse={(id) => { setSelectedCourseId(id); navigate('/detail'); }}
-            onLaunchPlayer={(id) => { setSelectedCourseId(id); navigate('/player'); }}
-          />
+          <ProtectedRoute>
+            <Page3Catalog
+              onSelectCourse={(id) => { setSelectedCourseId(id); navigate('/detail'); }}
+              onLaunchPlayer={(id) => { setSelectedCourseId(id); navigate('/player'); }}
+            />
+          </ProtectedRoute>
         } />
         <Route path="detail" element={
-          <Page4Detail
-            courseId={selectedCourseId}
-            onBackToCatalog={() => navigate('/catalog')}
-            onLaunchPlayer={(id) => { setSelectedCourseId(id); navigate('/player'); }}
-          />
+          <ProtectedRoute>
+            <Page4Detail
+              courseId={selectedCourseId}
+              onBackToCatalog={() => navigate('/catalog')}
+              onLaunchPlayer={(id) => { setSelectedCourseId(id); navigate('/player'); }}
+            />
+          </ProtectedRoute>
         } />
         <Route path="player" element={
-          <Page5Player
-            courseId={selectedCourseId}
-            onBackToCatalog={() => navigate('/catalog')}
-            onBackToDetail={() => navigate('/detail')}
-          />
+          <ProtectedRoute>
+            <Page5Player
+              courseId={selectedCourseId}
+              onBackToCatalog={() => navigate('/catalog')}
+              onBackToDetail={() => navigate('/detail')}
+            />
+          </ProtectedRoute>
         } />
         <Route path="certificates" element={
-          <Screen6Certificate
-            userId={user?.id}
-            courseId={selectedCourseId}
-            onBackToDashboard={() => navigate('/dashboard')}
-          />
+          <ProtectedRoute>
+            <Screen6Certificate
+              userId={user?.id}
+              courseId={selectedCourseId}
+              onBackToDashboard={() => navigate('/dashboard')}
+            />
+          </ProtectedRoute>
         } />
         <Route path="admin" element={
-          <Screen7Admin
-            onBackToDashboard={() => navigate('/dashboard')}
-          />
+          <ProtectedRoute allowedRoles={['admin']}>
+            <Screen7Admin onBackToDashboard={() => navigate('/dashboard')} />
+          </ProtectedRoute>
         } />
         <Route path="skill-gap" element={
-          <Screen8SkillGap
-            userId={user?.id}
-            onBackToDashboard={() => navigate('/dashboard')}
-            onEnrollCourse={(courseId) => setSelectedCourseId(courseId)}
-          />
+          <ProtectedRoute allowedRoles={['trainee', 'trainer']}>
+            <Screen8SkillGap
+              userId={user?.id}
+              onBackToDashboard={() => navigate('/dashboard')}
+              onEnrollCourse={(courseId) => setSelectedCourseId(courseId)}
+            />
+          </ProtectedRoute>
         } />
         <Route path="trainer" element={
-          <Screen9Trainer
-            userId={user?.id}
-            onNavigate={(screen) => navigate(screen)}
-          />
+          <ProtectedRoute allowedRoles={['trainer']}>
+            <Screen9Trainer
+              userId={user?.id}
+              onNavigate={(screen) => navigate(screen)}
+            />
+          </ProtectedRoute>
         } />
         <Route path="materials" element={
-          <Screen10CourseMaterials
-            userId={user?.id}
-            courseId={selectedCourseId}
-            onBackToDashboard={() => navigate('/dashboard')}
-          />
+          <ProtectedRoute allowedRoles={['trainer']}>
+            <Screen10CourseMaterials
+              userId={user?.id}
+              courseId={selectedCourseId}
+              onBackToDashboard={() => navigate('/dashboard')}
+            />
+          </ProtectedRoute>
         } />
         <Route path="profile" element={
-          <EditProfile
-            user={user}
-            onBackToDashboard={() => navigate('/dashboard')}
-          />
+          <ProtectedRoute>
+            <EditProfile
+              user={user}
+              onBackToDashboard={() => navigate('/dashboard')}
+            />
+          </ProtectedRoute>
         } />
         <Route path="quiz" element={
-          <Screen12Quiz
-            user={user}
-            onBackToDashboard={() => navigate('/dashboard')}
-          />
+          <ProtectedRoute>
+            <Screen12Quiz
+              user={user}
+              onBackToDashboard={() => navigate('/dashboard')}
+            />
+          </ProtectedRoute>
         } />
         <Route path="*" element={<Navigate to="/dashboard" replace />} />
       </Route>

@@ -4,11 +4,16 @@ export const AuthContext = createContext(null);
 
 const API_BASE = (import.meta.env?.VITE_API_URL || 'http://localhost:5000').replace(/\/$/, '') + '/api';
 
+async function withTimeout(promise, ms = 5000) {
+  const timeout = new Promise((_, reject) => setTimeout(() => reject(new Error('Request timeout')), ms));
+  return Promise.race([promise, timeout]);
+}
+
 async function checkApprovalStatus(userId) {
   try {
-    const res = await fetch(`${API_BASE}/auth/me`, {
+    const res = await withTimeout(fetch(`${API_BASE}/auth/me`, {
       headers: { Authorization: `Bearer ${localStorage.getItem('capacity_connect_token')}` }
-    });
+    }));
     if (!res.ok) return { approved: false, reason: 'session_invalid' };
     const data = await res.json();
     if (data.user) {
@@ -27,6 +32,16 @@ function createDemoUser(email, role) {
   return { email, role, name: names[role] || 'Demo User', id: `demo-${Date.now()}` };
 }
 
+function saveSession(user, token) {
+  localStorage.setItem('capacity_connect_user', JSON.stringify(user));
+  localStorage.setItem('capacity_connect_token', token);
+}
+
+function clearSession() {
+  localStorage.removeItem('capacity_connect_user');
+  localStorage.removeItem('capacity_connect_token');
+}
+
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(() => {
     try {
@@ -35,14 +50,13 @@ export function AuthProvider({ children }) {
     } catch { return null; }
   });
   const [token, setToken] = useState(() => localStorage.getItem('capacity_connect_token'));
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (token && user) {
       checkApprovalStatus(user?.id).then(result => {
         if (!result.approved) {
-          localStorage.removeItem('capacity_connect_token');
-          localStorage.removeItem('capacity_connect_user');
+          clearSession();
           setToken(null);
           setUser(null);
         }
@@ -55,11 +69,11 @@ export function AuthProvider({ children }) {
 
   const login = async (email, password) => {
     try {
-      const res = await fetch(`${API_BASE}/auth/login`, {
+      const res = await withTimeout(fetch(`${API_BASE}/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password })
-      });
+      }));
       if (!res.ok) {
         const err = await res.json().catch(() => ({}));
         throw new Error(err.message || `HTTP ${res.status}: Login failed`);
@@ -67,60 +81,55 @@ export function AuthProvider({ children }) {
       const data = await res.json();
       const userData = data.user || { email, role: 'trainee', name: email };
       const userToken = data.token || `mock-jwt-token-${userData.id || Date.now()}-${userData.role || 'trainee'}-${Date.now()}`;
-
-      localStorage.setItem('capacity_connect_token', userToken);
-      localStorage.setItem('capacity_connect_user', JSON.stringify(userData));
+      saveSession(userData, userToken);
       setToken(userToken);
       setUser(userData);
-      return userData;
-    } catch {
+      return { success: true, isDemo: false, user: userData, token: userToken };
+    } catch (err) {
+      console.warn('[Auth] Login fallback to demo mode:', err.message);
       const userData = createDemoUser(email, 'trainee');
       const userToken = `mock-jwt-token-${userData.id}-trainee-${Date.now()}`;
-      localStorage.setItem('capacity_connect_token', userToken);
-      localStorage.setItem('capacity_connect_user', JSON.stringify(userData));
+      saveSession(userData, userToken);
       setToken(userToken);
       setUser(userData);
-      return userData;
+      return { success: true, isDemo: true, user: userData, token: userToken };
     }
   };
 
   const register = async (name, email, password, role) => {
     try {
-      const res = await fetch(`${API_BASE}/auth/signup`, {
+      const res = await withTimeout(fetch(`${API_BASE}/auth/signup`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name, email, password, role })
-      });
+      }));
       if (!res.ok) {
         const err = await res.json().catch(() => ({}));
         if (res.status === 403) {
-          return { pending: true, message: err.message || 'Account pending admin approval' };
+          return { success: false, pending: true, message: err.message || 'Account pending admin approval' };
         }
         throw new Error(err.message || `HTTP ${res.status}: Registration failed`);
       }
       const data = await res.json();
       const userData = data.user || { name, email, role };
       const userToken = data.token || `mock-jwt-token-${userData.id || Date.now()}-${userData.role || 'trainee'}-${Date.now()}`;
-
-      localStorage.setItem('capacity_connect_token', userToken);
-      localStorage.setItem('capacity_connect_user', JSON.stringify(userData));
+      saveSession(userData, userToken);
       setToken(userToken);
       setUser(userData);
-      return userData;
-    } catch {
+      return { success: true, isDemo: false, user: userData, token: userToken };
+    } catch (err) {
+      console.warn('[Auth] Signup fallback to demo mode:', err.message);
       const userData = { name, email, role, id: `demo-${Date.now()}` };
       const userToken = `mock-jwt-token-${userData.id}-${role || 'trainee'}-${Date.now()}`;
-      localStorage.setItem('capacity_connect_token', userToken);
-      localStorage.setItem('capacity_connect_user', JSON.stringify(userData));
+      saveSession(userData, userToken);
       setToken(userToken);
       setUser(userData);
-      return userData;
+      return { success: true, isDemo: true, user: userData, token: userToken };
     }
   };
 
   const logout = () => {
-    localStorage.removeItem('capacity_connect_token');
-    localStorage.removeItem('capacity_connect_user');
+    clearSession();
     setToken(null);
     setUser(null);
   };

@@ -6,7 +6,7 @@ const API_BASE_URL = (import.meta.env?.VITE_API_URL || 'http://localhost:5000').
 
 export default function Screen1Auth({ onLogin }) {
   const navigate = useNavigate();
-  const { setUser: setAuthUser } = useAuth();
+  const { login, register } = useAuth();
   const [mode, setMode] = useState('login');
   const [formData, setFormData] = useState({
     email: '',
@@ -30,7 +30,6 @@ export default function Screen1Auth({ onLogin }) {
     const demoToken = `mock-jwt-token-${demoUser.id}-${role}-${Date.now()}`;
     localStorage.setItem('capacity_connect_token', demoToken);
     localStorage.setItem('capacity_connect_user', JSON.stringify(demoUser));
-    setAuthUser(demoUser);
     onLogin && onLogin(demoUser);
     navigate(role === 'admin' ? '/admin' : '/dashboard');
   };
@@ -47,37 +46,21 @@ export default function Screen1Auth({ onLogin }) {
 
     setSubmitting(true);
     try {
-      const endpoint = mode === 'register' ? 'signup' : 'login';
-      const response = await fetch(`${API_BASE_URL}/auth/${endpoint}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-        },
-        body: JSON.stringify({
-          email: formData.email,
-          password: formData.password,
-          name: formData.fullName,
-          role: formData.role,
-        }),
-      });
+      const result =
+        mode === 'register'
+          ? await register(formData.fullName, formData.email, formData.password, formData.role)
+          : await login(formData.email, formData.password);
 
-      if (!response.ok) {
-        const errJson = await response.json().catch(() => ({}));
-        if (mode === 'register' && response.status === 403) {
-          setAuthData({ status: 'pending', message: errJson.message || 'Your account is awaiting admin approval.' });
-          setSubmitting(false);
-          return;
-        }
-        throw new Error(errJson.message || `HTTP ${response.status}: Authentication failed`);
+      if (result?.success) {
+        const userSession = result.user || { email: formData.email, role: formData.role || 'trainee', name: formData.fullName };
+        onLogin && onLogin(userSession);
+        navigate(userSession.role === 'admin' ? '/admin' : '/dashboard');
+        return;
       }
 
-      const data = await response.json();
-      const userSession = data.user || data.session || { email: formData.email, role: formData.role || 'trainee', name: formData.fullName };
-      onLogin && onLogin(userSession);
-      navigate(userSession.role === 'admin' ? '/admin' : '/dashboard');
+      setLoginError(result?.message || 'Authentication failed');
     } catch (err) {
-      const isNetwork = err.message.includes('Failed to fetch') || err.message.includes('NetworkError') || err.message.includes('fetch');
+      const isNetwork = err.message.includes('Failed to fetch') || err.message.includes('NetworkError') || err.message.includes('fetch') || err.message.includes('timeout');
       if (isNetwork && mode === 'login') {
         completeDemoLogin(formData.email, formData.role || 'trainee', formData.fullName || 'Demo User');
       } else {
