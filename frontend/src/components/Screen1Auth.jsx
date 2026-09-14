@@ -2,6 +2,12 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 
+const DEMO_USERS = {
+  trainee: { id: 'demo-trainee-1', email: 'trainee@demo.com', role: 'trainee', name: 'Jane Doe' },
+  trainer: { id: 'demo-trainer-1', email: 'trainer@demo.com', role: 'trainer', name: 'Elena Rostova' },
+  admin: { id: 'demo-admin-1', email: 'admin@demo.com', role: 'admin', name: 'Admin User' },
+};
+
 export default function Screen1Auth({ onLogin }) {
   const navigate = useNavigate();
   const { login, register } = useAuth();
@@ -16,7 +22,6 @@ export default function Screen1Auth({ onLogin }) {
   const [rememberMe, setRememberMe] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [loginError, setLoginError] = useState('');
-  const [authData, setAuthData] = useState(null);
   const [demoNotice, setDemoNotice] = useState('');
 
   const handleInputChange = (e) => {
@@ -24,10 +29,21 @@ export default function Screen1Auth({ onLogin }) {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
+  const completeDemoLogin = (role) => {
+    const demoUser = DEMO_USERS[role] || { id: `demo-${Date.now()}`, email: `${role}@demo.com`, role, name: 'Demo User' };
+    const demoToken = `mock-jwt-token-${demoUser.id}-${role}-${Date.now()}`;
+    localStorage.setItem('capacity_connect_token', demoToken);
+    localStorage.setItem('capacity_connect_user', JSON.stringify(demoUser));
+    setDemoNotice('Logged in via Local DB / Demo Mode');
+    setTimeout(() => setDemoNotice(''), 4000);
+    onLogin && onLogin(demoUser);
+    navigate(role === 'admin' ? '/admin' : '/dashboard', { replace: true });
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoginError('');
-    setAuthData(null);
+    setDemoNotice('');
 
     if (!formData.email || !formData.password) {
       setLoginError('Email and password are required.');
@@ -48,44 +64,23 @@ export default function Screen1Auth({ onLogin }) {
           setDemoNotice('Logged in via Local DB / Demo Mode');
           setTimeout(() => setDemoNotice(''), 4000);
         }
-        navigate(userSession.role === 'admin' ? '/admin' : '/dashboard');
+        navigate(userSession.role === 'admin' ? '/admin' : '/dashboard', { replace: true });
         return;
       }
 
       setLoginError(result?.message || 'Authentication failed');
     } catch (err) {
-      const isNetwork = err.message.includes('Failed to fetch') || err.message.includes('NetworkError') || err.message.includes('fetch') || err.message.includes('timeout');
-      if (isNetwork && mode === 'login') {
-        setDemoNotice('Backend unreachable — using Local DB / Demo Mode');
-        setTimeout(() => setDemoNotice(''), 4000);
-        const fallbackUser = { id: `demo-${Date.now()}`, email: formData.email, role: formData.role || 'trainee', name: formData.fullName || 'Demo User' };
-        const fallbackToken = `mock-jwt-token-${fallbackUser.id}-${fallbackUser.role}-${Date.now()}`;
-        localStorage.setItem('capacity_connect_token', fallbackToken);
-        localStorage.setItem('capacity_connect_user', JSON.stringify(fallbackUser));
-        onLogin && onLogin(fallbackUser);
-        navigate(fallbackUser.role === 'admin' ? '/admin' : '/dashboard');
-      } else {
-        setLoginError(err.message || 'Error connecting to auth service');
-      }
+      setDemoNotice('Backend unreachable — using Local DB / Demo Mode');
+      setTimeout(() => setDemoNotice(''), 4000);
+      const fallbackUser = { id: `demo-${Date.now()}`, email: formData.email, role: formData.role || 'trainee', name: formData.fullName || 'Demo User' };
+      const fallbackToken = `mock-jwt-token-${fallbackUser.id}-${fallbackUser.role}-${Date.now()}`;
+      localStorage.setItem('capacity_connect_token', fallbackToken);
+      localStorage.setItem('capacity_connect_user', JSON.stringify(fallbackUser));
+      onLogin && onLogin(fallbackUser);
+      navigate(fallbackUser.role === 'admin' ? '/admin' : '/dashboard', { replace: true });
     } finally {
       setSubmitting(false);
     }
-  };
-
-  const handleDemoLogin = (role) => {
-    const names = { trainee: 'Jane Doe', trainer: 'Elena Rostova', admin: 'Admin User' };
-    const emails = { trainee: 'trainee@demo.com', trainer: 'trainer@demo.com', admin: 'admin@demo.com' };
-    const name = names[role] || 'Demo User';
-    const email = emails[role] || `${role}@demo.com`;
-
-    const demoUser = { id: `demo-${role}-${Date.now()}`, email, role, name };
-    const demoToken = `mock-jwt-token-${demoUser.id}-${role}-${Date.now()}`;
-    localStorage.setItem('capacity_connect_token', demoToken);
-    localStorage.setItem('capacity_connect_user', JSON.stringify(demoUser));
-    setDemoNotice('Logged in via Local DB / Demo Mode');
-    setTimeout(() => setDemoNotice(''), 4000);
-    onLogin && onLogin(demoUser);
-    navigate(role === 'admin' ? '/admin' : '/dashboard');
   };
 
   return (
@@ -115,18 +110,6 @@ export default function Screen1Auth({ onLogin }) {
           {loginError && (
             <div className="alert alert-error mb-4">
               <span>{loginError}</span>
-            </div>
-          )}
-
-          {authData?.status === 'pending' && (
-            <div className="alert alert-warning mb-4">
-              <span>⏳ {authData.message || 'Your account is awaiting admin approval.'}</span>
-            </div>
-          )}
-
-          {authData?.status === 'demo' && (
-            <div className="alert alert-warning mb-4">
-              <span>🎮 {authData.message}</span>
             </div>
           )}
 
@@ -232,21 +215,21 @@ export default function Screen1Auth({ onLogin }) {
           <div className="demo-buttons">
             <button
               type="button"
-              onClick={() => handleDemoLogin('trainee')}
+              onClick={() => completeDemoLogin('trainee')}
               className="demo-btn"
             >
               🎓 Trainee Demo
             </button>
             <button
               type="button"
-              onClick={() => handleDemoLogin('trainer')}
+              onClick={() => completeDemoLogin('trainer')}
               className="demo-btn"
             >
               👩‍🏫 Trainer Demo
             </button>
             <button
               type="button"
-              onClick={() => handleDemoLogin('admin')}
+              onClick={() => completeDemoLogin('admin')}
               className="demo-btn"
             >
               🛡️ Admin Demo
@@ -254,7 +237,7 @@ export default function Screen1Auth({ onLogin }) {
           </div>
 
           <div className="auth-footer">
-            <button onClick={() => { setMode(mode === 'login' ? 'register' : 'login'); setLoginError(''); setAuthData(null); }}>
+            <button onClick={() => { setMode(mode === 'login' ? 'register' : 'login'); setLoginError(''); setDemoNotice(''); }}>
               {mode === 'login' ? "Don't have an account? Create Account →" : 'Already have an account? Sign In →'}
             </button>
           </div>
