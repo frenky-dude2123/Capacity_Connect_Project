@@ -1,6 +1,0 @@
-{
-  "buildCommand": "cd frontend && npm run build && node -e \"const fs=require('fs');const path=require('path');const src=path.join('frontend','dist');const dest=path.join('dist');if(fs.existsSync(dest))fs.rmSync(dest,{recursive:true});fs.cpSync(src,dest,{recursive:true})\"",
-  "devCommand": "cd frontend && npm run dev",
-  "installCommand": "cd frontend && npm install",
-  "framework": "vite"
-}
