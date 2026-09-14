@@ -1151,10 +1151,11 @@ h4 { font-size: 1.1rem; }
   align-items: center;
   justify-content: space-between;
   padding: 0 2rem;
-  background: var(--glass-bg);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border-bottom: 1px solid var(--glass-border);
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
 }
 .public-content {
   flex: 1;
@@ -1171,6 +1172,13 @@ h4 { font-size: 1.1rem; }
   width: 100%;
   max-width: 440px;
   padding: 2.5rem;
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
+  border-radius: 16px;
+  color: #1e293b;
 }
 .auth-card .auth-logo {
   width: 56px;

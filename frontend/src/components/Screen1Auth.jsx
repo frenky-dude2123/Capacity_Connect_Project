@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const API_BASE_URL = 'http://localhost:5000/api';
+const API_BASE_URL = (import.meta.env?.VITE_API_URL || 'http://localhost:5000').replace(/\/$/, '') + '/api';
 
 export default function Screen1Auth({ onLogin }) {
   const [mode, setMode] = useState('login');
@@ -62,13 +62,15 @@ export default function Screen1Auth({ onLogin }) {
       const userSession = data.user || data.session || { email: formData.email, role: formData.role || 'trainee', name: formData.fullName };
       onLogin && onLogin(userSession);
     } catch (err) {
-      setLoginError(err.message || 'Error connecting to auth service');
-      if (mode === 'login') {
+      const isNetwork = err.message.includes('Failed to fetch') || err.message.includes('NetworkError') || err.message.includes('fetch');
+      if (isNetwork && mode === 'login') {
         setAuthData({
           status: 'demo',
-          message: 'API unavailable — demo mode',
+          message: 'Backend unreachable — using demo mode',
           user: { email: formData.email, role: formData.role || 'trainee', name: formData.fullName || 'Demo User' }
         });
+      } else {
+        setLoginError(err.message || 'Error connecting to auth service');
       }
     } finally {
       setSubmitting(false);
