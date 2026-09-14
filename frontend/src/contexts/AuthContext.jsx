@@ -54,18 +54,49 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (token && user) {
-      checkApprovalStatus(user?.id).then(result => {
-        if (!result.approved) {
-          clearSession();
-          setToken(null);
-          setUser(null);
+    let isMounted = true;
+
+    const initAuth = async () => {
+      try {
+        const savedUser = localStorage.getItem('capacity_connect_user');
+        const savedToken = localStorage.getItem('capacity_connect_token');
+        if (savedUser && savedToken) {
+          const parsedUser = JSON.parse(savedUser);
+          if (isMounted) {
+            setUser(parsedUser);
+            setToken(savedToken);
+          }
         }
-        setLoading(false);
-      });
-    } else {
-      setLoading(false);
-    }
+      } catch (e) {
+        console.error('Error loading auth state:', e);
+      } finally {
+        if (isMounted) {
+          setLoading(false);
+        }
+      }
+    };
+
+    initAuth();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!token || !user?.id) return;
+    let isMounted = true;
+    checkApprovalStatus(user.id).then(result => {
+      if (!isMounted) return;
+      if (!result.approved) {
+        clearSession();
+        setToken(null);
+        setUser(null);
+      }
+    });
+    return () => {
+      isMounted = false;
+    };
   }, [token, user?.id]);
 
   const login = async (email, password) => {

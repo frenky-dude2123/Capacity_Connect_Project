@@ -7,9 +7,9 @@ export default function ProtectedRoute({ children, allowedRoles }) {
 
   if (loading) {
     return (
-      <div className="loading-screen">
+      <div className="flex justify-center items-center p-12">
         <div className="spinner"></div>
-        <p className="loading-text">Loading...</p>
+        <p className="loading-text ml-4">Loading...</p>
       </div>
     );
   }
