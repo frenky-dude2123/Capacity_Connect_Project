@@ -46,7 +46,7 @@ export function AuthProvider({ children }) {
     } else {
       setLoading(false);
     }
-  }, [token, user.id]);
+  }, [token, user?.id]);
 
   const login = async (email, password) => {
     const res = await fetch(`${API_BASE}/auth/login`, {
