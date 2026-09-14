@@ -57,9 +57,9 @@ export default function App() {
         <Route index element={<Navigate to="/dashboard" replace />} />
         <Route path="dashboard" element={
           user?.role === 'admin' ? <Navigate to="/admin" replace /> :
-          user?.role === 'trainer' ? <Screen9Trainer userId={user.id} onNavigate={(screen) => navigate(screen)} /> :
+          user?.role === 'trainer' ? <Screen9Trainer userId={user?.id} onNavigate={(screen) => navigate(screen)} /> :
           <Screen2Dashboard
-            userId={user.id}
+            userId={user?.id}
             onOpenCourse={(id) => { setSelectedCourseId(id); navigate('/player'); }}
             onOpenCertificate={(uId, cId) => { setSelectedCourseId(cId); navigate('/certificates'); }}
             onOpenCatalog={() => navigate('/catalog')}
@@ -69,7 +69,7 @@ export default function App() {
           user?.role === 'admin' ? <Screen7Admin onBackToDashboard={() => navigate('/dashboard')} /> : <Navigate to="/dashboard" replace />
         } />
         <Route path="trainer" element={
-          user?.role === 'trainer' ? <Screen9Trainer userId={user.id} onNavigate={(screen) => navigate(screen)} /> : <Navigate to="/dashboard" replace />
+          user?.role === 'trainer' ? <Screen9Trainer userId={user?.id} onNavigate={(screen) => navigate(screen)} /> : <Navigate to="/dashboard" replace />
         } />
         <Route path="catalog" element={
           <Page3Catalog
@@ -93,7 +93,7 @@ export default function App() {
         } />
         <Route path="certificates" element={
           <Screen6Certificate
-            userId={user.id}
+            userId={user?.id}
             courseId={selectedCourseId}
             onBackToDashboard={() => navigate('/dashboard')}
           />
@@ -105,20 +105,20 @@ export default function App() {
         } />
         <Route path="skill-gap" element={
           <Screen8SkillGap
-            userId={user.id}
+            userId={user?.id}
             onBackToDashboard={() => navigate('/dashboard')}
             onEnrollCourse={(courseId) => setSelectedCourseId(courseId)}
           />
         } />
         <Route path="trainer" element={
           <Screen9Trainer
-            userId={user.id}
+            userId={user?.id}
             onNavigate={(screen) => navigate(screen)}
           />
         } />
         <Route path="materials" element={
           <Screen10CourseMaterials
-            userId={user.id}
+            userId={user?.id}
             courseId={selectedCourseId}
             onBackToDashboard={() => navigate('/dashboard')}
           />

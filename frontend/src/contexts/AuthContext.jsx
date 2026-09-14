@@ -39,7 +39,7 @@ export function AuthProvider({ children }) {
 
   useEffect(() => {
     if (token && user) {
-      checkApprovalStatus(user.id).then(result => {
+      checkApprovalStatus(user?.id).then(result => {
         if (!result.approved) {
           localStorage.removeItem('capacity_connect_token');
           localStorage.removeItem('capacity_connect_user');
