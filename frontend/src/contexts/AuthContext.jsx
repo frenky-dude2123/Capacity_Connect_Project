@@ -86,13 +86,21 @@ export function AuthProvider({ children }) {
       setUser(userData);
       return { success: true, isDemo: false, user: userData, token: userToken };
     } catch (err) {
-      console.warn('[Auth] Login fallback to demo mode:', err.message);
-      const userData = createDemoUser(email, 'trainee');
-      const userToken = `mock-jwt-token-${userData.id}-trainee-${Date.now()}`;
-      saveSession(userData, userToken);
-      setToken(userToken);
-      setUser(userData);
-      return { success: true, isDemo: true, user: userData, token: userToken };
+      console.warn('[Auth] Login fallback to local DB:', err.message);
+      const localUser = findUserByEmail(email);
+      if (localUser) {
+        const userToken = `mock-jwt-token-${localUser.id}-${localUser.role}-${Date.now()}`;
+        saveSession(localUser, userToken);
+        setToken(userToken);
+        setUser(localUser);
+        return { success: true, isDemo: true, user: localUser, token: userToken };
+      }
+      const demoUser = createDemoUser(email, 'trainee');
+      const demoToken = `mock-jwt-token-${demoUser.id}-trainee-${Date.now()}`;
+      saveSession(demoUser, demoToken);
+      setToken(demoToken);
+      setUser(demoUser);
+      return { success: true, isDemo: true, user: demoUser, token: demoToken };
     }
   };
 
@@ -118,13 +126,30 @@ export function AuthProvider({ children }) {
       setUser(userData);
       return { success: true, isDemo: false, user: userData, token: userToken };
     } catch (err) {
-      console.warn('[Auth] Signup fallback to demo mode:', err.message);
-      const userData = { name, email, role, id: `demo-${Date.now()}` };
-      const userToken = `mock-jwt-token-${userData.id}-${role || 'trainee'}-${Date.now()}`;
-      saveSession(userData, userToken);
+      console.warn('[Auth] Signup fallback to local DB:', err.message);
+      const existing = findUserByEmail(email);
+      if (existing) {
+        return { success: false, message: 'A user with this email already exists.' };
+      }
+      const newUser = {
+        id: `local-${Date.now()}`,
+        email,
+        password,
+        name: name || email,
+        role: role || 'trainee',
+        status: 'approved',
+        department: 'Enterprise Learning',
+        qualification: null,
+        skills: null,
+        subjects: null,
+        created_at: new Date().toISOString()
+      };
+      addUserToLocalDb(newUser);
+      const userToken = `mock-jwt-token-${newUser.id}-${newUser.role}-${Date.now()}`;
+      saveSession(newUser, userToken);
       setToken(userToken);
-      setUser(userData);
-      return { success: true, isDemo: true, user: userData, token: userToken };
+      setUser(newUser);
+      return { success: true, isDemo: true, user: newUser, token: userToken };
     }
   };
 

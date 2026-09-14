@@ -19,17 +19,22 @@ export default function Screen1Auth({ onLogin }) {
   const [submitting, setSubmitting] = useState(false);
   const [loginError, setLoginError] = useState('');
   const [authData, setAuthData] = useState(null);
+  const [demoNotice, setDemoNotice] = useState('');
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const completeDemoLogin = (email, role, name) => {
+  const completeDemoLogin = (email, role, name, isDemo = true) => {
     const demoUser = { id: `demo-${Date.now()}`, email, role, name };
     const demoToken = `mock-jwt-token-${demoUser.id}-${role}-${Date.now()}`;
     localStorage.setItem('capacity_connect_token', demoToken);
     localStorage.setItem('capacity_connect_user', JSON.stringify(demoUser));
+    if (isDemo) {
+      setDemoNotice('Logged in via Local DB / Demo Mode');
+      setTimeout(() => setDemoNotice(''), 4000);
+    }
     onLogin && onLogin(demoUser);
     navigate(role === 'admin' ? '/admin' : '/dashboard');
   };
@@ -54,6 +59,10 @@ export default function Screen1Auth({ onLogin }) {
       if (result?.success) {
         const userSession = result.user || { email: formData.email, role: formData.role || 'trainee', name: formData.fullName };
         onLogin && onLogin(userSession);
+        if (result.isDemo) {
+          setDemoNotice('Logged in via Local DB / Demo Mode');
+          setTimeout(() => setDemoNotice(''), 4000);
+        }
         navigate(userSession.role === 'admin' ? '/admin' : '/dashboard');
         return;
       }
@@ -62,6 +71,8 @@ export default function Screen1Auth({ onLogin }) {
     } catch (err) {
       const isNetwork = err.message.includes('Failed to fetch') || err.message.includes('NetworkError') || err.message.includes('fetch') || err.message.includes('timeout');
       if (isNetwork && mode === 'login') {
+        setDemoNotice('Backend unreachable — using Local DB / Demo Mode');
+        setTimeout(() => setDemoNotice(''), 4000);
         completeDemoLogin(formData.email, formData.role || 'trainee', formData.fullName || 'Demo User');
       } else {
         setLoginError(err.message || 'Error connecting to auth service');
@@ -117,6 +128,12 @@ export default function Screen1Auth({ onLogin }) {
           {authData?.status === 'demo' && (
             <div className="alert alert-warning mb-4">
               <span>🎮 {authData.message}</span>
+            </div>
+          )}
+
+          {demoNotice && (
+            <div className="alert alert-success mb-4">
+              <span>✅ {demoNotice}</span>
             </div>
           )}
 
