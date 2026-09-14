@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { findUserByEmail, addUser } from '../lib/mockDb';
 
 export const AuthContext = createContext(null);
 
@@ -144,7 +145,7 @@ export function AuthProvider({ children }) {
         subjects: null,
         created_at: new Date().toISOString()
       };
-      addUserToLocalDb(newUser);
+      addUser(newUser);
       const userToken = `mock-jwt-token-${newUser.id}-${newUser.role}-${Date.now()}`;
       saveSession(newUser, userToken);
       setToken(userToken);
