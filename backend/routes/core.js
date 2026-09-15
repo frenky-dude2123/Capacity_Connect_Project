@@ -24,6 +24,35 @@ const coreRouter = express.Router();
 // Course reference for certificates
 const courseTitles = {};
 
+function isDemoUserId(userId) {
+  return typeof userId === 'string' && userId.startsWith('demo-');
+}
+
+function getDemoDashboardData(userId) {
+  return {
+    userId: userId,
+    userName: 'Demo User',
+    role: 'trainee',
+    status: 'approved',
+    enrolledCourses: [
+      { id: 1, title: 'Advanced Astrophysics', category: 'Physics', progressPercent: 85, status: 'Completed', instructor: 'Dr. Elena Vasquez' },
+      { id: 2, title: 'Deep Space Navigation', category: 'Aerospace', progressPercent: 45, status: 'In Progress', instructor: 'Capt. M. Reyes' }
+    ],
+    metrics: {
+      overallCompletionPercent: 42,
+      capacityScore: 52,
+      activeCourses: 2,
+      trainingHours: 28,
+      completedCertifications: 1
+    },
+    recommendedCourses: [
+      { id: 3, title: 'Exoplanet Habitability', category: 'Astronomy', estimatedHours: 6, difficulty: 'Intermediate' },
+      { id: 4, title: 'Stellar Engineering', category: 'Engineering', estimatedHours: 12, difficulty: 'Advanced' }
+    ],
+    source: 'in-memory-fallback'
+  };
+}
+
 function guardApproval(res, user) {
   if (!user) return false;
   if (user.status === 'pending') {
@@ -275,6 +304,11 @@ authRouter.post('/signup', async (req, res) => {
 userRouter.get('/quiz-results/:userId', authMiddleware, requireRole('trainee', 'trainer'), async (req, res) => {
   try {
     const { userId } = req.params;
+
+    if (isDemoUserId(userId)) {
+      return res.status(200).json({ weakAreas: [], source: 'fallback' });
+    }
+
     if (!isSupabaseAvailable) {
       return res.status(200).json({ weakAreas: [], source: 'fallback' });
     }
@@ -381,6 +415,10 @@ userRouter.post('/quiz-attempts', authMiddleware, requireRole('trainee', 'traine
 userRouter.get('/dashboard/:userId', authMiddleware, requireRole('trainee', 'trainer'), async (req, res) => {
   try {
     const { userId } = req.params;
+
+    if (isDemoUserId(userId)) {
+      return res.status(200).json(getDemoDashboardData(userId));
+    }
 
     if (!isSupabaseAvailable) {
       const mockDashboard = {
@@ -561,6 +599,28 @@ userRouter.put('/profile', authMiddleware, async (req, res) => {
 certRouter.get('/:userId/:courseId', authMiddleware, requireRole('trainee', 'trainer'), async (req, res) => {
   try {
     const { userId, courseId } = req.params;
+
+    if (isDemoUserId(userId)) {
+      const certificateId = `CERT-2026-CC-${Math.abs((8942) + Number(courseId) * 17)}`;
+      return res.status(200).json({
+        certificateId,
+        userId,
+        studentName: 'Demo User',
+        courseId: isNaN(courseId) ? courseId : Number(courseId),
+        courseTitle: 'Sample Course',
+        completionDate: new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }),
+        issueAuthority: 'Capacity Connect Enterprise Accreditation Board',
+        grade: 'Passed with Distinction (96%)',
+        verificationUrl: `https://verify.capacityconnect.io/cert/${certificateId}`,
+        skillsValidated: [
+          'High-Availability Architecture',
+          'Multi-Region Cloud Resilience',
+          'Enterprise Security Governance',
+          'Distributed Consensus Protocols'
+        ],
+        source: 'in-memory-fallback'
+      });
+    }
 
     if (!isSupabaseAvailable) {
       return res.status(500).json({ error: 'Database not configured', details: 'Supabase is not available' });
@@ -856,6 +916,14 @@ adminRouter.post('/users/:userId/approve', requireRole('admin'), async (req, res
   try {
     const { userId } = req.params;
 
+    if (isDemoUserId(userId)) {
+      return res.status(200).json({
+        message: 'User approved successfully (demo mode)',
+        user: { id: userId, name: 'Demo User', email: 'demo@example.com', role: 'trainee', status: 'approved', created_at: new Date().toISOString() },
+        source: 'in-memory-fallback'
+      });
+    }
+
     if (!isSupabaseAvailable) {
       const user = mockUsers.find(u => u.id === userId);
       if (!user) {
@@ -913,6 +981,14 @@ adminRouter.post('/users/:userId/approve', requireRole('admin'), async (req, res
 adminRouter.post('/users/:userId/reject', requireRole('admin'), async (req, res) => {
   try {
     const { userId } = req.params;
+
+    if (isDemoUserId(userId)) {
+      return res.status(200).json({
+        message: 'User rejected successfully (demo mode)',
+        user: { id: userId, name: 'Demo User', email: 'demo@example.com', role: 'trainee', status: 'rejected', created_at: new Date().toISOString() },
+        source: 'in-memory-fallback'
+      });
+    }
 
     if (!isSupabaseAvailable) {
       const user = mockUsers.find(u => u.id === userId);
