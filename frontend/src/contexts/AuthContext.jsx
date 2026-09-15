@@ -3,7 +3,7 @@ import { findUserByEmail, addUser, initMockDb } from '../lib/mockDb';
 
 export const AuthContext = createContext(null);
 
-const API_BASE = (import.meta.env?.VITE_API_URL || 'http://localhost:5000').replace(/\/$/, '') + '/api';
+const API_BASE = (import.meta.env?.VITE_API_URL || 'https://capacity-connect-project.onrender.com').replace(/\/$/, '') + '/api';
 
 initMockDb();
 

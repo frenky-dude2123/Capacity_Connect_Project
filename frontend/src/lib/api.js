@@ -1,5 +1,5 @@
-const API_BASE = (import.meta.env?.VITE_API_URL || 'http://localhost:5000').replace(/\/$/, '') + '/api';
-const AI_API_BASE = (import.meta.env?.VITE_API_URL || 'http://localhost:5000').replace(/\/$/, '') + '/api/ai';
+const API_BASE = (import.meta.env?.VITE_API_URL || 'https://capacity-connect-project.onrender.com').replace(/\/$/, '') + '/api';
+const AI_API_BASE = (import.meta.env?.VITE_API_URL || 'https://capacity-connect-project.onrender.com').replace(/\/$/, '') + '/api/ai';
 
 function getAuthHeaders() {
   const token = localStorage.getItem('capacity_connect_token');

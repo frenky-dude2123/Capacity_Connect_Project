@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-const API_BASE_URL = 'http://localhost:5000/api/admin';
+const API_BASE_URL = 'https://capacity-connect-project.onrender.com/api/admin';
 
 export default function Screen7Admin({ onBackToDashboard }) {
   const [activeTab, setActiveTab] = useState('pending');
