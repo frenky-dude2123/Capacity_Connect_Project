@@ -15,11 +15,14 @@ export default function Screen8SkillGap({ userId, onBackToDashboard }) {
     setLoading(true);
     setError(null);
     try {
-      const response = await authFetch(`${API_BASE}/ai/skill-gap`, {
+      const response = await authFetch(`${API_BASE}/ai/skill-gap-analysis`, {
         method: 'POST',
         body: JSON.stringify({ userId, resumeText }),
       });
-      if (!response.ok) throw new Error(`HTTP ${response.status}: Skill gap analysis failed`);
+      if (!response.ok) {
+        const errBody = await response.json().catch(() => ({}));
+        throw new Error(errBody.message || `HTTP ${response.status}: Skill gap analysis failed`);
+      }
       const data = await response.json();
       setAnalysis(data);
     } catch (err) {
@@ -76,14 +79,14 @@ export default function Screen8SkillGap({ userId, onBackToDashboard }) {
           <div className="mt-6 space-y-4">
             <div className="p-4 rounded-xl border border-meadow-green/20 bg-meadow-green/5">
               <h3 className="text-sm font-black text-primary mb-2">Analysis Results</h3>
-              <p className="text-xs text-secondary whitespace-pre-wrap">{analysis.summary || analysis}</p>
+              <p className="text-xs text-secondary whitespace-pre-wrap">{analysis.summary || ''}</p>
             </div>
-            {analysis.recommendations && (
+            {(analysis.recommendedCourses || analysis.recommendations || analysis.assigned_courses || []).length > 0 && (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {analysis.recommendations.map((rec, idx) => (
+                {(analysis.recommendedCourses || analysis.recommendations || analysis.assigned_courses).map((rec, idx) => (
                   <div key={idx} className="p-4 rounded-xl border border-white/10 bg-white/5">
                     <h4 className="text-sm font-black text-primary mb-1">{rec.title}</h4>
-                    <p className="text-xs text-secondary">{rec.reason}</p>
+                    <p className="text-xs text-secondary">{rec.reason || rec.addresses_gap || rec.category}</p>
                   </div>
                 ))}
               </div>

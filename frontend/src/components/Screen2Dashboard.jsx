@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { authFetch, API_BASE, AI_API_BASE } from '../lib/api';
+import Layout from './Layout';
+import Icon from './Icons';
+import { useAuth } from '../contexts/AuthContext';
 
 export default function Screen2Dashboard({ userId = 'u_learner1', onOpenCourse, onOpenCertificate, onOpenCatalog }) {
+  const { user } = useAuth();
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -51,227 +55,232 @@ export default function Screen2Dashboard({ userId = 'u_learner1', onOpenCourse, 
     }
   };
 
-  return (
-    <div className="space-y-8">
-      {/* Top Banner */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-white/10">
-        <div>
-          <div className="flex items-center gap-2">
-            <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-gradient-to-r from-meadow-green/20 to-meadow-green/60 text-meadow-green border border-meadow-green/30">
-              Trainee Portal • Dashboard
-            </span>
-          </div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-primary mt-2">
-            Welcome back, {data?.userName || 'Jane Doe'}!
-          </h1>
-          <p className="text-xs sm:text-sm text-secondary mt-1">
-            Track your learning progress and certificates.
-          </p>
-        </div>
+  const enrolled = data?.enrolledCourses || [];
+  const recommended = data?.recommendedCourses || [];
 
-        <div className="flex items-center gap-2">
-          <button
-            onClick={fetchDashboard}
-            className="px-3 py-1.5 bg-white/5 hover:bg-meadow-green/10 border border-white/10 text-secondary rounded-lg text-xs font-bold transition btn-micro"
-          >
-            <span>↻</span> Refresh Data
+  return (
+    <Layout>
+      <div className="page-hero fade-in">
+        <div>
+          <span className="page-kicker">{user?.role || 'trainee'} portal</span>
+          <h1>Welcome back, {data?.userName || user?.name || 'learner'}</h1>
+          <p className="page-lede">Track your learning progress, resume courses, and grow with personalized recommendations.</p>
+        </div>
+        <div className="page-actions">
+          <button type="button" onClick={fetchDashboard} className="btn btn-ghost btn-sm">
+            <Icon name="refresh" size={16} /> Refresh
           </button>
-          <button
-            onClick={onOpenCatalog}
-            className="px-3.5 py-1.5 bg-gradient-to-r from-meadow-green to-meadow-green/70 hover:from-meadow-green hover:to-meadow-green/60 text-white rounded-lg text-xs font-bold shadow-lg transition btn-micro"
-          >
-            Explore Catalog →
+          <button type="button" onClick={onOpenCatalog} className="btn btn-primary btn-sm">
+            <Icon name="compass" size={16} /> Explore catalog
           </button>
         </div>
       </div>
 
       {loading && (
-        <div className="py-20 text-center">
-          <div className="w-10 h-10 border-4 border-meadow-green border-t-transparent rounded-full animate-spin mx-auto shadow-lg"></div>
-          <p className="mt-3 text-sm font-medium text-secondary">Loading your learner profile...</p>
+        <div className="stagger" aria-busy="true" aria-label="Loading dashboard">
+          <div className="grid-stats">
+            <div className="skeleton-card" />
+            <div className="skeleton-card" />
+            <div className="skeleton-card" />
+            <div className="skeleton-card" />
+          </div>
+          <div className="grid-courses mt-lg">
+            <div className="skeleton-card tall" />
+            <div className="skeleton-card tall" />
+            <div className="skeleton-card tall" />
+          </div>
         </div>
       )}
 
-      {error && (
-        <div className="p-6 bg-red-900/20 border border-red-800/50 rounded-2xl text-center text-xs text-red-300">
-          <p className="font-bold text-sm">Failed to load dashboard data</p>
-          <p className="mt-1">{error}</p>
-          <button onClick={fetchDashboard} className="mt-3 px-4 py-1.5 bg-red-600 text-white rounded-lg font-semibold">
-            Retry Connection
+      {error && !loading && (
+        <div className="glass-card no-hover alert-error slide-up">
+          <p className="empty-title">Could not load dashboard data</p>
+          <p className="empty-state">{error}</p>
+          <button type="button" onClick={fetchDashboard} className="btn btn-primary btn-sm mt-md">
+            Retry connection
           </button>
         </div>
       )}
 
       {!loading && !error && data && (
-        <div className="space-y-8">
-          {/* KPI Metrics Strip */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+        <div className="slide-up">
+          <div className="grid-stats">
             <div className="stat-card">
-              <div className="stat-icon green">📈</div>
+              <div className="stat-icon green"><Icon name="trend" size={22} /></div>
               <div className="stat-info">
                 <div className="stat-label">Progress</div>
-                <div className="stat-value">{data.metrics?.capacityScore || 94}%</div>
-                <div className="stat-trend up">↑ +4% vs last quarter</div>
+                <div className="stat-value">{data.metrics?.capacityScore || 0}%</div>
+                <div className="stat-trend up">Capacity score</div>
               </div>
             </div>
-
             <div className="stat-card">
-              <div className="stat-icon blue">📚</div>
+              <div className="stat-icon blue"><Icon name="catalog" size={22} /></div>
               <div className="stat-info">
-                <div className="stat-label">Enrolled Courses</div>
-                <div className="stat-value">{data.metrics?.activeCourses || data.enrolledCourses?.length}</div>
+                <div className="stat-label">Enrolled courses</div>
+                <div className="stat-value">{data.metrics?.activeCourses || enrolled.length}</div>
                 <div className="stat-trend">Curriculums underway</div>
               </div>
             </div>
-
             <div className="stat-card">
-              <div className="stat-icon amber">⏱️</div>
+              <div className="stat-icon amber"><Icon name="clock" size={22} /></div>
               <div className="stat-info">
-                <div className="stat-label">Hours Learned</div>
-                <div className="stat-value">{data.metrics?.trainingHours || 42.5} <span className="text-sm font-normal text-secondary">hrs</span></div>
+                <div className="stat-label">Hours learned</div>
+                <div className="stat-value">{data.metrics?.trainingHours || 0}</div>
                 <div className="stat-trend">Total learning time</div>
               </div>
             </div>
-
             <div className="stat-card">
-              <div className="stat-icon green">🏆</div>
+              <div className="stat-icon green"><Icon name="award" size={22} /></div>
               <div className="stat-info">
                 <div className="stat-label">Certificates</div>
-                <div className="stat-value">{data.metrics?.completedCertifications || 2}</div>
+                <div className="stat-value">{data.metrics?.completedCertifications || 0}</div>
                 <div className="stat-trend">Accredited skills</div>
               </div>
             </div>
           </div>
 
-          {/* Enrolled Courses Section */}
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <h2 className="text-lg font-bold text-primary">Enrolled Courses</h2>
-              <span className="text-xs text-secondary">{data.enrolledCourses?.length} Courses</span>
+          <section className="section mt-xl">
+            <div className="section-header">
+              <h2 className="section-title">Enrolled courses</h2>
+              <span className="badge badge-green">{enrolled.length} courses</span>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {data.enrolledCourses?.map((course) => (
-                <div key={course.id} className="course-card">
-                  <div className="course-thumb">
-                    <div className="course-category">
-                      <span className="badge badge-green">{course.category}</span>
+            {enrolled.length === 0 ? (
+              <div className="glass-card empty-state no-hover">
+                <div className="empty-icon"><Icon name="inbox" size={40} /></div>
+                <h3 className="empty-title">No courses enrolled yet</h3>
+                <p>Explore the catalog to start a learning path that fits your role.</p>
+                <button type="button" onClick={onOpenCatalog} className="btn btn-primary mt-md">
+                  <Icon name="compass" size={16} /> Browse catalog
+                </button>
+              </div>
+            ) : (
+              <div className="grid-courses stagger">
+                {enrolled.map((course, index) => (
+                  <article key={course.id} className="course-card">
+                    <div className={`course-thumb course-thumb-${(index % 3) + 1}`}>
+                      <div className="course-category">
+                        <span className="badge badge-green">{course.category}</span>
+                      </div>
                     </div>
-                  </div>
-                  <div className="course-body">
-                    <h3 className="course-title">{course.title}</h3>
-                    <p className="course-desc">Instructor: {course.instructor}</p>
-                    <div className="course-meta">
-                      <span>{course.progressPercent}% complete</span>
+                    <div className="course-body">
+                      <h3 className="course-title">{course.title}</h3>
+                      <p className="course-desc">Instructor: {course.instructor}</p>
+                      <div className="progress-bar mt-md" aria-label={`${course.progressPercent}% complete`}>
+                        <div className="progress-fill" style={{ width: `${course.progressPercent || 0}%` }} />
+                      </div>
+                      <div className="course-meta">
+                        <span>{course.progressPercent || 0}% complete</span>
+                      </div>
+                      <div className="page-actions mt-md">
+                        <button
+                          type="button"
+                          onClick={() => onOpenCourse && onOpenCourse(course.id)}
+                          className="btn btn-primary btn-sm"
+                        >
+                          <Icon name="play" size={14} /> Resume
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => onOpenCertificate && onOpenCertificate(userId, course.id)}
+                          className="btn btn-ghost btn-sm"
+                        >
+                          <Icon name="award" size={14} /> Certificate
+                        </button>
+                      </div>
                     </div>
-                    <div className="mt-4 flex gap-2">
-                      <button
-                        onClick={() => onOpenCourse && onOpenCourse(course.id)}
-                        className="btn btn-primary btn-sm flex-1"
-                      >
-                        Resume Lesson
-                      </button>
-                      <button
-                        onClick={() => onOpenCertificate && onOpenCertificate(userId, course.id)}
-                        className="btn btn-secondary btn-sm"
-                        title="View Certificate"
-                      >
-                        🎓 Cert
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Recommended Courses */}
-          <div className="glass-card p-6">
-            <h3 className="text-base font-bold text-primary mb-3">Recommended for Your Growth Path</h3>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-              {data.recommendedCourses?.map((rec) => (
-                <div key={rec.id} className="p-4 rounded-xl border border-white/10 bg-white/5 flex flex-col justify-between">
-                  <div>
-                    <span className="text-[10px] font-bold text-meadow-green uppercase bg-meadow-green/20 px-2 py-0.5 rounded">
-                      {rec.category}
-                    </span>
-                    <h4 className="text-sm font-bold text-primary mt-2">{rec.title}</h4>
-                    <p className="text-xs text-secondary mt-1">Est. Duration: {rec.estimatedHours} hrs</p>
-                  </div>
-                  <button
-                    onClick={onOpenCatalog}
-                    className="mt-4 text-xs font-semibold text-meadow-green hover:underline text-left"
-                  >
-                    View in Catalog →
-                  </button>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* AI Recommendations */}
-          <div className="glass-card p-6">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-bold text-primary flex items-center gap-2">
-                <span>🤖 AI Recommendations</span>
-              </h3>
-              <button
-                onClick={fetchAIRecommendations}
-                disabled={aiLoading}
-                className={`px-3 py-1.5 rounded-lg text-xs font-bold transition btn-micro ${
-                  aiLoading
-                    ? 'bg-white/5 text-secondary cursor-not-allowed'
-                    : 'bg-gradient-to-r from-meadow-green to-meadow-green/70 text-white shadow-lg'
-                }`}
-              >
-                {aiLoading ? 'Generating...' : aiRecs ? 'Refresh' : 'Generate with AI'}
-              </button>
-            </div>
-
-            {aiLoading && (
-              <div className="py-10 text-center">
-                <div className="w-8 h-8 border-4 border-meadow-green border-t-transparent rounded-full animate-spin mx-auto mb-3"></div>
-                <p className="text-sm text-secondary">AI analyzing weak areas and generating recommendations...</p>
+                  </article>
+                ))}
               </div>
             )}
+          </section>
 
-            {aiError && !aiLoading && (
-              <p className="text-xs text-meadow-amber font-semibold">Using sample data: {aiError}</p>
-            )}
-
-            {!aiLoading && aiRecs && (
-              <div className="space-y-3">
-                <p className={`text-xs font-black font-mono ${aiRecs.source === 'ai' ? 'text-meadow-green' : 'text-meadow-amber'}`}>
-                  {aiRecs.source === 'ai' ? '◆ Powered by Gemini LLM' : '◇ Using sample recommendations'}
-                </p>
-                <p className="text-xs text-secondary">{aiRecs.summary}</p>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {aiRecs.recommendations?.map((rec) => (
-                    <div key={rec.courseId} className="p-4 rounded-xl border border-white/10 bg-white/5">
-                      <div className="flex items-center gap-2 mb-2">
-                        <span className="px-2 py-0.5 bg-meadow-green/20 text-meadow-green text-[10px] font-black rounded">
-                          {rec.category}
-                        </span>
-                        <span className="px-2 py-0.5 bg-white/10 text-secondary text-[10px] font-black rounded">
-                          {rec.difficulty}
-                        </span>
-                      </div>
-                      <h4 className="text-sm font-black text-primary mb-1">{rec.title}</h4>
-                      <p className="text-xs text-secondary mb-2">{rec.reason}</p>
-                      <button
-                        onClick={onOpenCatalog}
-                        className="text-xs font-semibold text-meadow-green hover:underline text-left"
-                      >
-                        View in Catalog →
+          <section className="section">
+            <div className="glass-card no-hover">
+              <h3 className="section-title">Recommended for your growth path</h3>
+              {recommended.length === 0 ? (
+                <div className="empty-state">
+                  <div className="empty-icon"><Icon name="sparkles" size={32} /></div>
+                  <p>Recommendations will appear here as your learning profile grows.</p>
+                </div>
+              ) : (
+                <div className="grid-courses mt-md">
+                  {recommended.map((rec) => (
+                    <div key={rec.id} className="glass-card">
+                      <span className="badge badge-green">{rec.category}</span>
+                      <h4 className="course-title mt-sm">{rec.title}</h4>
+                      <p className="course-desc">Est. duration: {rec.estimatedHours} hrs</p>
+                      <button type="button" onClick={onOpenCatalog} className="btn btn-ghost btn-sm mt-md">
+                        View in catalog
                       </button>
                     </div>
                   ))}
                 </div>
+              )}
+            </div>
+          </section>
+
+          <section className="section">
+            <div className="glass-card no-hover">
+              <div className="section-header">
+                <h3 className="section-title" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                  <Icon name="sparkles" size={18} /> AI recommendations
+                </h3>
+                <button
+                  type="button"
+                  onClick={fetchAIRecommendations}
+                  disabled={aiLoading}
+                  className="btn btn-primary btn-sm"
+                >
+                  {aiLoading ? 'Generating…' : aiRecs ? 'Refresh' : 'Generate with AI'}
+                </button>
               </div>
-            )}
-          </div>
+
+              {aiLoading && (
+                <div className="grid-courses" aria-busy="true" aria-label="Generating recommendations">
+                  <div className="skeleton-card tall" />
+                  <div className="skeleton-card tall" />
+                  <div className="skeleton-card tall" />
+                </div>
+              )}
+
+              {aiError && !aiLoading && (
+                <p className="alert alert-warning">Using sample data: {aiError}</p>
+              )}
+
+              {!aiLoading && aiRecs && (
+                <div>
+                  <p className="page-lede">{aiRecs.source === 'ai' ? 'Powered by Gemini' : 'Using sample recommendations'}</p>
+                  <p className="course-desc mt-sm">{aiRecs.summary}</p>
+                  <div className="grid-courses mt-md">
+                    {aiRecs.recommendations?.map((rec) => (
+                      <div key={rec.courseId} className="glass-card">
+                        <div className="page-actions">
+                          <span className="badge badge-green">{rec.category}</span>
+                          <span className="badge badge-gray">{rec.difficulty}</span>
+                        </div>
+                        <h4 className="course-title mt-sm">{rec.title}</h4>
+                        <p className="course-desc">{rec.reason}</p>
+                        <button type="button" onClick={onOpenCatalog} className="btn btn-ghost btn-sm mt-md">
+                          View in catalog
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {!aiLoading && !aiRecs && (
+                <div className="empty-state">
+                  <div className="empty-icon"><Icon name="sparkles" size={32} /></div>
+                  <h3 className="empty-title">No AI recommendations yet</h3>
+                  <p>Generate a set of courses based on your weaker topic areas.</p>
+                </div>
+              )}
+            </div>
+          </section>
         </div>
       )}
-    </div>
+    </Layout>
   );
 }

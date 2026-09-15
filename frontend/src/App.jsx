@@ -97,7 +97,7 @@ export default function App() {
             </ProtectedRoute>
           } />
           <Route path="/materials" element={
-            <ProtectedRoute allowedRoles={['trainer']}>
+            <ProtectedRoute allowedRoles={['trainee', 'trainer']}>
               <Screen10CourseMaterials
                 userId={user?.id}
                 courseId={selectedCourseId}

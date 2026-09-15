@@ -148,6 +148,20 @@ const server = app.listen(PORT, async () => {
     }
 
     console.log('\n========================================================');
+    console.log(' TEST 3a: Wrong frontend path /skill-gap must 404');
+    console.log('========================================================');
+    const wrongPath = await fetch(`${base}/skill-gap`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ resumeText: PROJECT_COORDINATOR_RESUME, userId: 'test-user-1' }),
+    });
+    console.log('HTTP status:', wrongPath.status);
+    console.log('=> ' + (wrongPath.status === 404 ? 'CONFIRMED (old Screen8SkillGap URL is not a route)' : 'unexpected'));
+    if (wrongPath.status !== 404) {
+      throw new Error(`Expected 404 for /api/ai/skill-gap, got ${wrongPath.status}`);
+    }
+
+    console.log('\n========================================================');
     console.log(' TEST 3: Technical resume, WITH Content-Type');
     console.log('========================================================');
     const t3 = await postResume(TECHNICAL_RESUME, true);
