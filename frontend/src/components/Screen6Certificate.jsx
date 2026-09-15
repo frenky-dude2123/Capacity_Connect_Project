@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-
-const API_BASE_URL = 'http://localhost:5000/api';
+import { authFetch, API_BASE } from '../lib/api';
 
 export default function Screen6Certificate({ userId, courseId, onBackToDashboard }) {
   const [certificates, setCertificates] = useState([]);
@@ -12,9 +11,7 @@ export default function Screen6Certificate({ userId, courseId, onBackToDashboard
       setLoading(true);
       setError(null);
       try {
-        const response = await fetch(`${API_BASE_URL}/certificates/${userId}`, {
-          headers: { 'Accept': 'application/json' }
-        });
+        const response = await authFetch(`${API_BASE}/certificates/${userId}`);
         if (!response.ok) throw new Error(`HTTP ${response.status}: Failed to fetch certificates`);
         const data = await response.json();
         setCertificates(Array.isArray(data) ? data : (data.certificates || []));

@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
-
-const API_BASE_URL = 'http://localhost:5000/api/courses';
-const AI_API_URL = 'http://localhost:5000/api/ai';
+import { authFetch, API_BASE, AI_API_BASE } from '../lib/api';
 
 export default function Page5Player({ courseId = 1, onBackToCatalog, onBackToDetail }) {
   const [playerData, setPlayerData] = useState(null);
@@ -27,14 +25,7 @@ export default function Page5Player({ courseId = 1, onBackToCatalog, onBackToDet
     setIsCorrect(null);
 
     try {
-      const response = await fetch(`${API_BASE_URL}/player/${id}`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json'
-        }
-      });
-
+      const response = await authFetch(`${API_BASE}/courses/player/${id}`);
       if (!response.ok) {
         const errJson = await response.json().catch(() => ({}));
         throw new Error(errJson.message || `HTTP ${response.status}: Failed to fetch lesson player data`);
@@ -80,9 +71,8 @@ export default function Page5Player({ courseId = 1, onBackToCatalog, onBackToDet
     setAiAnswers([]);
     try {
       const topic = playerData?.title || `Course ${courseId}`;
-      const response = await fetch(`${AI_API_URL}/generate-quiz`, {
+      const response = await authFetch(`${AI_API_BASE}/generate-quiz`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           courseId,
           numQuestions: 3,

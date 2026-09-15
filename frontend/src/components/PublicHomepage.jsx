@@ -3,7 +3,10 @@ import { useNavigate } from 'react-router-dom';
 
 export default function PublicHomepage() {
   const navigate = useNavigate();
-  const handleAuth = () => navigate('/login');
+  const handleAuth = () => {
+  console.log('handleAuth called');
+  navigate('/login');
+};
   return (
     <div className="public-layout meadow-bg-login">
       <div className="bg-scrim"></div>

@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-
-const API_BASE_URL = 'http://localhost:5000/api/courses';
+import { authFetch, API_BASE } from '../lib/api';
 
 export default function Page3Catalog({ onSelectCourse, onLaunchPlayer }) {
   const [courses, setCourses] = useState([]);
@@ -12,18 +11,10 @@ export default function Page3Catalog({ onSelectCourse, onLaunchPlayer }) {
     setLoading(true);
     setError(null);
     try {
-      const response = await fetch(`${API_BASE_URL}/catalog`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json'
-        }
-      });
-
+      const response = await authFetch(`${API_BASE}/courses/catalog`);
       if (!response.ok) {
         throw new Error(`HTTP ${response.status}: Failed to fetch catalog`);
       }
-
       const data = await response.json();
       const courseList = Array.isArray(data) ? data : (data.courses || data.data || []);
       setCourses(courseList);

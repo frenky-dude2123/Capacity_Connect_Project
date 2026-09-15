@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
-
-const API_BASE_URL = 'http://localhost:5000/api/user/dashboard';
-const AI_API_URL = 'http://localhost:5000/api/ai';
+import { authFetch, API_BASE, AI_API_BASE } from '../lib/api';
 
 export default function Screen2Dashboard({ userId = 'u_learner1', onOpenCourse, onOpenCertificate, onOpenCatalog }) {
   const [data, setData] = useState(null);
@@ -15,7 +13,7 @@ export default function Screen2Dashboard({ userId = 'u_learner1', onOpenCourse, 
     setLoading(true);
     setError(null);
     try {
-      const response = await fetch(`${API_BASE_URL}/${userId}`);
+      const response = await authFetch(`${API_BASE}/user/dashboard/${userId}`);
       if (!response.ok) throw new Error(`HTTP ${response.status}: Failed to fetch dashboard`);
       const json = await response.json();
       setData(json);
@@ -39,9 +37,8 @@ export default function Screen2Dashboard({ userId = 'u_learner1', onOpenCourse, 
         { topic: 'Distributed Systems', score: 60, courseId: 3 },
         { topic: 'Cloud Architecture', score: 68, courseId: 1 }
       ];
-      const response = await fetch(`${AI_API_URL}/recommendations`, {
+      const response = await authFetch(`${AI_API_BASE}/recommendations`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ userId, weakAreas, numRecommendations: 3 }),
       });
       if (!response.ok) throw new Error(`HTTP ${response.status}: AI recommendations failed`);

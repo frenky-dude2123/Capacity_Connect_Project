@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-
-const API_BASE_URL = 'http://localhost:5000/api/courses';
+import { authFetch, API_BASE } from '../lib/api';
 
 export default function Page4Detail({ courseId = 1, onBackToCatalog, onLaunchPlayer }) {
   const [course, setCourse] = useState(null);
@@ -11,18 +10,10 @@ export default function Page4Detail({ courseId = 1, onBackToCatalog, onLaunchPla
     setLoading(true);
     setError(null);
     try {
-      const response = await fetch(`${API_BASE_URL}/detail/${id}`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json'
-        }
-      });
-
+      const response = await authFetch(`${API_BASE}/courses/detail/${id}`);
       if (!response.ok) {
         throw new Error(`HTTP ${response.status}: Failed to fetch course detail`);
       }
-
       const data = await response.json();
       setCourse(data);
     } catch (err) {

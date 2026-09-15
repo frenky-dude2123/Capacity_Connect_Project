@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-
-const API_BASE_URL = 'http://localhost:5000/api/ai';
+import { authFetch, API_BASE } from '../lib/api';
 
 export default function Screen8SkillGap({ userId, onBackToDashboard }) {
   const [resumeText, setResumeText] = useState('');
@@ -16,9 +15,8 @@ export default function Screen8SkillGap({ userId, onBackToDashboard }) {
     setLoading(true);
     setError(null);
     try {
-      const response = await fetch(`${API_BASE_URL}/skill-gap`, {
+      const response = await authFetch(`${API_BASE}/ai/skill-gap`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ userId, resumeText }),
       });
       if (!response.ok) throw new Error(`HTTP ${response.status}: Skill gap analysis failed`);

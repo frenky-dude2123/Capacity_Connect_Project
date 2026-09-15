@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-
-const API_BASE_URL = 'http://localhost:5000/api/courses';
+import { authFetch, API_BASE } from '../lib/api';
 
 export default function Screen10CourseMaterials({ userId, courseId, onBackToDashboard }) {
   const [materials, setMaterials] = useState([]);
@@ -10,9 +9,7 @@ export default function Screen10CourseMaterials({ userId, courseId, onBackToDash
     const fetchMaterials = async () => {
       setLoading(true);
       try {
-        const response = await fetch(`${API_BASE_URL}/materials/${courseId || 1}`, {
-          headers: { 'Accept': 'application/json' }
-        });
+        const response = await authFetch(`${API_BASE}/materials/${courseId || 1}`);
         if (!response.ok) throw new Error(`HTTP ${response.status}`);
         const data = await response.json();
         setMaterials(Array.isArray(data) ? data : (data.materials || []));
