@@ -1,6 +1,9 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
-export default function PublicHomepage({ onNavigateToAuth }) {
+export default function PublicHomepage() {
+  const navigate = useNavigate();
+  const handleAuth = () => navigate('/login');
   return (
     <div className="public-layout meadow-bg-login">
       <div className="bg-scrim"></div>
@@ -10,7 +13,7 @@ export default function PublicHomepage({ onNavigateToAuth }) {
           <span className="brand-text">Capacity Connect</span>
         </div>
         <div>
-          <button onClick={onNavigateToAuth} className="btn btn-primary btn-sm">
+          <button onClick={handleAuth} className="btn btn-primary btn-sm">
             Sign In
           </button>
         </div>
@@ -25,10 +28,10 @@ export default function PublicHomepage({ onNavigateToAuth }) {
             structured learning pathways, and accredited certifications.
           </p>
           <div className="hero-actions">
-            <button onClick={onNavigateToAuth} className="btn btn-primary btn-lg">
+            <button onClick={handleAuth} className="btn btn-primary btn-lg">
               Get Started
             </button>
-            <button onClick={onNavigateToAuth} className="btn btn-secondary btn-lg">
+            <button onClick={handleAuth} className="btn btn-secondary btn-lg">
               Sign In
             </button>
           </div>
